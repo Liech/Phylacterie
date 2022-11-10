@@ -5,6 +5,11 @@
 
 #include "Expression.h"
 
+namespace llvm {
+  class Value;
+  class Function;
+}
+
 namespace PLang
 {
   class FunctionDeclaration {
@@ -13,6 +18,7 @@ namespace PLang
 
     const std::string& getName() const;
 
+    llvm::Function* codegen(Context& context);
   private:
     std::string Name;
     std::vector<std::string> Args;
