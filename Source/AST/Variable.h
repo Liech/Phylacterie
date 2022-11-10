@@ -6,9 +6,9 @@
 
 namespace PLang
 {
-  class VariableExprAST : public PLang::Expression {
+  class Variable : public PLang::Expression {
   public:
-    VariableExprAST(const std::string& Name);
+    Variable(const std::string& Name);
 
     virtual llvm::Value* codegen() override;
 

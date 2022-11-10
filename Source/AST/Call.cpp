@@ -4,13 +4,13 @@
 
 namespace PLang
 {
-  CallExprAST::CallExprAST(const std::string& Callee, std::vector<std::unique_ptr<PLang::Expression>> Args)
+  Call::Call(const std::string& Callee, std::vector<std::unique_ptr<PLang::Expression>> Args)
     : 
     Callee(Callee),
     Args(std::move(Args)) {
   }
 
-  llvm::Value* CallExprAST::codegen() {
+  llvm::Value* Call::codegen() {
     return nullptr;
   }
 }

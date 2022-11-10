@@ -4,12 +4,12 @@
 
 namespace PLang
 {
-  NumberExprAST::NumberExprAST(double Val) 
+  Number::Number(double Val) 
     :
     Val(Val) {
   }
 
-  llvm::Value* NumberExprAST::codegen() {
+  llvm::Value* Number::codegen() {
     return nullptr;
   }
 }

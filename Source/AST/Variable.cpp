@@ -4,12 +4,12 @@
 
 namespace PLang
 {
-  VariableExprAST::VariableExprAST(const std::string& Name) 
+  Variable::Variable(const std::string& Name) 
     :
     Name(Name) {
   }
 
-  llvm::Value* VariableExprAST::codegen() {
+  llvm::Value* Variable::codegen() {
     return nullptr;
   }
 }
