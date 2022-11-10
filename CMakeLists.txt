@@ -17,13 +17,21 @@ source_group("Source" FILES ${Source_Files})
 
 set(AST_Files
   "Source/AST/Expression.h"
+  "Source/AST/Expression.cpp"
   "Source/AST/Number.h"
+  "Source/AST/Number.cpp"
   "Source/AST/Expression.h"
+  "Source/AST/Expression.cpp"
   "Source/AST/Variable.h"
+  "Source/AST/Variable.cpp"
   "Source/AST/Binary.h"
+  "Source/AST/Binary.cpp"
   "Source/AST/Call.h"
+  "Source/AST/Call.cpp"
   "Source/AST/Function.h"
+  "Source/AST/Function.cpp"
   "Source/AST/FunctionDeclaration.h"
+  "Source/AST/FunctionDeclaration.cpp"
 )
 source_group("Source/AST" FILES ${AST_Files})
 

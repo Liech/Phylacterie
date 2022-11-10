@@ -4,11 +4,15 @@
 
 namespace PLang
 {
-  class NumberExprAST : public PLang::Expression {
-    double Val;
-
+  class NumberExprAST : public PLang::Expression 
+  {
   public:
-    NumberExprAST(double Val) : Val(Val) {}
+    NumberExprAST(double Val);
+
+    virtual llvm::Value* codegen() override;
+
+  private:
+    double Val;
   };
 }
 

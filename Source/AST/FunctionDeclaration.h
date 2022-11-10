@@ -8,13 +8,13 @@
 namespace PLang
 {
   class FunctionDeclaration {
+  public:
+    FunctionDeclaration(const std::string& Name, std::vector<std::string> Args);
+
+    const std::string& getName() const;
+
+  private:
     std::string Name;
     std::vector<std::string> Args;
-
-  public:
-    FunctionDeclaration(const std::string& Name, std::vector<std::string> Args)
-      : Name(Name), Args(std::move(Args)) {}
-
-    const std::string& getName() const { return Name; }
   };
 }
