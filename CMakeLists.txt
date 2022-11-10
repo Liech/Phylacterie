@@ -8,8 +8,10 @@ find_package(LLVM CONFIG REQUIRED)
 
 set(Source_Files
   "Source/LLVMPlayground.h"
-  "Source/main.cpp"
   "Source/LLVMPlayground.cpp"
+  "Source/Context.h"
+  "Source/Context.cpp"
+  "Source/main.cpp"
 )
 source_group("Source" FILES ${Source_Files})
 

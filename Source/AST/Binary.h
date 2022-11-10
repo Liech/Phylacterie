@@ -10,7 +10,7 @@ namespace PLang
   public:
     Binary(char Op, std::unique_ptr<PLang::Expression> LHS, std::unique_ptr<PLang::Expression> RHS);
 
-    virtual llvm::Value* codegen() override;
+    virtual llvm::Value* codegen(Context&) override;
   private:
     char Op;
     std::unique_ptr<PLang::Expression> LHS, RHS;

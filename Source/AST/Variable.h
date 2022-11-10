@@ -10,7 +10,7 @@ namespace PLang
   public:
     Variable(const std::string& Name);
 
-    virtual llvm::Value* codegen() override;
+    virtual llvm::Value* codegen(Context& context) override;
 
   private:
     std::string Name;

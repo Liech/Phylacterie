@@ -12,7 +12,7 @@ namespace PLang
   public:
     Call(const std::string& Callee, std::vector<std::unique_ptr<PLang::Expression>> Args);
 
-    virtual llvm::Value* codegen() override;
+    virtual llvm::Value* codegen(Context& context) override;
   private:
     std::string Callee;
     std::vector<std::unique_ptr<PLang::Expression>> Args;

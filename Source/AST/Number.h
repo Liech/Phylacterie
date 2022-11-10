@@ -9,7 +9,7 @@ namespace PLang
   public:
     Number(double Val);
 
-    virtual llvm::Value* codegen() override;
+    virtual llvm::Value* codegen(Context&) override;
 
   private:
     double Val;
