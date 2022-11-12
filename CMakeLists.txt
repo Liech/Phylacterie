@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.23)
 project(llvmPlayground)
 include(FetchContent)
 
-find_package(LLVM 13 CONFIG REQUIRED)
+find_package(LLVM CONFIG REQUIRED)
+message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 llvm_map_components_to_libnames(
   LLVM_LIBRARIES
   Core
