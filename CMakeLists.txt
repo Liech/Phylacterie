@@ -60,7 +60,6 @@ set(ALL_FILES
 
 include_directories("Source")
 add_executable(llvmPlayground ${ALL_FILES})
-set_property(TARGET llvmPlayground PROPERTY CXX_STANDARD 20)
 
 target_include_directories(llvmPlayground PRIVATE ${LLVM_INCLUDE_DIRS})
 target_compile_definitions(llvmPlayground PRIVATE ${LLVM_DEFINITIONS})

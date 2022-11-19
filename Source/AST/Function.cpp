@@ -63,7 +63,6 @@ namespace PLang
       // Validate the generated code, checking for consistency.
       //llvm::verifyFunction(*TheFunction);
       llvm::verifyFunction(*TheFunction);
-      throw std::runtime_error("Uncomment this");
 
       return TheFunction;
     }

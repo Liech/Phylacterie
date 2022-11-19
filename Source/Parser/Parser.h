@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Lexer.h"
+#include "Context.h"
 
 namespace PLang
 {
@@ -38,7 +39,8 @@ namespace PLang
     int CurTok;
     std::map<char, int> BinopPrecedence;
   private:
-
+    
     Lexer& lexer;
+    std::unique_ptr<Context> context;
   };
 }
