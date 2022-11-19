@@ -14,6 +14,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
+#include "llvm/IR/LegacyPassManager.h"
 
 #include <algorithm>
 #include <cctype>
@@ -63,6 +64,8 @@ namespace PLang
       // Validate the generated code, checking for consistency.
       //llvm::verifyFunction(*TheFunction);
       llvm::verifyFunction(*TheFunction);
+
+      context.fpm->run(*TheFunction);
 
       return TheFunction;
     }
