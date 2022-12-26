@@ -10,6 +10,9 @@ namespace llvm {
   class LLVMContext;
   class Value;
   class Module;
+  namespace orc {
+    class KaleidoscopeJIT;
+  }
   namespace legacy {
     class FunctionPassManager;
   }
@@ -30,6 +33,7 @@ namespace PLang {
     std::unique_ptr<llvm::Module>                      mod;
     std::map<std::string, llvm::Value*>                namedValues;
     std::unique_ptr<llvm::legacy::FunctionPassManager> fpm;
+    std::unique_ptr<llvm::orc::KaleidoscopeJIT>        jit;
   private:
     std::unique_ptr<Expression> LogError(const char* Str);
   };

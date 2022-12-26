@@ -9,12 +9,17 @@
 #include "AST/Binary.h"
 #include "AST/FunctionDeclaration.h"
 #include "AST/Function.h"
+#include "llvm/Support/TargetSelect.h"
 
 static PLang::Lexer  lexer;
 static PLang::Parser parser(lexer);
 
 /// top ::= definition | external | expression | ';'
 static void MainLoop() {
+  llvm::InitializeNativeTarget();
+  llvm::InitializeNativeTargetAsmPrinter();
+  llvm::InitializeNativeTargetAsmParser();
+
   while (true) {
     fprintf(stderr, "ready> ");
     switch (parser.CurTok) {
