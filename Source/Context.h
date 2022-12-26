@@ -26,6 +26,10 @@ namespace PLang {
     Context();
     virtual ~Context() = default;
 
+    void initialize();
+    void startJit();
+    void stopJit();
+
     llvm::Value* LogErrorV(const char* Str);
 
     std::unique_ptr<llvm::LLVMContext >                context;

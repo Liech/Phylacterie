@@ -20,6 +20,28 @@ namespace PLang {
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
 
+    initialize();
+  }
+
+  llvm::Value* Context::LogErrorV(const char* Str) {
+    LogError(Str);
+    return nullptr;
+  }
+
+  std::unique_ptr<Expression> Context::LogError(const char* Str) {
+    fprintf(stderr, "Error: %s\n", Str);
+    return nullptr;
+  }    
+
+  void Context::startJit() {
+
+  }
+
+  void Context::stopJit() {
+
+  }
+
+  void Context::initialize() {
     context = std::make_unique<llvm::LLVMContext>();
     builder = std::make_unique<llvm::IRBuilder<>>(*context);
     mod = std::make_unique<llvm::Module>("my cool jit", *context);
@@ -38,15 +60,5 @@ namespace PLang {
     fpm->add(llvm::createCFGSimplificationPass());
 
     fpm->doInitialization();
-  }
-
-  llvm::Value* Context::LogErrorV(const char* Str) {
-    LogError(Str);
-    return nullptr;
-  }
-
-  std::unique_ptr<Expression> Context::LogError(const char* Str) {
-    fprintf(stderr, "Error: %s\n", Str);
-    return nullptr;
   }
 }

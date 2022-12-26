@@ -16,10 +16,6 @@ static PLang::Parser parser(lexer);
 
 /// top ::= definition | external | expression | ';'
 static void MainLoop() {
-  llvm::InitializeNativeTarget();
-  llvm::InitializeNativeTargetAsmPrinter();
-  llvm::InitializeNativeTargetAsmParser();
-
   while (true) {
     fprintf(stderr, "ready> ");
     switch (parser.CurTok) {
