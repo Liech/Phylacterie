@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33103.201
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLVMSharp", "LLVMSharp.csproj", "{00E05B90-FA3A-4C2B-8A1E-14224779BD95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LLVMSharpPlayground", "LLVMSharpPlayground.csproj", "{00E05B90-FA3A-4C2B-8A1E-14224779BD95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaleidoscope", "..\Kaleidoscope\Kaleidoscope.csproj", "{CD23CB2E-951B-4FAD-A4CD-4048731DBA31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{00E05B90-FA3A-4C2B-8A1E-14224779BD95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00E05B90-FA3A-4C2B-8A1E-14224779BD95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00E05B90-FA3A-4C2B-8A1E-14224779BD95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD23CB2E-951B-4FAD-A4CD-4048731DBA31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD23CB2E-951B-4FAD-A4CD-4048731DBA31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD23CB2E-951B-4FAD-A4CD-4048731DBA31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD23CB2E-951B-4FAD-A4CD-4048731DBA31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
