@@ -62,7 +62,6 @@ namespace PLang
       context.builder->CreateRet(RetVal);
     
       // Validate the generated code, checking for consistency.
-      //llvm::verifyFunction(*TheFunction);
       llvm::verifyFunction(*TheFunction);
 
       context.fpm->run(*TheFunction);

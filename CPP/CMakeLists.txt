@@ -11,7 +11,20 @@ llvm_map_components_to_libnames(
   Support
   IRReader
   passes 
+  orcjit
+  native
+  target
+  orctargetprocess
+  jitlink
+  windowsmanifest
 )
+
+# aggressiveinstcombine all all-targets analysis asmparser asmprinter binaryformat bitreader bitstreamreader bitwriter cfguard codegen core coroutines
+# coverage debuginfocodeview debuginfodwarf debuginfogsym debuginfomsf debuginfopdb demangle dlltooldriver dwarflinker dwp engine executionengine extensions
+# filecheck frontendopenacc frontendopenmp fuzzmutate globalisel instcombine instrumentation interfacestub interpreter ipo irreader jitlink libdriver 
+# lineeditor linker lto mc mca mcdisassembler mcjit mcparser mirparser native nativecodegen objcarcopts object objectyaml option orcjit orcshared 
+# orctargetprocess passes profiledata remarks runtimedyld scalaropts selectiondag support symbolize tablegen target textapi transformutils vectorize
+# windowsmanifest x86 x86asmparser x86codegen x86desc x86disassembler x86info xray
 
 set(Source_Files
   "Source/LLVMPlayground.h"
@@ -19,6 +32,7 @@ set(Source_Files
   "Source/Context.h"
   "Source/Context.cpp"
   "Source/main.cpp"
+  "Source/KaleidoscopeJIT.h"
 )
 source_group("Source" FILES ${Source_Files})
 

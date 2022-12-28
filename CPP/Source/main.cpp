@@ -9,6 +9,7 @@
 #include "AST/Binary.h"
 #include "AST/FunctionDeclaration.h"
 #include "AST/Function.h"
+#include "llvm/Support/TargetSelect.h"
 
 static PLang::Lexer  lexer;
 static PLang::Parser parser(lexer);

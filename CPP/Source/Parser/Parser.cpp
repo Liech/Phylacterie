@@ -13,6 +13,8 @@
 #include "AST/Binary.h"
 #include "AST/Function.h"
 
+#include "KaleidoscopeJIT.h"
+
 namespace PLang
 {
   Parser::Parser(Lexer& inputLexer) : lexer(inputLexer) {
@@ -254,11 +256,31 @@ namespace PLang
     if (auto FnAST = ParseTopLevelExpr()) {
       if (auto* FnIR = FnAST->codegen(*context)) {
         fprintf(stderr, "Read top-level expression:");
+
+
         FnIR->print(llvm::errs());
         fprintf(stderr, "\n");
-
-        // Remove the anonymous expression.
         FnIR->eraseFromParent();
+
+        //context->startJit();
+        //
+        auto RT = context->jit->getMainJITDylib().createResourceTracker();
+        auto H = context->jit->addModule(llvm::orc::ThreadSafeModule(std::move(context->mod), std::move(context->context)), RT);
+        context->initialize();
+        
+
+        auto ExprSymbol = context->jit->lookup("@__anon_expr");
+        if(!ExprSymbol)
+          fprintf(stderr, "Function not found\n");
+
+
+
+        //double (*FP)() = (double (*)())(intptr_t)ExprSymbol.get().getAddress();
+        //fprintf(stderr, "Evaluated to %f\n", FP());
+        //
+        //// Delete the anonymous expression module from the JIT.
+        RT->remove();
+        //context->stopJit();
       }
     }
     else {
