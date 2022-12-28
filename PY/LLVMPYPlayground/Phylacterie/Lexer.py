@@ -21,8 +21,8 @@ class Lexer(object):
             'then':     TokenKind.THEN,
             'else':     TokenKind.ELSE,
             'for':      TokenKind.FOR,
-            'begin':    TokenKind.SCOPESTART,
-            'end'  :    TokenKind.SCOPEEND,
+            '{'    :    TokenKind.SCOPESTART,
+            '}'    :    TokenKind.SCOPEEND,
             'binary':   TokenKind.BINARY,
             'unary':    TokenKind.UNARY,
             'var':      TokenKind.VAR,            
@@ -50,6 +50,12 @@ class Lexer(object):
                     num_str += self.lastchar
                     self._advance()
                 yield Token(kind=TokenKind.NUMBER, value=num_str)
+            elif self.lastchar == '{':
+                yield Token(kind=TokenKind.SCOPESTART, value=self.lastchar);   
+                self._advance()
+            elif self.lastchar == '}':
+                yield Token(kind=TokenKind.SCOPEEND, value=self.lastchar);                
+                self._advance()
             # Comment
             elif self.lastchar == '#':
                 self._advance()
