@@ -2,7 +2,7 @@
 from .Lexer import Lexer
 from .Token import *
 from .AST import *
-
+from .ParseError import ParseError
 
 class Parser(object):
     """Parser for the Kaleidoscope language.
@@ -20,16 +20,19 @@ class Parser(object):
         self.token_generator = Lexer(buf).tokens()
         self.cur_tok = None
         self._get_next_token()
-
-        if self.cur_tok.kind == TokenKind.EXTERN:
-            return self._parse_external()
-        elif self.cur_tok.kind == TokenKind.DEF:
-            return self._parse_definition()
-        elif self._cur_tok_is_operator(';'):
-            self._get_next_token()
-            return None
-        else:
-            return self._parse_toplevel_expression()
+        result = [];
+        while self.cur_tok.kind != TokenKind.EOF:
+            if self.cur_tok.kind == TokenKind.EXTERN:
+                result.append(self._parse_external())
+            elif self.cur_tok.kind == TokenKind.DEF:
+                result.append(self._parse_definition())
+            elif self._cur_tok_is_operator(';'):
+                result.append(self._get_next_token())
+            else:
+                result.append(self._parse_toplevel_expression())
+            if self.cur_tok.kind != TokenKind.EOF:
+                self._get_next_token()
+        return result
 
     def _get_next_token(self):
         self.cur_tok = next(self.token_generator)

@@ -36,6 +36,8 @@
     <Compile Include="Phylacterie\AST\VarExprAST.py" />
     <Compile Include="Phylacterie\AST\VariableExprAST.py" />
     <Compile Include="Phylacterie\AST\__init__.py" />
+    <Compile Include="Phylacterie\BuiltIn\putchard.py" />
+    <Compile Include="Phylacterie\BuiltIn\__init__.py" />
     <Compile Include="Phylacterie\CodegenError.py" />
     <Compile Include="Phylacterie\Phylacterie.py" />
     <Compile Include="Phylacterie\Lexer.py" />
@@ -65,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Phylacterie\AST\" />
+    <Folder Include="Phylacterie\BuiltIn\" />
     <Folder Include="Phylacterie\Test\" />
     <Folder Include="pykaleidoscope-master\" />
     <Folder Include="Phylacterie\" />
