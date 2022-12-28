@@ -214,6 +214,8 @@ class Parser(object):
                 return lhs
             op = self.cur_tok.value
             self._get_next_token()  # consume the operator
+            if (op == ';' and self.cur_tok.kind == TokenKind.EOF):
+              return lhs;
             rhs = self._parse_unary()
 
             next_prec = self._cur_tok_precedence()
