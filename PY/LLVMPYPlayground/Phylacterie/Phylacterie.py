@@ -7,14 +7,7 @@ from .LLVMCodeGenerator import LLVMCodeGenerator
 from .Parser import Parser
 from .AST import *
 
-class LanguageEvaluator(object):
-    """Evaluator for Kaleidoscope expressions.
-
-    Once an object is created, calls to evaluate() add new expressions to the
-    module. Definitions (including externs) are only added into the IR - no
-    JIT compilation occurs. When a toplevel expression is evaluated, the whole
-    module is JITed and the result of the expression is returned.
-    """
+class Phylacterie(object):
     def __init__(self):
         llvm.initialize()
         llvm.initialize_native_target()
@@ -27,12 +20,6 @@ class LanguageEvaluator(object):
         self.target = llvm.Target.from_default_triple()
 
     def evaluate(self, codestr, optimize=True, llvmdump=False):
-        """Evaluate code in codestr.
-
-        Returns None for definitions and externs, and the evaluated expression
-        value for toplevel expressions.
-        """
-        # Parse the given code and generate code from it
         ast = self.parser.parse_toplevel(codestr)
         self.codegen.generate_code(ast)
 
@@ -40,17 +27,12 @@ class LanguageEvaluator(object):
             print('======== Unoptimized LLVM IR')
             print(str(self.codegen.module))
 
-        # If we're evaluating a definition or extern declaration, don't do
-        # anything else. If we're evaluating an anonymous wrapper for a toplevel
-        # expression, JIT-compile the module and run the function to get its
-        # result.
         if not (isinstance(ast, FunctionAST) and ast.is_anonymous()):
             return None
 
         # Convert LLVM IR into in-memory representation
         llvmmod = llvm.parse_assembly(str(self.codegen.module))
 
-        # Optimize the module
         if optimize:
             pmb = llvm.create_pass_manager_builder()
             pmb.opt_level = 2
@@ -62,9 +44,6 @@ class LanguageEvaluator(object):
                 print('======== Optimized LLVM IR')
                 print(str(llvmmod))
 
-        # Create a MCJIT execution engine to JIT-compile the module. Note that
-        # ee takes ownership of target_machine, so it has to be recreated anew
-        # each time we call create_mcjit_compiler.
         target_machine = self.target.create_target_machine()
         with llvm.create_mcjit_compiler(llvmmod, target_machine) as ee:
             ee.finalize_object()

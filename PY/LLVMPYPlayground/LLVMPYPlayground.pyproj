@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>edac7511-dd8e-49bd-9bf5-2f32834db31f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>LLVMPYPlayground.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,7 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="LLVMPYPlayground.py" />
+    <Compile Include="main.py" />
     <Compile Include="Phylacterie\AST\ASTNode.py" />
     <Compile Include="Phylacterie\AST\BinaryExprAST.py" />
     <Compile Include="Phylacterie\AST\CallExprAST.py" />
@@ -37,7 +37,7 @@
     <Compile Include="Phylacterie\AST\VariableExprAST.py" />
     <Compile Include="Phylacterie\AST\__init__.py" />
     <Compile Include="Phylacterie\CodegenError.py" />
-    <Compile Include="Phylacterie\LanguageEvaluator.py" />
+    <Compile Include="Phylacterie\Phylacterie.py" />
     <Compile Include="Phylacterie\Lexer.py" />
     <Compile Include="Phylacterie\LLVMCodeGenerator.py" />
     <Compile Include="Phylacterie\ParseError.py" />
@@ -73,6 +73,7 @@
     <Content Include="pykaleidoscope-master\.gitignore" />
     <Content Include="pykaleidoscope-master\.vimrc" />
     <Content Include="pykaleidoscope-master\LICENSE" />
+    <Content Include="main.phy" />
     <Content Include="pykaleidoscope-master\README.rst" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
