@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>edac7511-dd8e-49bd-9bf5-2f32834db31f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>pykaleidoscope-master\chapter5.py</StartupFile>
+    <StartupFile>LLVMPYPlayground.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="LLVMPYPlayground.py" />
+    <Compile Include="Phylacterie\AST\ASTNode.py" />
+    <Compile Include="Phylacterie\AST\BinaryExprAST.py" />
+    <Compile Include="Phylacterie\AST\CallExprAST.py" />
+    <Compile Include="Phylacterie\AST\ExprAST.py" />
+    <Compile Include="Phylacterie\AST\ForExprAST.py" />
+    <Compile Include="Phylacterie\AST\FunctionAST.py" />
+    <Compile Include="Phylacterie\AST\IfExprAST.py" />
+    <Compile Include="Phylacterie\AST\NumberExprAST.py" />
+    <Compile Include="Phylacterie\AST\PrototypeAST.py" />
+    <Compile Include="Phylacterie\AST\UnaryExprAST.py" />
+    <Compile Include="Phylacterie\AST\VarExprAST.py" />
+    <Compile Include="Phylacterie\AST\VariableExprAST.py" />
+    <Compile Include="Phylacterie\AST\__init__.py" />
+    <Compile Include="Phylacterie\CodegenError.py" />
+    <Compile Include="Phylacterie\LanguageEvaluator.py" />
+    <Compile Include="Phylacterie\Lexer.py" />
+    <Compile Include="Phylacterie\LLVMCodeGenerator.py" />
+    <Compile Include="Phylacterie\ParseError.py" />
+    <Compile Include="Phylacterie\Parser.py" />
+    <Compile Include="Phylacterie\__init__.py" />
+    <Compile Include="Phylacterie\Test\TestEvaluator.py" />
+    <Compile Include="Phylacterie\Test\TestParser.py" />
+    <Compile Include="Phylacterie\Token.py" />
     <Compile Include="pykaleidoscope-master\chapter1and2.py" />
     <Compile Include="pykaleidoscope-master\chapter3and4.py" />
     <Compile Include="pykaleidoscope-master\chapter5.py" />
@@ -41,7 +64,10 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Phylacterie\AST\" />
+    <Folder Include="Phylacterie\Test\" />
     <Folder Include="pykaleidoscope-master\" />
+    <Folder Include="Phylacterie\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="pykaleidoscope-master\.gitignore" />
