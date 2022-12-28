@@ -13,8 +13,9 @@ class TokenKind(Enum):
     THEN = -8
     ELSE = -9
     FOR = -10
-    IN = -11
+    SCOPESTART = -11
     BINARY = -12
     UNARY = -13
     VAR = -14
+    SCOPEEND = -15
 Token = namedtuple('Token', 'kind value')

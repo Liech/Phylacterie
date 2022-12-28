@@ -146,7 +146,7 @@ class Parser(object):
             step_expr = self._parse_expression()
         else:
             step_expr = None
-        self._match(TokenKind.IN)
+        self._match(TokenKind.SCOPESTART)
         body = self._parse_expression()
         return ForExprAST(id_name, start_expr, end_expr, step_expr, body)
 
@@ -178,8 +178,9 @@ class Parser(object):
             if self.cur_tok.kind != TokenKind.IDENTIFIER:
                 raise ParseError('expected identifier in "var" after ","')
 
-        self._match(TokenKind.IN)
+        self._match(TokenKind.SCOPESTART)
         body = self._parse_expression()
+        self._match(TokenKind.SCOPEEND)
         return VarExprAST(vars, body)
 
     # unary

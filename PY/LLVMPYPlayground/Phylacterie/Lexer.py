@@ -21,10 +21,11 @@ class Lexer(object):
             'then':     TokenKind.THEN,
             'else':     TokenKind.ELSE,
             'for':      TokenKind.FOR,
-            'in':       TokenKind.IN,
+            'begin':    TokenKind.SCOPESTART,
+            'end'  :    TokenKind.SCOPEEND,
             'binary':   TokenKind.BINARY,
             'unary':    TokenKind.UNARY,
-            'var':      TokenKind.VAR,
+            'var':      TokenKind.VAR,            
         }
 
     def tokens(self):
