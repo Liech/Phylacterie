@@ -148,6 +148,7 @@ class Parser(object):
             step_expr = None
         self._match(TokenKind.SCOPESTART)
         body = self._parse_expression()
+        self._match(TokenKind.SCOPEEND)
         return ForExprAST(id_name, start_expr, end_expr, step_expr, body)
 
     # varexpr ::= 'var' identifier ('=' expr)?
