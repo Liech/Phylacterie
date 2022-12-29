@@ -34,7 +34,7 @@ class FunctionAST(ASTNode):
         # function arguments.
         generator.func_symtab = {}
         # Create the function skeleton from the prototype.
-        func = generator._codegen(self.proto)
+        func = self.proto.codegen(generator)
         # Create the entry BB in the function and set the builder to it.
         bb_entry = func.append_basic_block('entry')
         generator.builder = ir.IRBuilder(bb_entry)
@@ -46,6 +46,6 @@ class FunctionAST(ASTNode):
             generator.builder.store(arg, alloca)
             generator.func_symtab[arg.name] = alloca
 
-        retval = generator._codegen(self.body)
+        retval = self.body.codegen(generator)
         generator.builder.ret(retval)
         return func

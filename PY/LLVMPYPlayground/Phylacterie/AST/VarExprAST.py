@@ -29,7 +29,7 @@ class VarExprAST(ExprAST):
             # Emit the initializer before adding the variable to scope. This
             # prefents the initializer from referencing the variable itgenerator.
             if init is not None:
-                init_val = generator._codegen(init)
+                init_val = init.codegen(generator)
             else:
                 init_val = ir.Constant(ir.DoubleType(), 0.0)
 
@@ -47,7 +47,7 @@ class VarExprAST(ExprAST):
             generator.func_symtab[name] = var_addr
 
         # Now all the vars are in scope. Codegen the body.
-        body_val = generator._codegen(self.body)
+        body_val = self.body.codegen(generator)
 
         # Restore the old bindings.
         for i, (name, _) in enumerate(self.vars):

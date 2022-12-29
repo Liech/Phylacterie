@@ -53,7 +53,7 @@ class ForExprAST(ExprAST):
 
         # Emit the start expr first, without the variable in scope. Store it
         # into the var.
-        start_val = generator._codegen(self.start_expr)
+        start_val = self.start_expr.codegen(generator)
         generator.builder.store(start_val, var_addr)
         loop_bb = generator.builder.function.append_basic_block('loop')
 
@@ -68,10 +68,10 @@ class ForExprAST(ExprAST):
 
         # Emit the body of the loop. This, like any other expr, can change the
         # current BB. Note that we ignore the value computed by the body.
-        body_val = generator._codegen(self.body)
+        body_val = self.body.codegen(generator)
 
         # Compute the end condition
-        endcond = generator._codegen(self.end_expr)
+        endcond = self.end_expr.codegen(generator)
         cmp = generator.builder.fcmp_ordered(
             '!=', endcond, ir.Constant(ir.DoubleType(), 0.0),
             'loopcond')
@@ -79,7 +79,7 @@ class ForExprAST(ExprAST):
         if self.step_expr is None:
             stepval = ir.Constant(ir.DoubleType(), 1.0)
         else:
-            stepval = generator._codegen(self.step_expr)
+            stepval = self.step_expr.codegen(generator)
         cur_var = generator.builder.load(var_addr, self.id_name)
         nextval = generator.builder.fadd(cur_var, stepval, 'nextvar')
         generator.builder.store(nextval, var_addr)

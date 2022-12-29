@@ -27,49 +27,10 @@ class LLVMCodeGenerator(object):
 
     def generate_code(self, node):
         assert isinstance(node, (PrototypeAST, FunctionAST))
-        return self._codegen(node)
+        return node.codegen(self)
 
     def _create_entry_block_alloca(self, name):
         """Create an alloca in the entry BB of the current function."""
         builder = ir.IRBuilder()
         builder.position_at_start(self.builder.function.entry_basic_block)
         return builder.alloca(ir.DoubleType(), size=None, name=name)
-
-    def _codegen(self, node):
-        """Node visitor. Dispathces upon node type.
-
-        For AST node of class Foo, calls self._codegen_Foo. Each visitor is
-        expected to return a llvmlite.ir.Value.
-        """
-        method = '_codegen_' + node.__class__.__name__
-        return getattr(self, method)(node)
-
-    def _codegen_NumberExprAST(self, node):
-        return node.codegen(self);
-
-    def _codegen_VariableExprAST(self, node):
-        return node.codegen(self);
-
-    def _codegen_UnaryExprAST(self, node):
-        return node.codegen(self);
-
-    def _codegen_BinaryExprAST(self, node):
-        return node.codegen(self);
-
-    def _codegen_IfExprAST(self, node):
-        return node.codegen(self)
-
-    def _codegen_ForExprAST(self, node):
-        return node.codegen(self)
-
-    def _codegen_VarExprAST(self, node):
-        return node.codegen(self)
-
-    def _codegen_CallExprAST(self, node):
-        return node.codegen(self)
-
-    def _codegen_PrototypeAST(self, node):
-        return node.codegen(self)
-
-    def _codegen_FunctionAST(self, node):
-        return node.codegen(self)

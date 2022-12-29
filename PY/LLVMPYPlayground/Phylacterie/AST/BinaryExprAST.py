@@ -25,12 +25,12 @@ class BinaryExprAST(ExprAST):
             if not isinstance(self.lhs, VariableExprAST):
                 raise CodegenError('lhs of "=" must be a variable')
             var_addr = generator.func_symtab[self.lhs.name]
-            rhs_val = self.rhs.generator._codegen(self.rhs)
+            rhs_val = self.rhs.codegen(generator)
             generator.builder.store(rhs_val, var_addr)
             return rhs_val
 
-        lhs = generator._codegen(self.lhs)
-        rhs = generator._codegen(self.rhs)
+        lhs = self.lhs.codegen(generator)
+        rhs = self.rhs.codegen(generator)
 
         if self.op == '+':
             return generator.builder.fadd(lhs, rhs, 'addtmp')

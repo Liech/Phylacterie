@@ -22,7 +22,7 @@ class IfExprAST(ExprAST):
 
     def codegen(self, generator):
         # Emit comparison value
-        cond_val = generator._codegen(self.cond_expr)
+        cond_val = self.cond_expr.codegen(generator)
         cmp = generator.builder.fcmp_ordered(
             '!=', cond_val, ir.Constant(ir.DoubleType(), 0.0))
 
@@ -38,7 +38,7 @@ class IfExprAST(ExprAST):
 
         # Emit the 'then' part
         generator.builder.position_at_start(then_bb)
-        then_val = generator._codegen(self.then_expr)
+        then_val = self.then_expr.codegen(generator)
         generator.builder.branch(merge_bb)
 
         # Emission of then_val could have modified the current basic block. To
@@ -48,7 +48,7 @@ class IfExprAST(ExprAST):
         # Emit the 'else' part
         generator.builder.function.basic_blocks.append(else_bb)
         generator.builder.position_at_start(else_bb)
-        else_val = generator._codegen(self.else_expr)
+        else_val = self.else_expr.codegen(generator)
 
         # Emission of else_val could have modified the current basic block.
         else_bb = generator.builder.block

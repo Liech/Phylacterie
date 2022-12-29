@@ -22,5 +22,5 @@ class CallExprAST(ExprAST):
             raise CodegenError('Call to unknown function', self.callee)
         if len(callee_func.args) != len(self.args):
             raise CodegenError('Call argument length mismatch', self.callee)
-        call_args = [generator._codegen(arg) for arg in self.args]
+        call_args = [arg.codegen(generator) for arg in self.args]
         return generator.builder.call(callee_func, call_args, 'calltmp')
