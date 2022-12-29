@@ -10,3 +10,4 @@ from .PrototypeAST import PrototypeAST
 from .UnaryExprAST import UnaryExprAST
 from .VarExprAST import VarExprAST
 from .VariableExprAST import VariableExprAST
+from .ScopeAST import ScopeAST

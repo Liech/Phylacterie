@@ -303,3 +303,9 @@ class Parser(object):
     def _parse_toplevel_expression(self):
         expr = self._parse_expression()
         return FunctionAST.create_anonymous(expr)
+
+    def _parse_scope(self):
+        self._match(TokenKind.SCOPESTART)
+        body = self._parse_expression()
+        self._match(TokenKind.SCOPEEND)
+        return ScopeAST(body);

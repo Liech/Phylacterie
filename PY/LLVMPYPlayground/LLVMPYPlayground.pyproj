@@ -33,6 +33,7 @@
     <Compile Include="Phylacterie\AST\IfExprAST.py" />
     <Compile Include="Phylacterie\AST\NumberExprAST.py" />
     <Compile Include="Phylacterie\AST\PrototypeAST.py" />
+    <Compile Include="Phylacterie\AST\ScopeAST.py" />
     <Compile Include="Phylacterie\AST\UnaryExprAST.py" />
     <Compile Include="Phylacterie\AST\VarExprAST.py" />
     <Compile Include="Phylacterie\AST\VariableExprAST.py" />
