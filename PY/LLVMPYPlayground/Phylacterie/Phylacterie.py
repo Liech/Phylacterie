@@ -19,7 +19,7 @@ class Phylacterie(object):
         self._add_builtins(self.codegen.module)
 
         self.target = llvm.Target.from_default_triple()
-        self.evaluate('def binary ; 1 (x y) y');
+        self.evaluate('def binary ; 1 (x y) {y}');
 
     def evaluate(self, codestr, optimize=True, llvmdump=False):
         expressions = self.parser.parse_toplevel(codestr)

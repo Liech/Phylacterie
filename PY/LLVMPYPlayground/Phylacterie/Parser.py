@@ -125,9 +125,9 @@ class Parser(object):
         self._get_next_token()  # consume the 'if'
         cond_expr = self._parse_expression()
         self._match(TokenKind.THEN)
-        then_expr = self._parse_expression()
+        then_expr = self._parse_scope()
         self._match(TokenKind.ELSE)
-        else_expr = self._parse_expression()
+        else_expr = self._parse_scope()
         return IfExprAST(cond_expr, then_expr, else_expr)
 
     # forexpr ::= 'for' identifier '=' expr ',' expr (',' expr)? 'in' expr
@@ -146,9 +146,7 @@ class Parser(object):
             step_expr = self._parse_expression()
         else:
             step_expr = None
-        self._match(TokenKind.SCOPESTART)
-        body = self._parse_expression()
-        self._match(TokenKind.SCOPEEND)
+        body = self._parse_scope()
         return ForExprAST(id_name, start_expr, end_expr, step_expr, body)
 
     # varexpr ::= 'var' identifier ('=' expr)?
@@ -179,9 +177,7 @@ class Parser(object):
             if self.cur_tok.kind != TokenKind.IDENTIFIER:
                 raise ParseError('expected identifier in "var" after ","')
 
-        self._match(TokenKind.SCOPESTART)
-        body = self._parse_expression()
-        self._match(TokenKind.SCOPEEND)
+        body = self._parse_scope()
         return VarExprAST(vars, body)
 
     # unary
@@ -296,7 +292,7 @@ class Parser(object):
     def _parse_definition(self):
         self._get_next_token()  # consume 'def'
         proto = self._parse_prototype()
-        expr = self._parse_expression()
+        expr = self._parse_scope()
         return FunctionAST(proto, expr)
 
     # toplevel ::= expression

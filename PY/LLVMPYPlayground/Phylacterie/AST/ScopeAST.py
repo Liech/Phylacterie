@@ -13,3 +13,6 @@ class ScopeAST(ExprAST):
         s += '{0} Body:\n'.format(prefix)
         s += self.body.dump(indent + 2)
         return s
+
+    def codegen(self, generator):
+        return self.body.codegen(generator);
