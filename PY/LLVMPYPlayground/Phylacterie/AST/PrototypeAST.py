@@ -1,4 +1,8 @@
 from .ASTNode import ASTNode
+from .CodegenError import CodegenError
+
+import llvmlite.ir as ir
+import llvmlite.binding as llvm
 
 class PrototypeAST(ASTNode):
     def __init__(self, name, argnames, isoperator=False, prec=0):
@@ -24,3 +28,27 @@ class PrototypeAST(ASTNode):
         if self.isoperator:
             s += '[operator with prec={0}]'.format(self.prec)
         return s
+
+    def codegen(self,generator):
+        funcname = self.name
+        # Create a function type
+        func_ty = ir.FunctionType(ir.DoubleType(),
+                                  [ir.DoubleType()] * len(self.argnames))
+
+        # If a function with this name already exists in the module...
+        if funcname in generator.module.globals:
+            # We only allow the case in which a declaration exists and now the
+            # function is defined (or redeclared) with the same number of args.
+            existing_func = generator.module[funcname]
+            if not isinstance(existing_func, ir.Function):
+                raise CodegenError('Function/Global name collision', funcname)
+            if not existing_func.is_declaration():
+                raise CodegenError('Redifinition of {0}'.format(funcname))
+            if len(existing_func.function_type.args) != len(func_ty.args):
+                raise CodegenError(
+                    'Redifinition with different number of arguments')
+            func = generator.module.globals[funcname]
+        else:
+            # Otherwise create a new function
+            func = ir.Function(generator.module, func_ty, funcname)
+        return func

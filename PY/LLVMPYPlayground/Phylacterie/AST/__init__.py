@@ -11,3 +11,5 @@ from .UnaryExprAST import UnaryExprAST
 from .VarExprAST import VarExprAST
 from .VariableExprAST import VariableExprAST
 from .ScopeAST import ScopeAST
+
+from .CodegenError import CodegenError

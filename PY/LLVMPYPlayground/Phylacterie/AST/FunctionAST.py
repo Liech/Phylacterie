@@ -1,6 +1,9 @@
 from .ASTNode import ASTNode
 from .PrototypeAST import PrototypeAST
 
+import llvmlite.ir as ir
+import llvmlite.binding as llvm
+
 class FunctionAST(ASTNode):
     def __init__(self, proto, body):
         self.proto = proto
@@ -25,3 +28,24 @@ class FunctionAST(ASTNode):
             ' ' * indent, self.__class__.__name__, self.proto.dump())
         s += self.body.dump(indent + 2) + '\n'
         return s
+
+    def codegen(self, generator):
+        # Reset the symbol table. Prototype generation will pre-populate it with
+        # function arguments.
+        generator.func_symtab = {}
+        # Create the function skeleton from the prototype.
+        func = generator._codegen(self.proto)
+        # Create the entry BB in the function and set the builder to it.
+        bb_entry = func.append_basic_block('entry')
+        generator.builder = ir.IRBuilder(bb_entry)
+
+        # Add all arguments to the symbol table and create their allocas
+        for i, arg in enumerate(func.args):
+            arg.name = self.proto.argnames[i]
+            alloca = generator.builder.alloca(ir.DoubleType(), name=arg.name)
+            generator.builder.store(arg, alloca)
+            generator.func_symtab[arg.name] = alloca
+
+        retval = generator._codegen(self.body)
+        generator.builder.ret(retval)
+        return func

@@ -1,5 +1,8 @@
 from .ExprAST import ExprAST
 
+import llvmlite.ir as ir
+import llvmlite.binding as llvm
+
 class ScopeAST(ExprAST):
     def __init__(self, body):
         self.body = body
