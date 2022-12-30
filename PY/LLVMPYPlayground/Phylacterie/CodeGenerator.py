@@ -16,7 +16,7 @@ class CodeGenerator(object):
         At any time, the current LLVM module being constructed can be obtained
         from the module attribute.
         """
-        self.module = ir.Module()
+        self._module = ir.Module()
 
         # Current IR builder.
         self._builder = None
@@ -30,6 +30,9 @@ class CodeGenerator(object):
 
     def getBuilder(self):
       return self._builder;
+
+    def getModule(self):
+      return self._module
 
     def generate_code(self, node):
         return node.codegen(self)

@@ -16,7 +16,7 @@ class Phylacterie(object):
 
         self.codegen = CodeGenerator()
         self.parser = Parser()
-        self._add_builtins(self.codegen.module)
+        self._add_builtins(self.codegen.getModule())
 
         self.target = llvm.Target.from_default_triple()
         self.evaluate('def binary ; 1 (x y) {y}');
@@ -38,13 +38,13 @@ class Phylacterie(object):
 
         if llvmdump:
             print('======== Unoptimized LLVM IR')
-            print(str(self.codegen.module))
+            print(str(self.codegen.getModule()))
 
         if not (isinstance(ast, FunctionAST) and ast.is_anonymous()):
             return None
 
         # Convert LLVM IR into in-memory representation
-        llvmmod = llvm.parse_assembly(str(self.codegen.module))
+        llvmmod = llvm.parse_assembly(str(self.codegen.getModule()))
 
         if optimize:
             pmb = llvm.create_pass_manager_builder()
