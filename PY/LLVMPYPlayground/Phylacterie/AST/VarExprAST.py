@@ -46,15 +46,10 @@ class VarExprAST(ExprAST):
             # what to restore.
             old_bindings.append(generator.func_symtab.get(name))
             generator.func_symtab[name] = var_addr
+        
 
-        # Now all the vars are in scope. Codegen the body.
-        body_val = self.body.codegen(generator)
+        # Cleanup of variables is done by parent scope
+        self.parent.addOldBindings(old_bindings);
+        self.parent.addVars(self.vars);
 
-        # Restore the old bindings.
-        for i, (name, _) in enumerate(self.vars):
-            if old_bindings[i] is not None:
-                generator.func_symtab[name] = old_bindings[i]
-            else:
-                del generator.func_symtab[name]
-
-        return body_val
+        return self.body.codegen(generator)

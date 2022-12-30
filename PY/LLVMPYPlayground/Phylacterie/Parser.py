@@ -14,6 +14,7 @@ class Parser(object):
         self.token_generator = None
         self.cur_tok = None
         self.root = ScopeAST(None, None);
+        self.root.setIsGlobalScope(True);
 
     # toplevel ::= definition | external | expression | ';'
     def parse_toplevel(self, buf):
@@ -33,7 +34,8 @@ class Parser(object):
                 result.append(self._parse_toplevel_expression(self.root))
             if self.cur_tok.kind != TokenKind.EOF:
                 self._get_next_token()
-        return result
+        self.root.setBody(result);
+        return self.root;
 
     def _get_next_token(self):
         self.cur_tok = next(self.token_generator)
@@ -309,5 +311,5 @@ class Parser(object):
         self._match(TokenKind.SCOPESTART);
         body = self._parse_expression(result);
         self._match(TokenKind.SCOPEEND);
-        result.body = body;
+        result.setBody(body);
         return result;

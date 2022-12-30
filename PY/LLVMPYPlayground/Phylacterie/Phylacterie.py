@@ -30,9 +30,10 @@ class Phylacterie(object):
 
 
     def evaluate(self, codestr, optimize=True, llvmdump=False):
-        expressions = self.parser.parse_toplevel(codestr)
-        for ast in expressions:
-            self.codegen.generate_code(ast)
+        root = self.parser.parse_toplevel(codestr)
+        self.codegen.generate_code(root)
+
+        ast = root.body[-1]
 
         if llvmdump:
             print('======== Unoptimized LLVM IR')

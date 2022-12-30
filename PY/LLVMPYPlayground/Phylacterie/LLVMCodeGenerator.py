@@ -26,7 +26,6 @@ class LLVMCodeGenerator(object):
         self.func_symtab = {}
 
     def generate_code(self, node):
-        assert isinstance(node, (PrototypeAST, FunctionAST))
         return node.codegen(self)
 
     def _create_entry_block_alloca(self, name):
