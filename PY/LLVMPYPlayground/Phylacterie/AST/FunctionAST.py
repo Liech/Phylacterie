@@ -33,7 +33,7 @@ class FunctionAST(ASTNode):
     def codegen(self, generator):
         # Reset the symbol table. Prototype generation will pre-populate it with
         # function arguments.
-        generator.func_symtab = {}
+        generator.setSymtab({});
 
         # Create the function skeleton from the prototype.
         func = self.proto.codegen(generator)
@@ -47,7 +47,7 @@ class FunctionAST(ASTNode):
             arg.name = self.proto.argnames[i]
             alloca = generator.getBuilder().alloca(ir.DoubleType(), name=arg.name)
             generator.getBuilder().store(arg, alloca)
-            generator.func_symtab[arg.name] = alloca
+            generator.getSymtab()[arg.name] = alloca
 
         retval = self.body.codegen(generator)
         generator.getBuilder().ret(retval)

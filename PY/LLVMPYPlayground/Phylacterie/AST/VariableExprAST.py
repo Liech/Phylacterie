@@ -13,5 +13,5 @@ class VariableExprAST(ExprAST):
             ' ' * indent, self.__class__.__name__, self.name)
 
     def codegen(self,generator):
-        var_addr = generator.func_symtab[self.name]
+        var_addr = generator.getSymtab()[self.name]
         return generator.getBuilder().load(var_addr, self.name)

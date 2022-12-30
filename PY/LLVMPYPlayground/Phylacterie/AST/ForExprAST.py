@@ -64,8 +64,8 @@ class ForExprAST(ExprAST):
 
         # Within the loop, the variable now refers to our alloca slot. If it
         # shadows an existing variable, we'll have to restore, so save it now.
-        old_var_addr = generator.func_symtab.get(self.id_name)
-        generator.func_symtab[self.id_name] = var_addr
+        old_var_addr = generator.getSymtab().get(self.id_name)
+        generator.getSymtab()[self.id_name] = var_addr
 
         # Emit the body of the loop. This, like any other expr, can change the
         # current BB. Note that we ignore the value computed by the body.
@@ -96,9 +96,9 @@ class ForExprAST(ExprAST):
 
         # Restore the old var address if it was shadowed.
         if old_var_addr is not None:
-            generator.func_symtab[self.id_name] = old_var_addr
+            generator.getSymtab()[self.id_name] = old_var_addr
         else:
-            del generator.func_symtab[self.id_name]
+            del generator.getSymtab()[self.id_name]
 
         # The 'for' expression always returns 0
         return ir.Constant(ir.DoubleType(), 0.0)

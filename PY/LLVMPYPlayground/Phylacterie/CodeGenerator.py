@@ -23,7 +23,7 @@ class CodeGenerator(object):
 
         # Manages a symbol table while a function is being codegen'd. Maps var
         # names to ir.Value which represents the var's address (alloca).
-        self.func_symtab = {}
+        self._func_symtab = {}
 
     def setBuilder(self, builder):
       self._builder = builder;
@@ -37,6 +37,12 @@ class CodeGenerator(object):
     def generate_code(self, node):
         return node.codegen(self)
 
+    def getSymtab(self):
+      return self._func_symtab;
+
+    def setSymtab(self, newSymtab):
+      self._func_symtab = newSymtab;
+
     def defineVariable(self, name, value):
         # Create an alloca for the induction var and store the init value to
         # it. Save and restore location of our builder because
@@ -48,8 +54,8 @@ class CodeGenerator(object):
         
         # We're going to shadow this name in the symbol table now; remember
         # what to restore.
-        result = self.func_symtab.get(name);
-        self.func_symtab[name] = var_addr
+        result = self.getSymtab().get(name);
+        self.getSymtab()[name] = var_addr
 
         return result;
 

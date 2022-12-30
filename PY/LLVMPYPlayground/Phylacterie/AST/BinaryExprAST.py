@@ -25,7 +25,7 @@ class BinaryExprAST(ExprAST):
         if self.op == '=':
             if not isinstance(self.lhs, VariableExprAST):
                 raise CodegenError('lhs of "=" must be a variable')
-            var_addr = generator.func_symtab[self.lhs.name]
+            var_addr = generator.getSymtab()[self.lhs.name]
             rhs_val = self.rhs.codegen(generator)
             generator.builder.store(rhs_val, var_addr)
             return rhs_val
@@ -45,5 +45,5 @@ class BinaryExprAST(ExprAST):
         else:
             # Note one of predefined operator, so it must be a user-defined one.
             # Emit a call to it.
-            func = generator.module.get_global('binary{0}'.format(self.op))
+            func = generator.getModule().get_global('binary{0}'.format(self.op))
             return generator.getBuilder().call(func, [lhs, rhs], 'binop')
