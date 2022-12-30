@@ -13,6 +13,7 @@ class Parser(object):
     def __init__(self):
         self.token_generator = None
         self.cur_tok = None
+        self.root = ScopeAST(None, None);
 
     # toplevel ::= definition | external | expression | ';'
     def parse_toplevel(self, buf):
@@ -23,13 +24,13 @@ class Parser(object):
         result = [];
         while self.cur_tok.kind != TokenKind.EOF:
             if self.cur_tok.kind == TokenKind.EXTERN:
-                result.append(self._parse_external())
+                result.append(self._parse_external(self.root))
             elif self.cur_tok.kind == TokenKind.DEF:
-                result.append(self._parse_definition())
+                result.append(self._parse_definition(self.root))
             elif self._cur_tok_is_operator(';'):
-                result.append(self._get_next_token())
+                result.append(self._get_next_token(self.root))
             else:
-                result.append(self._parse_toplevel_expression())
+                result.append(self._parse_toplevel_expression(self.root))
             if self.cur_tok.kind != TokenKind.EOF:
                 self._get_next_token()
         return result
@@ -66,35 +67,35 @@ class Parser(object):
     # identifierexpr
     #   ::= identifier
     #   ::= identifier '(' expression* ')'
-    def _parse_identifier_expr(self):
+    def _parse_identifier_expr(self,parent):
         id_name = self.cur_tok.value
         self._get_next_token()
         # If followed by a '(' it's a call; otherwise, a simple variable ref.
         if not self._cur_tok_is_operator('('):
-            return VariableExprAST(id_name)
+            return VariableExprAST(parent, id_name)
 
         self._get_next_token()
         args = []
         if not self._cur_tok_is_operator(')'):
             while True:
-                args.append(self._parse_expression())
+                args.append(self._parse_expression(parent))
                 if self._cur_tok_is_operator(')'):
                     break
                 self._match(TokenKind.OPERATOR, ',')
 
         self._get_next_token()  # consume the ')'
-        return CallExprAST(id_name, args)
+        return CallExprAST(parent, id_name, args)
 
     # numberexpr ::= number
-    def _parse_number_expr(self):
-        result = NumberExprAST(self.cur_tok.value)
+    def _parse_number_expr(self,parent):
+        result = NumberExprAST(parent, self.cur_tok.value)
         self._get_next_token()  # consume the number
         return result
 
     # parenexpr ::= '(' expression ')'
-    def _parse_paren_expr(self):
+    def _parse_paren_expr(self, parent):
         self._get_next_token()  # consume the '('
-        expr = self._parse_expression()
+        expr = self._parse_expression(parent)
         self._match(TokenKind.OPERATOR, ')')
         return expr
 
@@ -104,54 +105,54 @@ class Parser(object):
     #   ::= parenexpr
     #   ::= ifexpr
     #   ::= forexpr
-    def _parse_primary(self):
+    def _parse_primary(self,parent):
         if self.cur_tok.kind == TokenKind.IDENTIFIER:
-            return self._parse_identifier_expr()
+            return self._parse_identifier_expr(parent)
         elif self.cur_tok.kind == TokenKind.NUMBER:
-            return self._parse_number_expr()
+            return self._parse_number_expr(parent)
         elif self._cur_tok_is_operator('('):
-            return self._parse_paren_expr()
+            return self._parse_paren_expr(parent)
         elif self.cur_tok.kind == TokenKind.IF:
-            return self._parse_if_expr()
+            return self._parse_if_expr(parent)
         elif self.cur_tok.kind == TokenKind.FOR:
-            return self._parse_for_expr()
+            return self._parse_for_expr(parent)
         elif self.cur_tok.kind == TokenKind.VAR:
-            return self._parse_var_expr()
+            return self._parse_var_expr(parent)
         else:
             raise ParseError('Unknown token when expecting an expression')
 
     # ifexpr ::= 'if' expression 'then' expression 'else' expression
-    def _parse_if_expr(self):
+    def _parse_if_expr(self, parent):
         self._get_next_token()  # consume the 'if'
-        cond_expr = self._parse_expression()
+        cond_expr = self._parse_expression(parent)
         self._match(TokenKind.THEN)
-        then_expr = self._parse_scope()
+        then_expr = self._parse_scope(parent)
         self._match(TokenKind.ELSE)
-        else_expr = self._parse_scope()
-        return IfExprAST(cond_expr, then_expr, else_expr)
+        else_expr = self._parse_scope(parent)
+        return IfExprAST(parent, cond_expr, then_expr, else_expr)
 
     # forexpr ::= 'for' identifier '=' expr ',' expr (',' expr)? 'in' expr
-    def _parse_for_expr(self):
+    def _parse_for_expr(self, parent):
         self._get_next_token()  # consume the 'for'
         id_name = self.cur_tok.value
         self._match(TokenKind.IDENTIFIER)
         self._match(TokenKind.OPERATOR, '=')
-        start_expr = self._parse_expression()
+        start_expr = self._parse_expression(parent)
         self._match(TokenKind.OPERATOR, ',')
-        end_expr = self._parse_expression()
+        end_expr = self._parse_expression(parent)
 
         # The step part is optional
         if self._cur_tok_is_operator(','):
             self._get_next_token()
-            step_expr = self._parse_expression()
+            step_expr = self._parse_expression(parent)
         else:
             step_expr = None
-        body = self._parse_scope()
-        return ForExprAST(id_name, start_expr, end_expr, step_expr, body)
+        body = self._parse_scope(parent)
+        return ForExprAST(parent, id_name, start_expr, end_expr, step_expr, body)
 
     # varexpr ::= 'var' identifier ('=' expr)?
     #                   (',' identifier ('=' expr)?)* 'in' expr
-    def _parse_var_expr(self):
+    def _parse_var_expr(self, parent):
         self._get_next_token()  # consume the 'var'
         vars = []
 
@@ -165,7 +166,7 @@ class Parser(object):
             # Parse the optional initializer
             if self._cur_tok_is_operator('='):
                 self._get_next_token()  # consume the '='
-                init = self._parse_expression()
+                init = self._parse_expression(parent)
             else:
                 init = None
             vars.append((name, init))
@@ -177,17 +178,17 @@ class Parser(object):
             if self.cur_tok.kind != TokenKind.IDENTIFIER:
                 raise ParseError('expected identifier in "var" after ","')
 
-        body = self._parse_scope()
-        return VarExprAST(vars, body)
+        body = self._parse_scope(parent)
+        return VarExprAST(parent, vars, body)
 
     # unary
     #   ::= primary
     #   ::= <op> unary
-    def _parse_unary(self):
+    def _parse_unary(self, parent):
         # no unary operator before a primary
         if (not self.cur_tok.kind == TokenKind.OPERATOR or
             self.cur_tok.value in ('(', ',')):
-            return self._parse_primary()
+            return self._parse_primary(parent)
 
         # unary operator
         op = self.cur_tok.value
@@ -195,7 +196,7 @@ class Parser(object):
         return UnaryExprAST(op, self._parse_unary())
 
     # binoprhs ::= (<binop> primary)*
-    def _parse_binop_rhs(self, expr_prec, lhs):
+    def _parse_binop_rhs(self, expr_prec, lhs, parent):
         """Parse the right-hand-side of a binary expression.
 
         expr_prec: minimal precedence to keep going (precedence climbing).
@@ -214,7 +215,7 @@ class Parser(object):
             self._get_next_token()  # consume the operator
             if (op == ';' and self.cur_tok.kind == TokenKind.EOF):
               return lhs;
-            rhs = self._parse_unary()
+            rhs = self._parse_unary(parent)
 
             next_prec = self._cur_tok_precedence()
             # There are three options:
@@ -224,22 +225,25 @@ class Parser(object):
             # 3. next_prec < cur_prec: no need for a recursive call, combine
             #    lhs and the next iteration will immediately bail out.
             if cur_prec < next_prec:
-                rhs = self._parse_binop_rhs(cur_prec + 1, rhs)
+                rhs = self._parse_binop_rhs(cur_prec + 1, rhs, parent)
 
             # Merge lhs/rhs
-            lhs = BinaryExprAST(op, lhs, rhs)
+            lhs = BinaryExprAST(parent, op, lhs, rhs)
 
     # expression ::= primary binoprhs
-    def _parse_expression(self):
-        lhs = self._parse_unary()
+    def _parse_expression(self, parent):
+        if (self.cur_tok.kind == TokenKind.SCOPESTART):
+           return self._parse_scope(parent);
+
+        lhs = self._parse_unary(parent)
         # Start with precedence 0 because we want to bind any operator to the
         # expression at this point.
-        return self._parse_binop_rhs(0, lhs)
+        return self._parse_binop_rhs(0, lhs, parent)
 
     # prototype
     #   ::= id '(' id* ')'
     #   ::= 'binary' LETTER number? '(' id id ')'
-    def _parse_prototype(self):
+    def _parse_prototype(self, parent):
         prec = 30
         if self.cur_tok.kind == TokenKind.IDENTIFIER:
             name = self.cur_tok.value
@@ -280,28 +284,30 @@ class Parser(object):
         elif name.startswith('unary') and len(argnames) != 1:
             raise ParseError('Expected unary operator to have one operand')
 
-        return PrototypeAST(
+        return PrototypeAST(parent,
             name, argnames, name.startswith(('unary', 'binary')), prec)
 
     # external ::= 'extern' prototype
-    def _parse_external(self):
+    def _parse_external(self,parent):
         self._get_next_token()  # consume 'extern'
-        return self._parse_prototype()
+        return self._parse_prototype(parent)
 
     # definition ::= 'def' prototype expression
-    def _parse_definition(self):
+    def _parse_definition(self, parent):
         self._get_next_token()  # consume 'def'
-        proto = self._parse_prototype()
-        expr = self._parse_scope()
-        return FunctionAST(proto, expr)
+        proto = self._parse_prototype(parent)
+        expr = self._parse_scope(parent)
+        return FunctionAST(parent, proto, expr)
 
     # toplevel ::= expression
-    def _parse_toplevel_expression(self):
-        expr = self._parse_expression()
-        return FunctionAST.create_anonymous(expr)
+    def _parse_toplevel_expression(self, parent):
+        expr = self._parse_expression(parent)
+        return FunctionAST.create_anonymous(parent, expr)
 
-    def _parse_scope(self):
-        self._match(TokenKind.SCOPESTART)
-        body = self._parse_expression()
-        self._match(TokenKind.SCOPEEND)
-        return ScopeAST(body);
+    def _parse_scope(self, parent):
+        result = ScopeAST(parent,None);
+        self._match(TokenKind.SCOPESTART);
+        body = self._parse_expression(result);
+        self._match(TokenKind.SCOPEEND);
+        result.body = body;
+        return result;

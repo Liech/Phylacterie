@@ -4,10 +4,11 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class VarExprAST(ExprAST):
-    def __init__(self, vars, body):
+    def __init__(self,parent, vars, body):
         # vars is a sequence of (name, init) pairs
         self.vars = vars
         self.body = body
+        self.parent = parent
 
     def dump(self, indent=0):
         prefix = ' ' * indent

@@ -5,8 +5,9 @@ import llvmlite.binding as llvm
 
 
 class NumberExprAST(ExprAST):
-    def __init__(self, val):
+    def __init__(self, parent, val):
         self.val = val
+        self.parent = parent
 
     def dump(self, indent=0):
         return '{0}{1}[{2}]'.format(

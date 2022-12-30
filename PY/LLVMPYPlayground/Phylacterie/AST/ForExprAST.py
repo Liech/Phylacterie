@@ -4,12 +4,13 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class ForExprAST(ExprAST):
-    def __init__(self, id_name, start_expr, end_expr, step_expr, body):
+    def __init__(self,parent, id_name, start_expr, end_expr, step_expr, body):
         self.id_name = id_name
         self.start_expr = start_expr
         self.end_expr = end_expr
         self.step_expr = step_expr
         self.body = body
+        self.parent = parent
 
     def dump(self, indent=0):
         prefix = ' ' * indent

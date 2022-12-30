@@ -5,11 +5,12 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class PrototypeAST(ASTNode):
-    def __init__(self, name, argnames, isoperator=False, prec=0):
+    def __init__(self, parent, name, argnames, isoperator=False, prec=0):
         self.name = name
         self.argnames = argnames
         self.isoperator = isoperator
         self.prec = prec
+        self.parent = parent
 
     def is_unary_op(self):
         return self.isoperator and len(self.argnames) == 1

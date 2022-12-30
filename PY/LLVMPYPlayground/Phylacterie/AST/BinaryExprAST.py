@@ -6,10 +6,11 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class BinaryExprAST(ExprAST):
-    def __init__(self, op, lhs, rhs):
+    def __init__(self, parent, op, lhs, rhs):
         self.op = op
         self.lhs = lhs
         self.rhs = rhs
+        self.parent = parent
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(

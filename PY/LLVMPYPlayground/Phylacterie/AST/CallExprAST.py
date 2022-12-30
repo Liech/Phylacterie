@@ -5,9 +5,10 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class CallExprAST(ExprAST):
-    def __init__(self, callee, args):
+    def __init__(self, parent, callee, args):
         self.callee = callee
         self.args = args
+        self.parent = parent
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(

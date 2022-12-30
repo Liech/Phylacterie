@@ -4,9 +4,10 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class UnaryExprAST(ExprAST):
-    def __init__(self, op, operand):
+    def __init__(self, parent, op, operand):
         self.op = op
         self.operand = operand
+        self.parent = parent
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(

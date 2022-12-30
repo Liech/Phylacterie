@@ -4,10 +4,11 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class IfExprAST(ExprAST):
-    def __init__(self, cond_expr, then_expr, else_expr):
+    def __init__(self, parent, cond_expr, then_expr, else_expr):
         self.cond_expr = cond_expr
         self.then_expr = then_expr
         self.else_expr = else_expr
+        self.parent = parent
 
     def dump(self, indent=0):
         prefix = ' ' * indent

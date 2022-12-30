@@ -4,8 +4,9 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class ScopeAST(ExprAST):
-    def __init__(self, body):
+    def __init__(self, parent, body):
         self.body = body
+        self.parent = parent
 
     def dump(self, indent=0):
         prefix = ' ' * indent

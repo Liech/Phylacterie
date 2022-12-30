@@ -21,6 +21,14 @@ class Phylacterie(object):
         self.target = llvm.Target.from_default_triple()
         self.evaluate('def binary ; 1 (x y) {y}');
 
+
+        # basic sanity tests
+        self.evaluate('{1+1}');
+        self.evaluate('var x = 1 { x*3 }');
+        self.evaluate('if 1 then { 2 } else { 3 }')
+        self.evaluate('for x = 1,x < 10, 1 { x }');
+
+
     def evaluate(self, codestr, optimize=True, llvmdump=False):
         expressions = self.parser.parse_toplevel(codestr)
         for ast in expressions:

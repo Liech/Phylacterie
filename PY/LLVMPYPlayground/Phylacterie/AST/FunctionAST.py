@@ -5,18 +5,19 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class FunctionAST(ASTNode):
-    def __init__(self, proto, body):
+    def __init__(self, parent, proto, body):
         self.proto = proto
         self.body = body
+        self.parent = parent
 
     _anonymous_function_counter = 0
 
     @classmethod
-    def create_anonymous(klass, expr):
+    def create_anonymous(klass,parent, expr):
         """Create an anonymous function to hold an expression."""
         klass._anonymous_function_counter += 1
-        return klass(
-            PrototypeAST('_anon{0}'.format(klass._anonymous_function_counter),
+        return klass(parent,
+            PrototypeAST(parent, '_anon{0}'.format(klass._anonymous_function_counter),
                          []),
             expr)
 
