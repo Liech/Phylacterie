@@ -41,14 +41,24 @@ class FunctionAST(ASTNode):
         bb_entry = func.append_basic_block('entry')
         generator.setBuilder(ir.IRBuilder(bb_entry));
         
-        
-        # Add all arguments to the symbol table and create their allocas
+        old_bindings = []
+        names = []
+
         for i, arg in enumerate(func.args):
             arg.name = self.proto.argnames[i]
-            alloca = generator.getBuilder().alloca(ir.DoubleType(), name=arg.name)
-            generator.getBuilder().store(arg, alloca)
-            generator.getSymtab()[arg.name] = alloca
 
+            old = generator.defineVariable(arg.name,arg);
+            old_bindings.append(old);        
+            names.append(arg.name);
+
+
+        scope = self.body;
+        if (not scope.isScope()):
+          scope = self.parent;
+
+        scope.addOldBindings(old_bindings);
+        scope.addVarNames(names);
+        
         retval = self.body.codegen(generator)
         generator.getBuilder().ret(retval)
         return func

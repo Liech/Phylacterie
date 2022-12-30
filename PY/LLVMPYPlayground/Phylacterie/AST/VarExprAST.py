@@ -25,6 +25,7 @@ class VarExprAST(ExprAST):
 
     def codegen(self, generator):
         old_bindings = []
+        names = []
 
         for name, init in self.vars:
             # Emit the initializer before adding the variable to scope. This
@@ -36,9 +37,10 @@ class VarExprAST(ExprAST):
 
             old = generator.defineVariable(name,init_val);
             old_bindings.append(old);        
+            names.append(name);
 
         # Cleanup of variables is done by parent scope
         self.parent.addOldBindings(old_bindings);
-        self.parent.addVars(self.vars);
+        self.parent.addVarNames(names);
 
         return self.body.codegen(generator)

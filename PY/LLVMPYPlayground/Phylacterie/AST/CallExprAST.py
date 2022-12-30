@@ -18,10 +18,10 @@ class CallExprAST(ExprAST):
         return s[:-1]  # snip out trailing '\n'
 
     def codegen(self, generator):
-        callee_func = generator.module.get_global(self.callee)
+        callee_func = generator.getModule().get_global(self.callee)
         if callee_func is None or not isinstance(callee_func, ir.Function):
             raise CodegenError('Call to unknown function', self.callee)
         if len(callee_func.args) != len(self.args):
             raise CodegenError('Call argument length mismatch', self.callee)
         call_args = [arg.codegen(generator) for arg in self.args]
-        return generator.builder.call(callee_func, call_args, 'calltmp')
+        return generator.getBuilder().call(callee_func, call_args, 'calltmp')

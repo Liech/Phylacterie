@@ -7,9 +7,12 @@ class ScopeAST(ExprAST):
     def __init__(self, parent, body):
         self.body = body
         self.parent = parent
-        self.localVars = []
+        self.varNames = []
         self.oldBindings = []
         self.isGlobalScope = False;
+
+    def isScope(self):
+      return True;
 
     def setIsGlobalScope(self,isGlobal):
       self.isGlobalScope = isGlobal;
@@ -17,8 +20,8 @@ class ScopeAST(ExprAST):
     def setBody(self, newBody):
       self.body = newBody;
 
-    def addVars(self, newVars):
-      self.localVars.extend(newVars);
+    def addVarNames(self, newVars):
+      self.varNames.extend(newVars);
 
     def addOldBindings(self, oldBindings):
       self.oldBindings = oldBindings;
