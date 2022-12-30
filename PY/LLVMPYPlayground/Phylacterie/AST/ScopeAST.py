@@ -32,7 +32,7 @@ class ScopeAST(ExprAST):
 
     def codegen(self, generator):      
         result = None;
-        #root scope may have multiple expressions (Hacky thing that should be replaced)
+        # root scope may have multiple expressions (Hacky thing that should be replaced)
         if type(self.body) == list:
           for body in self.body:
             result = body.codegen(generator);

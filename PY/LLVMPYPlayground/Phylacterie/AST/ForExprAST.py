@@ -48,19 +48,19 @@ class ForExprAST(ExprAST):
         # Create an alloca for the induction var. Save and restore location of
         # our builder because _create_entry_block_alloca may modify it (llvmlite
         # issue #44).
-        saved_block = generator.builder.block
+        saved_block = generator.getBuilder().block
         var_addr = generator._create_entry_block_alloca(self.id_name)
-        generator.builder.position_at_end(saved_block)
+        generator.getBuilder().position_at_end(saved_block)
 
         # Emit the start expr first, without the variable in scope. Store it
         # into the var.
         start_val = self.start_expr.codegen(generator)
-        generator.builder.store(start_val, var_addr)
-        loop_bb = generator.builder.function.append_basic_block('loop')
+        generator.getBuilder().store(start_val, var_addr)
+        loop_bb = generator.getBuilder().function.append_basic_block('loop')
 
         # Insert an explicit fall through from the current block to loop_bb
-        generator.builder.branch(loop_bb)
-        generator.builder.position_at_start(loop_bb)
+        generator.getBuilder().branch(loop_bb)
+        generator.getBuilder().position_at_start(loop_bb)
 
         # Within the loop, the variable now refers to our alloca slot. If it
         # shadows an existing variable, we'll have to restore, so save it now.
@@ -73,7 +73,7 @@ class ForExprAST(ExprAST):
 
         # Compute the end condition
         endcond = self.end_expr.codegen(generator)
-        cmp = generator.builder.fcmp_ordered(
+        cmp = generator.getBuilder().fcmp_ordered(
             '!=', endcond, ir.Constant(ir.DoubleType(), 0.0),
             'loopcond')
 
@@ -81,18 +81,18 @@ class ForExprAST(ExprAST):
             stepval = ir.Constant(ir.DoubleType(), 1.0)
         else:
             stepval = self.step_expr.codegen(generator)
-        cur_var = generator.builder.load(var_addr, self.id_name)
-        nextval = generator.builder.fadd(cur_var, stepval, 'nextvar')
-        generator.builder.store(nextval, var_addr)
+        cur_var = generator.getBuilder().load(var_addr, self.id_name)
+        nextval = generator.getBuilder().fadd(cur_var, stepval, 'nextvar')
+        generator.getBuilder().store(nextval, var_addr)
 
         # Create the 'after loop' block and insert it
-        after_bb = generator.builder.function.append_basic_block('afterloop')
+        after_bb = generator.getBuilder().function.append_basic_block('afterloop')
 
         # Insert the conditional branch into the end of loop_end_bb
-        generator.builder.cbranch(cmp, loop_bb, after_bb)
+        generator.getBuilder().cbranch(cmp, loop_bb, after_bb)
 
         # New code will be inserted into after_bb
-        generator.builder.position_at_start(after_bb)
+        generator.getBuilder().position_at_start(after_bb)
 
         # Restore the old var address if it was shadowed.
         if old_var_addr is not None:

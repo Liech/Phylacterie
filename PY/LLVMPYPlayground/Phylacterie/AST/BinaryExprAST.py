@@ -34,16 +34,16 @@ class BinaryExprAST(ExprAST):
         rhs = self.rhs.codegen(generator)
 
         if self.op == '+':
-            return generator.builder.fadd(lhs, rhs, 'addtmp')
+            return generator.getBuilder().fadd(lhs, rhs, 'addtmp')
         elif self.op == '-':
-            return generator.builder.fsub(lhs, rhs, 'subtmp')
+            return generator.getBuilder().fsub(lhs, rhs, 'subtmp')
         elif self.op == '*':
-            return generator.builder.fmul(lhs, rhs, 'multmp')
+            return generator.getBuilder().fmul(lhs, rhs, 'multmp')
         elif self.op == '<':
-            cmp = generator.builder.fcmp_unordered('<', lhs, rhs, 'cmptmp')
-            return generator.builder.uitofp(cmp, ir.DoubleType(), 'booltmp')
+            cmp = generator.getBuilder().fcmp_unordered('<', lhs, rhs, 'cmptmp')
+            return generator.getBuilder().uitofp(cmp, ir.DoubleType(), 'booltmp')
         else:
             # Note one of predefined operator, so it must be a user-defined one.
             # Emit a call to it.
             func = generator.module.get_global('binary{0}'.format(self.op))
-            return generator.builder.call(func, [lhs, rhs], 'binop')
+            return generator.getBuilder().call(func, [lhs, rhs], 'binop')

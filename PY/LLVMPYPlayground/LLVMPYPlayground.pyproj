@@ -43,7 +43,7 @@
     <Compile Include="Phylacterie\AST\CodegenError.py" />
     <Compile Include="Phylacterie\Phylacterie.py" />
     <Compile Include="Phylacterie\Lexer.py" />
-    <Compile Include="Phylacterie\LLVMCodeGenerator.py" />
+    <Compile Include="Phylacterie\CodeGenerator.py" />
     <Compile Include="Phylacterie\ParseError.py" />
     <Compile Include="Phylacterie\Parser.py" />
     <Compile Include="Phylacterie\__init__.py" />

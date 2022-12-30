@@ -34,19 +34,8 @@ class VarExprAST(ExprAST):
             else:
                 init_val = ir.Constant(ir.DoubleType(), 0.0)
 
-            # Create an alloca for the induction var and store the init value to
-            # it. Save and restore location of our builder because
-            # _create_entry_block_alloca may modify it (llvmlite issue #44).
-            saved_block = generator.builder.block
-            var_addr = generator._create_entry_block_alloca(name)
-            generator.builder.position_at_end(saved_block)
-            generator.builder.store(init_val, var_addr)
-
-            # We're going to shadow this name in the symbol table now; remember
-            # what to restore.
-            old_bindings.append(generator.func_symtab.get(name))
-            generator.func_symtab[name] = var_addr
-        
+            old = generator.defineVariable(name,init_val);
+            old_bindings.append(old);        
 
         # Cleanup of variables is done by parent scope
         self.parent.addOldBindings(old_bindings);

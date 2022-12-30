@@ -3,7 +3,7 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 from ctypes import CFUNCTYPE, c_double
-from .LLVMCodeGenerator import LLVMCodeGenerator
+from .CodeGenerator import CodeGenerator
 from .Parser import Parser
 from .AST import *
 from .BuiltIn import BuiltIn
@@ -14,7 +14,7 @@ class Phylacterie(object):
         llvm.initialize_native_target()
         llvm.initialize_native_asmprinter()
 
-        self.codegen = LLVMCodeGenerator()
+        self.codegen = CodeGenerator()
         self.parser = Parser()
         self._add_builtins(self.codegen.module)
 
@@ -27,6 +27,7 @@ class Phylacterie(object):
         self.evaluate('var x = 1 { x*3 }');
         self.evaluate('if 1 then { 2 } else { 3 }')
         self.evaluate('for x = 1,x < 10, 1 { x }');
+        print('>>');
 
 
     def evaluate(self, codestr, optimize=True, llvmdump=False):

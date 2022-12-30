@@ -34,19 +34,21 @@ class FunctionAST(ASTNode):
         # Reset the symbol table. Prototype generation will pre-populate it with
         # function arguments.
         generator.func_symtab = {}
+
         # Create the function skeleton from the prototype.
         func = self.proto.codegen(generator)
         # Create the entry BB in the function and set the builder to it.
         bb_entry = func.append_basic_block('entry')
-        generator.builder = ir.IRBuilder(bb_entry)
-
+        generator.setBuilder(ir.IRBuilder(bb_entry));
+        
+        
         # Add all arguments to the symbol table and create their allocas
         for i, arg in enumerate(func.args):
             arg.name = self.proto.argnames[i]
-            alloca = generator.builder.alloca(ir.DoubleType(), name=arg.name)
-            generator.builder.store(arg, alloca)
+            alloca = generator.getBuilder().alloca(ir.DoubleType(), name=arg.name)
+            generator.getBuilder().store(arg, alloca)
             generator.func_symtab[arg.name] = alloca
 
         retval = self.body.codegen(generator)
-        generator.builder.ret(retval)
+        generator.getBuilder().ret(retval)
         return func
