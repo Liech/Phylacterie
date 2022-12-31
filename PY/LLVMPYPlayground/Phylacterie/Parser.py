@@ -13,11 +13,9 @@ class Parser(object):
     def __init__(self):
         self.token_generator = None
         self.cur_tok = None
-        self.root = ScopeAST(None, None);
-        self.root.setIsGlobalScope(True);
 
     # toplevel ::= definition | external | expression | ';'
-    def parse_toplevel(self, buf):
+    def parse_toplevel(self, root, buf):
         """Given a string, returns an AST node representing it."""
         self.token_generator = Lexer(buf).tokens()
         self.cur_tok = None
@@ -25,17 +23,17 @@ class Parser(object):
         result = [];
         while self.cur_tok.kind != TokenKind.EOF:
             if self.cur_tok.kind == TokenKind.EXTERN:
-                result.append(self._parse_external(self.root))
+                result.append(self._parse_external(root))
+                assert(self.cur_tok.value == ';');
             elif self.cur_tok.kind == TokenKind.DEF:
-                result.append(self._parse_definition(self.root))
-            elif self._cur_tok_is_operator(';'):
-                result.append(self._get_next_token(self.root))
+                result.append(self._parse_definition(root))
+            elif self.cur_tok.kind == TokenKind.SCOPESTART:
+                result.append(self._parse_scope(root))
             else:
-                result.append(self._parse_toplevel_expression(self.root))
-            if self.cur_tok.kind != TokenKind.EOF:
-                self._get_next_token()
-        self.root.setBody(result);
-        return self.root;
+                result.append(self._parse_toplevel_expression(root))                
+                self._match(TokenKind.OPERATOR, ';')
+        root.setBody(result);
+        return FunctionAST.create_anonymous(None, root)
 
     def _get_next_token(self):
         self.cur_tok = next(self.token_generator)
@@ -120,6 +118,10 @@ class Parser(object):
             return self._parse_for_expr(parent)
         elif self.cur_tok.kind == TokenKind.VAR:
             return self._parse_var_expr(parent)
+        elif self.cur_tok.kind == TokenKind.SCOPESTART:
+            return self._parse_scope(parent);
+        elif self.cur_tok.kind == TokenKind.DEF:
+            return self._parse_definition(parent);
         else:
             raise ParseError('Unknown token when expecting an expression')
 
@@ -180,8 +182,7 @@ class Parser(object):
             if self.cur_tok.kind != TokenKind.IDENTIFIER:
                 raise ParseError('expected identifier in "var" after ","')
 
-        body = self._parse_scope(parent)
-        return VarExprAST(parent, vars, body)
+        return VarExprAST(parent, vars)
 
     # unary
     #   ::= primary
@@ -195,7 +196,7 @@ class Parser(object):
         # unary operator
         op = self.cur_tok.value
         self._get_next_token()
-        return UnaryExprAST(op, self._parse_unary())
+        return UnaryExprAST(parent, op, self._parse_unary(parent))
 
     # binoprhs ::= (<binop> primary)*
     def _parse_binop_rhs(self, expr_prec, lhs, parent):
@@ -240,7 +241,9 @@ class Parser(object):
         lhs = self._parse_unary(parent)
         # Start with precedence 0 because we want to bind any operator to the
         # expression at this point.
-        return self._parse_binop_rhs(0, lhs, parent)
+        result =  self._parse_binop_rhs(0, lhs, parent)
+
+        return result;
 
     # prototype
     #   ::= id '(' id* ')'
@@ -304,12 +307,18 @@ class Parser(object):
     # toplevel ::= expression
     def _parse_toplevel_expression(self, parent):
         expr = self._parse_expression(parent)
-        return FunctionAST.create_anonymous(parent, expr)
+        # return FunctionAST.create_anonymous(parent, expr)
+        return expr;
 
     def _parse_scope(self, parent):
         result = ScopeAST(parent,None);
         self._match(TokenKind.SCOPESTART);
-        body = self._parse_expression(result);
+        
+        body = []
+        while self.cur_tok.kind != TokenKind.SCOPEEND:
+          body.append(self._parse_expression(result));
+          self._match(TokenKind.OPERATOR, ';')
+
         self._match(TokenKind.SCOPEEND);
         result.setBody(body);
         return result;

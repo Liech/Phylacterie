@@ -17,5 +17,5 @@ class UnaryExprAST(ExprAST):
 
     def codegen(self, generator):
         operand = self.operand.codegen(generator)
-        func = generator.module.get_global('unary{0}'.format(self.op))
-        return generator.builder.call(func, [operand], 'unop')
+        func = generator.getModule().get_global('unary{0}'.format(self.op))
+        return generator.getBuilder().call(func, [operand], 'unop')

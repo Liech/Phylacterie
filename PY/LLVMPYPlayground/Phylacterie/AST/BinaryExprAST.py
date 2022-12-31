@@ -27,7 +27,7 @@ class BinaryExprAST(ExprAST):
                 raise CodegenError('lhs of "=" must be a variable')
             var_addr = generator.getSymtab()[self.lhs.name]
             rhs_val = self.rhs.codegen(generator)
-            generator.builder.store(rhs_val, var_addr)
+            generator.getBuilder().store(rhs_val, var_addr)
             return rhs_val
 
         lhs = self.lhs.codegen(generator)

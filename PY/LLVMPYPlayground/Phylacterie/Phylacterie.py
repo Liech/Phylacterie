@@ -16,35 +16,32 @@ class Phylacterie(object):
 
         self.codegen = CodeGenerator()
         self.parser = Parser()
-        self._add_builtins(self.codegen.getModule())
+        #self._add_builtins(self.codegen.getModule())
 
         self.target = llvm.Target.from_default_triple()
-        self.evaluate('def binary ; 1 (x y) {y}');
-
+        #self.evaluate('def binary ; 1 (x y) {y}');
 
         # basic sanity tests
-        self.evaluate('{1+1}');
-        self.evaluate('var x = 1 { x*3 }');
-        self.evaluate('if 1 then { 2 } else { 3 }')
-        self.evaluate('for x = 1,x < 10, 1 { x }');
-        print('>>');
+        #self.evaluate('{1+1}');
+        #self.evaluate('if 1 then { 2 } else { 3 }')
+        #self.evaluate('for x = 1,x < 10, 1 { x }');
 
 
     def evaluate(self, codestr, optimize=True, llvmdump=False):
-        root = self.parser.parse_toplevel(codestr)
-        self.codegen.generate_code(root)
-
-        ast = root.body[-1]
+        self.root = ScopeAST(None,None);
+        self.root.isGlobalScope = True;
+        ast = self.parser.parse_toplevel(self.root,codestr)
+        self.codegen.generate_code(ast)
+        
 
         if llvmdump:
             print('======== Unoptimized LLVM IR')
             print(str(self.codegen.getModule()))
 
-        if not (isinstance(ast, FunctionAST) and ast.is_anonymous()):
-            return None
+        assemblyString = str(self.codegen.getModule())
 
         # Convert LLVM IR into in-memory representation
-        llvmmod = llvm.parse_assembly(str(self.codegen.getModule()))
+        llvmmod = llvm.parse_assembly(assemblyString)
 
         if optimize:
             pmb = llvm.create_pass_manager_builder()
@@ -64,6 +61,10 @@ class Phylacterie(object):
             if llvmdump:
                 print('======== Machine code')
                 print(target_machine.emit_assembly(llvmmod))
+
+                
+            if not (isinstance(ast, FunctionAST) and ast.is_anonymous()):
+                return None
 
             fptr = CFUNCTYPE(c_double)(ee.get_function_address(ast.proto.name))
             result = fptr()

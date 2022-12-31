@@ -3,8 +3,40 @@ from Phylacterie import Phylacterie
 # Evaluate some code.
 phyl = Phylacterie()
 
+allInput = "";
+saveInput = False;
+
 while True:
-  print(phyl.evaluate(input()))
+  print('>>');
+  inp = input();
+
+  if (inp == 'cls'):
+    allInput = "";
+    continue;
+  if (inp == 'save'):
+    saveInput = not saveInput;
+    continue;
+  if (saveInput == False):
+    allInput = "";
+
+  allInput = allInput + inp
+
+  if (len(inp) > 0):
+    print('eval:');
+    print(allInput);
+    print('>>>>>');
+    try:
+      print(phyl.evaluate(allInput))
+    except Exception as e:
+      print(e);
+      print('');
+      print("Exception occured: Throw?");
+      print('y/n');
+      if (input() == 'y'):
+        raise;
+      allInput = '';
+      print('cls');
+
 
 phyl.evaluate('''
     def foo(x y z)
