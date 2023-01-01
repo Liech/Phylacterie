@@ -33,7 +33,8 @@ class VarExprAST(ExprAST):
                 init_val = ir.Constant(ir.DoubleType(), 0.0)
 
             old = generator.defineVariable(name,init_val);
-            old_bindings.append(old);        
+            if (not old is None):
+              old_bindings.append(old);        
             names.append(name);
             lastInitValue = init_val;
 

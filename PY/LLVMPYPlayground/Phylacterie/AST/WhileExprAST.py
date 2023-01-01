@@ -5,9 +5,7 @@ import llvmlite.binding as llvm
 
 class WhileExprAST(ExprAST):
     def __init__(self,parent, cond_expr, body):
-        self.start_expr = start_expr
         self.cond_expr = cond_expr
-        self.step_expr = step_expr
         self.body = body
         self.parent = parent
 
@@ -39,8 +37,7 @@ class WhileExprAST(ExprAST):
             '!=', cond, ir.Constant(ir.DoubleType(), 0.0),
             'loopcond')
 
-        stepval = self.step_expr.codegen(generator)
-
+        
         # Create the 'after loop' block and insert it
         after_bb = generator.getBuilder().function.append_basic_block('afterloop')
 

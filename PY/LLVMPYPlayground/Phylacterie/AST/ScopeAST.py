@@ -46,7 +46,7 @@ class ScopeAST(ExprAST):
 
         # Restore the old bindings.
         for i, name in enumerate(self.varNames):
-            if self.oldBindings[i] is not None:
+            if len(self.oldBindings) > 0 and self.oldBindings[i] is not None:
                 generator.getSymtab()[name] = self.oldBindings[i]
             else:
                 del generator.getSymtab()[name]
