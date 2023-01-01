@@ -10,7 +10,6 @@ class TokenKind(Enum):
     NUMBER = -5
     OPERATOR = -6
     IF = -7
-    THEN = -8
     ELSE = -9
     FOR = -10
     SCOPESTART = -11

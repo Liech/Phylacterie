@@ -23,14 +23,12 @@ class Parser(object):
         while self.cur_tok.kind != TokenKind.EOF:
             if self.cur_tok.kind == TokenKind.EXTERN:
                 result.append(self._parse_external(root))
-                self._match(TokenKind.OPERATOR, ';')
             elif self.cur_tok.kind == TokenKind.DEF:
                 result.append(self._parse_definition(root))
             elif self.cur_tok.kind == TokenKind.SCOPESTART:
                 result.append(self._parse_scope(root))
             else:
                 result.append(self._parse_toplevel_expression(root))                
-                self._match(TokenKind.OPERATOR, ';')
         root.setBody(result);
         return FunctionAST.create_anonymous(None, root)
 
@@ -126,13 +124,18 @@ class Parser(object):
 
     # ifexpr ::= 'if' expression 'then' expression 'else' expression
     def _parse_if_expr(self, parent):
-        self._get_next_token()  # consume the 'if'
+        self._get_next_token()  # consume the 'if'        
+        self._match(TokenKind.OPERATOR, '(')
         cond_expr = self._parse_expression(parent)
-        self._match(TokenKind.THEN)
-        then_expr = self._parse_scope(parent)
-        self._match(TokenKind.ELSE)
-        else_expr = self._parse_scope(parent)
-        return IfExprAST(parent, cond_expr, then_expr, else_expr)
+        self._match(TokenKind.OPERATOR, ')')
+        then_expr = self._parse_expression(parent)
+        if self.cur_tok.kind == TokenKind.ELSE:
+          self._match(TokenKind.ELSE)
+          else_expr = self._parse_expression(parent)
+          return IfExprAST(parent, cond_expr, then_expr, else_expr)
+        else:
+          return IfExprAST(parent, cond_expr, then_expr, None)
+
 
     # forexpr ::= 'for' identifier '=' expr ',' expr (',' expr)? 'in' expr
     def _parse_for_expr(self, parent):
@@ -141,7 +144,6 @@ class Parser(object):
         self._match(TokenKind.IDENTIFIER)
         self._match(TokenKind.OPERATOR, '=')
         start_expr = self._parse_expression(parent)
-        self._match(TokenKind.OPERATOR, ',')
         end_expr = self._parse_expression(parent)
 
         # The step part is optional
@@ -306,7 +308,6 @@ class Parser(object):
     # toplevel ::= expression
     def _parse_toplevel_expression(self, parent):
         expr = self._parse_expression(parent)
-        # return FunctionAST.create_anonymous(parent, expr)
         return expr;
 
     def _parse_scope(self, parent):
@@ -316,7 +317,6 @@ class Parser(object):
         body = []
         while self.cur_tok.kind != TokenKind.SCOPEEND:
           body.append(self._parse_expression(result));
-          self._match(TokenKind.OPERATOR, ';')
 
         self._match(TokenKind.SCOPEEND);
         result.setBody(body);

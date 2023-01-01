@@ -1,4 +1,5 @@
 from .ExprAST import ExprAST
+from .NumberExprAST import NumberExprAST
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -17,11 +18,12 @@ class IfExprAST(ExprAST):
             prefix, self.cond_expr.dump(indent + 2))
         s += '{0} Then:\n{1}\n'.format(
             prefix, self.then_expr.dump(indent + 2))
-        s += '{0} Else:\n{1}'.format(
-            prefix, self.else_expr.dump(indent + 2))
         return s
 
     def codegen(self, generator):
+        if (self.else_expr is None):
+          self.else_expr = NumberExprAST(self.parent,0);
+
         # Emit comparison value
         cond_val = self.cond_expr.codegen(generator)
         cmp = generator.getBuilder().fcmp_ordered(
