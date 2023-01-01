@@ -1,6 +1,5 @@
 
 from .Lexer import Lexer
-from .Token import *
 from .AST import *
 from .ParseError import ParseError
 
@@ -24,7 +23,7 @@ class Parser(object):
         while self.cur_tok.kind != TokenKind.EOF:
             if self.cur_tok.kind == TokenKind.EXTERN:
                 result.append(self._parse_external(root))
-                assert(self.cur_tok.value == ';');
+                self._match(TokenKind.OPERATOR, ';')
             elif self.cur_tok.kind == TokenKind.DEF:
                 result.append(self._parse_definition(root))
             elif self.cur_tok.kind == TokenKind.SCOPESTART:

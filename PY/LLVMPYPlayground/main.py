@@ -1,7 +1,6 @@
 from Phylacterie import Phylacterie
 
 # Evaluate some code.
-phyl = Phylacterie()
 
 allInput = "";
 saveInput = False;
@@ -9,6 +8,7 @@ saveInput = False;
 while True:
   print('>>');
   inp = input();
+  phyl = Phylacterie()
 
   if (inp == 'cls'):
     allInput = "";

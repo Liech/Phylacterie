@@ -1,5 +1,5 @@
-
-from .Token import Token, TokenKind
+from .AST import TokenKind
+from .AST import Token
 
 class Lexer(object):
     """Lexer for Kaleidoscope.

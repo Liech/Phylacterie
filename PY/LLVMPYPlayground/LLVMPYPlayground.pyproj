@@ -49,7 +49,7 @@
     <Compile Include="Phylacterie\__init__.py" />
     <Compile Include="Phylacterie\Test\TestEvaluator.py" />
     <Compile Include="Phylacterie\Test\TestParser.py" />
-    <Compile Include="Phylacterie\Token.py" />
+    <Compile Include="Phylacterie\AST\Token.py" />
     <Compile Include="pykaleidoscope-master\chapter1and2.py" />
     <Compile Include="pykaleidoscope-master\chapter3and4.py" />
     <Compile Include="pykaleidoscope-master\chapter5.py" />

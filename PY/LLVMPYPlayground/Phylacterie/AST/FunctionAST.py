@@ -33,32 +33,24 @@ class FunctionAST(ASTNode):
     def codegen(self, generator):
         # Reset the symbol table. Prototype generation will pre-populate it with
         # function arguments.
-        #generator.setSymtab({});
+        generator.storeSymtab();
+        generator.storeBuilder();
 
         # Create the function skeleton from the prototype.
         func = self.proto.codegen(generator)
         # Create the entry BB in the function and set the builder to it.
         bb_entry = func.append_basic_block('entry')
         generator.setBuilder(ir.IRBuilder(bb_entry));
-        
-        old_bindings = []
-        names = []
-
+                
+        # Add all arguments to the symbol table and create their allocas
         for i, arg in enumerate(func.args):
             arg.name = self.proto.argnames[i]
+            alloca = generator.getBuilder().alloca(ir.DoubleType(), name=arg.name)
+            generator.getBuilder().store(arg, alloca)
+            generator.getSymtab()[arg.name] = alloca
 
-            old = generator.defineVariable(arg.name,arg);
-            old_bindings.append(old);        
-            names.append(arg.name);
-
-
-        scope = self.body;
-        if (not scope.isScope()):
-          scope = self.parent;
-
-        scope.addOldBindings(old_bindings);
-        scope.addVarNames(names);
-        
         retval = self.body.codegen(generator)
         generator.getBuilder().ret(retval)
+        generator.popSymtab();
+        generator.popBuilder();
         return func

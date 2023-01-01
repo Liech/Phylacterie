@@ -7,8 +7,10 @@ from .AST import *
 class CodeGenerator(object):
     def __init__(self):
         self._module = ir.Module()
-        self._builder = None
+        self._builder = None;
         self._func_symtab = {}
+        self._symStack = [];
+        self._builderStack = [];
 
     def setBuilder(self, builder):
       self._builder = builder;
@@ -28,6 +30,23 @@ class CodeGenerator(object):
     def setSymtab(self, newSymtab):
       self._func_symtab = newSymtab;
 
+    def storeSymtab(self):
+      self._symStack.append(self._func_symtab);
+      self._symStack = [];
+
+    def popSymtab(self):
+      if (len(self._symStack) > 0):
+        self._func_symtab = self._symStack[-1];
+        self._symStack = self._symStack[:-1] 
+
+    def storeBuilder(self):
+      self._builderStack.append(self.getBuilder())
+      self._builder = None;
+
+    def popBuilder(self):
+      self._builder = self._builderStack[-1];
+      self._builderStack = self._builderStack[:-1] 
+
     def defineVariable(self, name, value):
         saved_block = self._builder.block
         var_addr = self._create_entry_block_alloca(name)
@@ -40,6 +59,6 @@ class CodeGenerator(object):
         return result;
 
     def _create_entry_block_alloca(self, name):
-        #_builder = ir.IRBuilder()
-        #_builder.position_at_start(self._builder.function.entry_basic_block)
+        _builder = ir.IRBuilder()
+        _builder.position_at_start(self._builder.function.entry_basic_block)
         return self._builder.alloca(ir.DoubleType(), size=None, name=name)

@@ -11,5 +11,7 @@ from .UnaryExprAST import UnaryExprAST
 from .VarExprAST import VarExprAST
 from .VariableExprAST import VariableExprAST
 from .ScopeAST import ScopeAST
+from .Token import TokenKind
+from .Token import Token
 
 from .CodegenError import CodegenError

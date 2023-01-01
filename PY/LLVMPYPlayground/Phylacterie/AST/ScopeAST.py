@@ -1,5 +1,7 @@
 from .ExprAST import ExprAST
 
+from .Token import TokenKind
+
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
@@ -34,7 +36,7 @@ class ScopeAST(ExprAST):
         return s
 
     def codegen(self, generator):      
-        result = None;
+        result = None;        
         # root scope may have multiple expressions (Hacky thing that should be replaced)
         if type(self.body) == list:
           for body in self.body:
@@ -42,12 +44,11 @@ class ScopeAST(ExprAST):
         else:
           result = self.body.codegen(generator)
 
-        if (not self.isGlobalScope):
-          # Restore the old bindings.
-          for i, name in enumerate(self.varNames):
-              if self.oldBindings[i] is not None:
-                  generator.getSymtab()[name] = self.oldBindings[i]
-              else:
-                  del generator.getSymtab()[name]
+        # Restore the old bindings.
+        for i, name in enumerate(self.varNames):
+            if self.oldBindings[i] is not None:
+                generator.getSymtab()[name] = self.oldBindings[i]
+            else:
+                del generator.getSymtab()[name]
                 
         return result
