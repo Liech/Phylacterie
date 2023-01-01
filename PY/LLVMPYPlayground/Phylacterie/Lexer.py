@@ -19,7 +19,7 @@ class Lexer(object):
             'extern':   TokenKind.EXTERN,
             'if':       TokenKind.IF,
             'else':     TokenKind.ELSE,
-            'for':      TokenKind.FOR,
+            'while':    TokenKind.WHILE,
             '{'    :    TokenKind.SCOPESTART,
             '}'    :    TokenKind.SCOPEEND,
             'binary':   TokenKind.BINARY,

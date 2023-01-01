@@ -20,6 +20,7 @@ class Phylacterie(object):
 
         self.target = llvm.Target.from_default_triple()
         #self.evaluate('def binary ; 1 (x y) {y}');
+        #self.evaluate('def binary> 10 (lhs rhs) { rhs < lhs }')
 
         # basic sanity tests
         #self.evaluate('{1+1}');
@@ -33,7 +34,6 @@ class Phylacterie(object):
         ast = self.parser.parse_toplevel(self.root,codestr)
         self.codegen.generate_code(ast)
         
-
         if llvmdump:
             print('======== Unoptimized LLVM IR')
             print(str(self.codegen.getModule()))
@@ -63,8 +63,6 @@ class Phylacterie(object):
                 print(target_machine.emit_assembly(llvmmod))
 
                 
-            if not (isinstance(ast, FunctionAST) and ast.is_anonymous()):
-                return None
 
             fptr = CFUNCTYPE(c_double)(ee.get_function_address(ast.proto.name))
             result = fptr()

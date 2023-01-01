@@ -111,8 +111,8 @@ class Parser(object):
             return self._parse_paren_expr(parent)
         elif self.cur_tok.kind == TokenKind.IF:
             return self._parse_if_expr(parent)
-        elif self.cur_tok.kind == TokenKind.FOR:
-            return self._parse_for_expr(parent)
+        elif self.cur_tok.kind == TokenKind.WHILE:
+            return self._parse_while_expr(parent)
         elif self.cur_tok.kind == TokenKind.VAR:
             return self._parse_var_expr(parent)
         elif self.cur_tok.kind == TokenKind.SCOPESTART:
@@ -138,22 +138,18 @@ class Parser(object):
 
 
     # forexpr ::= 'for' identifier '=' expr ',' expr (',' expr)? 'in' expr
-    def _parse_for_expr(self, parent):
+    def _parse_while_expr(self, parent):
         self._get_next_token()  # consume the 'for'
-        id_name = self.cur_tok.value
-        self._match(TokenKind.IDENTIFIER)
-        self._match(TokenKind.OPERATOR, '=')
-        start_expr = self._parse_expression(parent)
-        end_expr = self._parse_expression(parent)
 
-        # The step part is optional
-        if self._cur_tok_is_operator(','):
-            self._get_next_token()
-            step_expr = self._parse_expression(parent)
-        else:
-            step_expr = None
-        body = self._parse_scope(parent)
-        return ForExprAST(parent, id_name, start_expr, end_expr, step_expr, body)
+        self._match(TokenKind.OPERATOR, '(')
+
+        cond_expr = self._parse_expression(parent)
+
+        self._match(TokenKind.OPERATOR, ')')
+
+        body = self._parse_expression(parent)
+        
+        return WhileExprAST(parent, cond_expr, body)
 
     # varexpr ::= 'var' identifier ('=' expr)?
     #                   (',' identifier ('=' expr)?)* 'in' expr

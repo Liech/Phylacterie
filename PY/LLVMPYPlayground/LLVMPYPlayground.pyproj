@@ -28,7 +28,7 @@
     <Compile Include="Phylacterie\AST\BinaryExprAST.py" />
     <Compile Include="Phylacterie\AST\CallExprAST.py" />
     <Compile Include="Phylacterie\AST\ExprAST.py" />
-    <Compile Include="Phylacterie\AST\ForExprAST.py" />
+    <Compile Include="Phylacterie\AST\WhileExprAST.py" />
     <Compile Include="Phylacterie\AST\FunctionAST.py" />
     <Compile Include="Phylacterie\AST\IfExprAST.py" />
     <Compile Include="Phylacterie\AST\NumberExprAST.py" />

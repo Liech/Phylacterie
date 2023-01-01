@@ -2,7 +2,7 @@ from .ASTNode import ASTNode
 from .BinaryExprAST import BinaryExprAST
 from .CallExprAST import CallExprAST
 from .ExprAST import ExprAST
-from .ForExprAST import ForExprAST
+from .WhileExprAST import WhileExprAST
 from .FunctionAST import FunctionAST
 from .IfExprAST import IfExprAST
 from .NumberExprAST import NumberExprAST

@@ -11,7 +11,7 @@ class TokenKind(Enum):
     OPERATOR = -6
     IF = -7
     ELSE = -9
-    FOR = -10
+    WHILE = -10
     SCOPESTART = -11
     BINARY = -12
     UNARY = -13
