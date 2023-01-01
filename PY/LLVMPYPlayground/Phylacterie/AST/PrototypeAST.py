@@ -40,10 +40,10 @@ class PrototypeAST(ASTNode):
         if funcname in generator.getModule().globals:
             # We only allow the case in which a declaration exists and now the
             # function is defined (or redeclared) with the same number of args.
-            existing_func = generator.getModule()[funcname]
+            existing_func = generator.getModule().globals[funcname]
             if not isinstance(existing_func, ir.Function):
                 raise CodegenError('Function/Global name collision', funcname)
-            if not existing_func.is_declaration():
+            if not existing_func.is_declaration:
                 raise CodegenError('Redifinition of {0}'.format(funcname))
             if len(existing_func.function_type.args) != len(func_ty.args):
                 raise CodegenError(
