@@ -105,7 +105,7 @@ class ExprAST(ASTNode):
     pass
 
 
-class NumberExprAST(ExprAST):
+class DoubleExprAST(ExprAST):
     def __init__(self, val):
         self.val = val
 
@@ -337,7 +337,7 @@ class Parser(object):
 
     # numberexpr ::= number
     def _parse_number_expr(self):
-        result = NumberExprAST(self.cur_tok.value)
+        result = DoubleExprAST(self.cur_tok.value)
         self._get_next_token()  # consume the number
         return result
 
@@ -554,7 +554,7 @@ class LLVMCodeGenerator(object):
         method = '_codegen_' + node.__class__.__name__
         return getattr(self, method)(node)
 
-    def _codegen_NumberExprAST(self, node):
+    def _codegen_DoubleExprAST(self, node):
         return ir.Constant(ir.DoubleType(), float(node.val))
 
     def _codegen_VariableExprAST(self, node):
@@ -849,7 +849,7 @@ import unittest
 class TestParser(unittest.TestCase):
     def _flatten(self, ast):
         """Test helper - flattens the AST into a sexpr-like nested list."""
-        if isinstance(ast, NumberExprAST):
+        if isinstance(ast, DoubleExprAST):
             return ['Number', ast.val]
         elif isinstance(ast, VariableExprAST):
             return ['Variable', ast.name]

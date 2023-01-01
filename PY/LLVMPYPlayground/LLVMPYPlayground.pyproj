@@ -27,11 +27,12 @@
     <Compile Include="Phylacterie\AST\ASTNode.py" />
     <Compile Include="Phylacterie\AST\BinaryExprAST.py" />
     <Compile Include="Phylacterie\AST\CallExprAST.py" />
+    <Compile Include="Phylacterie\AST\BoolExprAST.py" />
     <Compile Include="Phylacterie\AST\ExprAST.py" />
     <Compile Include="Phylacterie\AST\WhileExprAST.py" />
     <Compile Include="Phylacterie\AST\FunctionAST.py" />
     <Compile Include="Phylacterie\AST\IfExprAST.py" />
-    <Compile Include="Phylacterie\AST\NumberExprAST.py" />
+    <Compile Include="Phylacterie\AST\DoubleExprAST.py" />
     <Compile Include="Phylacterie\AST\PrototypeAST.py" />
     <Compile Include="Phylacterie\AST\ScopeAST.py" />
     <Compile Include="Phylacterie\AST\UnaryExprAST.py" />

@@ -2,7 +2,7 @@
 class TestParser(unittest.TestCase):
     def _flatten(self, ast):
         """Test helper - flattens the AST into a sexpr-like nested list."""
-        if isinstance(ast, NumberExprAST):
+        if isinstance(ast, DoubleExprAST):
             return ['Number', ast.val]
         elif isinstance(ast, VariableExprAST):
             return ['Variable', ast.name]

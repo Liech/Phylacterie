@@ -4,7 +4,7 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 
-class NumberExprAST(ExprAST):
+class DoubleExprAST(ExprAST):
     def __init__(self, parent, val):
         self.val = val
         self.parent = parent

@@ -84,7 +84,7 @@ class ExprAST(ASTNode):
     pass
 
 
-class NumberExprAST(ExprAST):
+class DoubleExprAST(ExprAST):
     def __init__(self, val):
         self.val = val
 
@@ -234,7 +234,7 @@ class Parser(object):
 
     # numberexpr ::= number
     def _parse_number_expr(self):
-        result = NumberExprAST(self.cur_tok.value)
+        result = DoubleExprAST(self.cur_tok.value)
         self._get_next_token()  # consume the number
         return result
 
@@ -378,7 +378,7 @@ class TestLexer(unittest.TestCase):
 class TestParser(unittest.TestCase):
     def _flatten(self, ast):
         """Test helper - flattens the AST into a sexpr-like nested list."""
-        if isinstance(ast, NumberExprAST):
+        if isinstance(ast, DoubleExprAST):
             return ['Number', ast.val]
         elif isinstance(ast, VariableExprAST):
             return ['Variable', ast.name]
@@ -404,7 +404,7 @@ class TestParser(unittest.TestCase):
     def test_basic(self):
         ast = Parser().parse_toplevel('2')
         self.assertIsInstance(ast, FunctionAST)
-        self.assertIsInstance(ast.body, NumberExprAST)
+        self.assertIsInstance(ast.body, DoubleExprAST)
         self.assertEqual(ast.body.val, '2')
 
     def test_basic_with_flattening(self):

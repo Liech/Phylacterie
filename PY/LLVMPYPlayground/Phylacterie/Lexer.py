@@ -26,6 +26,8 @@ class Lexer(object):
             'unary':    TokenKind.UNARY,
             'var':      TokenKind.VAR,            
             'include':  TokenKind.INCLUDE,
+            'true':     TokenKind.TRUE,
+            'false':    TokenKind.FALSE
         }
 
     def tokens(self):

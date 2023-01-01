@@ -1,4 +1,5 @@
 
+from ast import parse
 from .Lexer import Lexer
 from .AST import *
 from .ParseError import ParseError
@@ -27,8 +28,10 @@ class Parser(object):
                 result.append(self._parse_definition(root))
             elif self.cur_tok.kind == TokenKind.SCOPESTART:
                 result.append(self._parse_scope(root))
+            elif self.cur_tok.kind == TokenKind.FALSE or self.cur_tok.kind== TokenKind.TRUE:
+                result.append(self._parse_boolean(root))
             else:
-                result.append(self._parse_toplevel_expression(root))                
+                result.append(self._parse_expression(root))                
         root.setBody(result);
         return FunctionAST.create_anonymous(None, root)
 
@@ -85,7 +88,7 @@ class Parser(object):
 
     # numberexpr ::= number
     def _parse_number_expr(self,parent):
-        result = NumberExprAST(parent, self.cur_tok.value)
+        result = DoubleExprAST(parent, self.cur_tok.value)
         self._get_next_token()  # consume the number
         return result
 
@@ -159,10 +162,15 @@ class Parser(object):
 
         # At least one variable name is required
         if self.cur_tok.kind != TokenKind.IDENTIFIER:
-            raise ParseError('expected identifier after "var"')
+            raise ParseError('expected identifier after "var"')         
         while True:
+            #datatype = self.cur_tok.value
+            #self._get_next_token()  # consume the identifier
             name = self.cur_tok.value
             self._get_next_token()  # consume the identifier
+
+            #if datatype != 'double':
+            #  raise ParseError('unkown datatype. Try double')   
 
             # Parse the optional initializer
             if self._cur_tok_is_operator('='):
@@ -300,12 +308,7 @@ class Parser(object):
         proto = self._parse_prototype(parent)
         expr = self._parse_scope(parent)
         return FunctionAST(parent, proto, expr)
-
-    # toplevel ::= expression
-    def _parse_toplevel_expression(self, parent):
-        expr = self._parse_expression(parent)
-        return expr;
-
+      
     def _parse_scope(self, parent):
         result = ScopeAST(parent,None);
         self._match(TokenKind.SCOPESTART);
@@ -317,3 +320,13 @@ class Parser(object):
         self._match(TokenKind.SCOPEEND);
         result.setBody(body);
         return result;
+
+    def _parse_boolean(self, parent):
+      if (self.cur_tok.kind == TokenKind.FALSE):
+        self._get_next_token()
+        return BoolExprAST(parent,0);
+      elif (self.cur_tok.kind == TokenKind.TRUE):
+        self._get_next_token()
+        return BoolExprAST(parent,1);
+      else:
+        raise ParseError("Expected boolean true/false");

@@ -1,5 +1,5 @@
 from .ExprAST import ExprAST
-from .NumberExprAST import NumberExprAST
+from .DoubleExprAST import DoubleExprAST
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -22,7 +22,7 @@ class IfExprAST(ExprAST):
 
     def codegen(self, generator):
         if (self.else_expr is None):
-          self.else_expr = NumberExprAST(self.parent,0);
+          self.else_expr = DoubleExprAST(self.parent,0);
 
         # Emit comparison value
         cond_val = self.cond_expr.codegen(generator)

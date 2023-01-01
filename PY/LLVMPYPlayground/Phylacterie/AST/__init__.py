@@ -5,12 +5,14 @@ from .ExprAST import ExprAST
 from .WhileExprAST import WhileExprAST
 from .FunctionAST import FunctionAST
 from .IfExprAST import IfExprAST
-from .NumberExprAST import NumberExprAST
+from .DoubleExprAST import DoubleExprAST
 from .PrototypeAST import PrototypeAST
 from .UnaryExprAST import UnaryExprAST
 from .VarExprAST import VarExprAST
 from .VariableExprAST import VariableExprAST
 from .ScopeAST import ScopeAST
+from .BoolExprAST import BoolExprAST
+
 from .Token import TokenKind
 from .Token import Token
 
