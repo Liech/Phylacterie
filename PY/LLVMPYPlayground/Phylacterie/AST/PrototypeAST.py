@@ -5,13 +5,14 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class PrototypeAST(ASTNode):
-    def __init__(self, parent, name, argnames, isoperator=False, prec=0, returnType = ir.DoubleType()):
+    def __init__(self, parent, name, arguments, isoperator=False, prec=0, returnType = ir.DoubleType()):
         self.name = name
-        self.argnames = argnames
+        self.argnames = [i['name'] for i in arguments]
         self.isoperator = isoperator
         self.prec = prec
         self.parent = parent
         self.returnType = returnType
+        self.parameterTypes =  [i['type'] for i in arguments]
 
     def is_unary_op(self):
         return self.isoperator and len(self.argnames) == 1
@@ -34,8 +35,7 @@ class PrototypeAST(ASTNode):
     def codegen(self,generator):
         funcname = self.name
         # Create a function type
-        func_ty = ir.FunctionType(self.returnType,
-                                  [ir.DoubleType()] * len(self.argnames))
+        func_ty = ir.FunctionType(self.returnType,  self.parameterTypes)
 
         # If a function with this name already exists in the module...
         if funcname in generator.getModule().globals:

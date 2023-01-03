@@ -48,6 +48,7 @@
     <Compile Include="Phylacterie\CodeGenerator.py" />
     <Compile Include="Phylacterie\ParseError.py" />
     <Compile Include="Phylacterie\Parser.py" />
+    <Compile Include="Phylacterie\string2irType.py" />
     <Compile Include="Phylacterie\__init__.py" />
     <Compile Include="Phylacterie\Test\TestEvaluator.py" />
     <Compile Include="Phylacterie\Test\TestParser.py" />

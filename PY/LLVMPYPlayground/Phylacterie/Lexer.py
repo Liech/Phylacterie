@@ -27,7 +27,7 @@ class Lexer(object):
             'var':      TokenKind.VAR,            
             'include':  TokenKind.INCLUDE,
             'true':     TokenKind.TRUE,
-            'false':    TokenKind.FALSE
+            'false':    TokenKind.FALSE,
         }
 
     def tokens(self):

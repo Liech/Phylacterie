@@ -32,9 +32,7 @@ class FunctionAST(ASTNode):
         # function arguments.
         generator.storeSymtab();
         generator.storeBuilder();
-
-        retval = self.body.codegen(generator)
-        self.proto.returnType = retval.type
+        
         # Create the function skeleton from the prototype.
         func = self.proto.codegen(generator)
         # Create the entry BB in the function and set the builder to it.
@@ -48,6 +46,7 @@ class FunctionAST(ASTNode):
             generator.getBuilder().store(arg, alloca)
             generator.getSymtab()[arg.name] = alloca
 
+        retval = self.body.codegen(generator)
         generator.getBuilder().ret(retval)
         generator.popSymtab();
         generator.popBuilder();

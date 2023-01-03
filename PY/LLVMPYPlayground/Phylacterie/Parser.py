@@ -1,8 +1,12 @@
 
+import llvmlite.ir as ir
+import llvmlite.binding as llvm
+
 from ast import parse
 from .Lexer import Lexer
 from .AST import *
 from .ParseError import ParseError
+from .string2irType import string2irType
 
 class Parser(object):
     """Parser for the Kaleidoscope language.
@@ -254,6 +258,11 @@ class Parser(object):
     #   ::= id '(' id* ')'
     #   ::= 'binary' LETTER number? '(' id id ')'
     def _parse_prototype(self, parent):
+        if not self.cur_tok.kind == TokenKind.IDENTIFIER:
+          raise ParseError('Expected datatype identifier')
+        datatype = string2irType(self.cur_tok.value)
+        self._get_next_token()
+
         prec = 30
         if self.cur_tok.kind == TokenKind.IDENTIFIER:
             name = self.cur_tok.value
@@ -285,8 +294,15 @@ class Parser(object):
         self._match(TokenKind.OPERATOR, '(')
         argnames = []
         while self.cur_tok.kind == TokenKind.IDENTIFIER:
-            argnames.append(self.cur_tok.value)
+            if not self.cur_tok.kind == TokenKind.IDENTIFIER:
+              raise ParseError('Expected datatype identifier')
+            dataType = self.cur_tok.value
             self._get_next_token()
+            if not self.cur_tok.kind == TokenKind.IDENTIFIER:
+              raise ParseError('Expected variablename identifier')
+            argName = self.cur_tok.value
+            self._get_next_token()
+            argnames.append({'name':argName, 'type':string2irType(dataType)})
         self._match(TokenKind.OPERATOR, ')')
 
         if name.startswith('binary') and len(argnames) != 2:
@@ -294,8 +310,7 @@ class Parser(object):
         elif name.startswith('unary') and len(argnames) != 1:
             raise ParseError('Expected unary operator to have one operand')
 
-        return PrototypeAST(parent,
-            name, argnames, name.startswith(('unary', 'binary')), prec)
+        return PrototypeAST(parent, name, argnames, name.startswith(('unary', 'binary')), prec, datatype)
 
     # external ::= 'extern' prototype
     def _parse_external(self,parent):
