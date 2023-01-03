@@ -2,11 +2,12 @@
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
-from ctypes import CFUNCTYPE, c_double
+from ctypes import CFUNCTYPE, c_bool, c_double
 from .CodeGenerator import CodeGenerator
 from .Parser import Parser
 from .AST import *
 from .BuiltIn import BuiltIn
+from .irType2cType import irType2cType
 
 class Phylacterie(object):
     def __init__(self):
@@ -63,8 +64,8 @@ class Phylacterie(object):
                 print(target_machine.emit_assembly(llvmmod))
 
                 
-
-            fptr = CFUNCTYPE(c_double)(ee.get_function_address(ast.proto.name))
+            cType = irType2cType(ast.proto.returnType)
+            fptr = CFUNCTYPE(cType)(ee.get_function_address(ast.proto.name))
             result = fptr()
             return result
 

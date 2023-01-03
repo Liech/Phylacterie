@@ -16,10 +16,7 @@ class FunctionAST(ASTNode):
     def create_anonymous(klass,parent, expr):
         """Create an anonymous function to hold an expression."""
         klass._anonymous_function_counter += 1
-        return klass(parent,
-            PrototypeAST(parent, '_anon{0}'.format(klass._anonymous_function_counter),
-                         []),
-            expr)
+        return klass(parent,PrototypeAST(parent, '_anon{0}'.format(klass._anonymous_function_counter),[]),expr)
 
     def is_anonymous(self):
         return self.proto.name.startswith('_anon')
@@ -36,6 +33,8 @@ class FunctionAST(ASTNode):
         generator.storeSymtab();
         generator.storeBuilder();
 
+        retval = self.body.codegen(generator)
+        self.proto.returnType = retval.type
         # Create the function skeleton from the prototype.
         func = self.proto.codegen(generator)
         # Create the entry BB in the function and set the builder to it.
@@ -49,7 +48,6 @@ class FunctionAST(ASTNode):
             generator.getBuilder().store(arg, alloca)
             generator.getSymtab()[arg.name] = alloca
 
-        retval = self.body.codegen(generator)
         generator.getBuilder().ret(retval)
         generator.popSymtab();
         generator.popBuilder();
