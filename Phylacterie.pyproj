@@ -3,14 +3,15 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>edac7511-dd8e-49bd-9bf5-2f32834db31f</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
+    <ProjectHome>
+    </ProjectHome>
     <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>LLVMPYPlayground</Name>
-    <RootNamespace>LLVMPYPlayground</RootNamespace>
+    <Name>Phylacterie</Name>
+    <RootNamespace>Phylacterie</RootNamespace>
     <InterpreterId>MSBuild|env1|$(MSBuildProjectFullPath)</InterpreterId>
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
@@ -51,14 +52,7 @@
     <Compile Include="Phylacterie\Parser.py" />
     <Compile Include="Phylacterie\string2irType.py" />
     <Compile Include="Phylacterie\__init__.py" />
-    <Compile Include="Phylacterie\Test\TestEvaluator.py" />
-    <Compile Include="Phylacterie\Test\TestParser.py" />
     <Compile Include="Phylacterie\AST\Token.py" />
-    <Compile Include="pykaleidoscope-master\chapter1and2.py" />
-    <Compile Include="pykaleidoscope-master\chapter3and4.py" />
-    <Compile Include="pykaleidoscope-master\chapter5.py" />
-    <Compile Include="pykaleidoscope-master\chapter6.py" />
-    <Compile Include="pykaleidoscope-master\chapter7and8.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env1\">
@@ -83,16 +77,10 @@
   <ItemGroup>
     <Folder Include="Phylacterie\AST\" />
     <Folder Include="Phylacterie\BuiltIn\" />
-    <Folder Include="Phylacterie\Test\" />
-    <Folder Include="pykaleidoscope-master\" />
     <Folder Include="Phylacterie\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="pykaleidoscope-master\.gitignore" />
-    <Content Include="pykaleidoscope-master\.vimrc" />
-    <Content Include="pykaleidoscope-master\LICENSE" />
     <Content Include="main.phy" />
-    <Content Include="pykaleidoscope-master\README.rst" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
