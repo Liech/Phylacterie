@@ -126,6 +126,10 @@ class Parser(object):
             return self._parse_scope(parent);
         elif self.cur_tok.kind == TokenKind.DEF:
             return self._parse_definition(parent);
+        elif self.cur_tok.kind == TokenKind.TRUE:
+            return self._parse_boolean(parent);
+        elif self.cur_tok.kind == TokenKind.FALSE:
+            return self._parse_boolean(parent);
         else:
             raise ParseError('Unknown token when expecting an expression')
 
@@ -166,32 +170,23 @@ class Parser(object):
 
         # At least one variable name is required
         if self.cur_tok.kind != TokenKind.IDENTIFIER:
-            raise ParseError('expected identifier after "var"')         
-        while True:
-            #datatype = self.cur_tok.value
-            #self._get_next_token()  # consume the identifier
-            name = self.cur_tok.value
-            self._get_next_token()  # consume the identifier
+            raise ParseError('expected datatype identifier after "var"')         
+        datatype = self.cur_tok.value
+        self._get_next_token()  # consume the identifier
+        if self.cur_tok.kind != TokenKind.IDENTIFIER:
+          raise ParseError('expected name identifier after "var"')         
 
-            #if datatype != 'double':
-            #  raise ParseError('unkown datatype. Try double')   
+        name = self.cur_tok.value
+        self._get_next_token()  # consume the identifier
 
-            # Parse the optional initializer
-            if self._cur_tok_is_operator('='):
-                self._get_next_token()  # consume the '='
-                init = self._parse_expression(parent)
-            else:
-                init = None
-            vars.append((name, init))
+        # Parse the optional initializer
+        if self._cur_tok_is_operator('='):
+            self._get_next_token()  # consume the '='
+            init = self._parse_expression(parent)
+        else:
+            init = None
 
-            # If there are no more vars in this declaration, we're done.
-            if not self._cur_tok_is_operator(','):
-                break
-            self._get_next_token()  # consume the ','
-            if self.cur_tok.kind != TokenKind.IDENTIFIER:
-                raise ParseError('expected identifier in "var" after ","')
-
-        return VarExprAST(parent, vars)
+        return VarExprAST(parent, (name, init, string2irType(datatype)))
 
     # unary
     #   ::= primary
@@ -258,6 +253,7 @@ class Parser(object):
     #   ::= id '(' id* ')'
     #   ::= 'binary' LETTER number? '(' id id ')'
     def _parse_prototype(self, parent):
+         
         if not self.cur_tok.kind == TokenKind.IDENTIFIER:
           raise ParseError('Expected datatype identifier')
         datatype = string2irType(self.cur_tok.value)

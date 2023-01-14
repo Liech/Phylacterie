@@ -1,5 +1,6 @@
 from .ASTNode import ASTNode
 from .PrototypeAST import PrototypeAST
+from ..string2irType import string2irType
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -42,7 +43,7 @@ class FunctionAST(ASTNode):
         # Add all arguments to the symbol table and create their allocas
         for i, arg in enumerate(func.args):
             arg.name = self.proto.argnames[i]
-            alloca = generator.getBuilder().alloca(ir.DoubleType(), name=arg.name)
+            alloca = generator.getBuilder().alloca(self.proto.parameterTypes[i], name=arg.name)
             generator.getBuilder().store(arg, alloca)
             generator.getSymtab()[arg.name] = alloca
 

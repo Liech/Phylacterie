@@ -49,7 +49,7 @@ class CodeGenerator(object):
 
     def defineVariable(self, name, value):
         saved_block = self._builder.block
-        var_addr = self._create_entry_block_alloca(name)
+        var_addr = self._create_entry_block_alloca(name, value.type)
         self._builder.position_at_end(saved_block)
         self._builder.store(value, var_addr)
         
@@ -58,7 +58,7 @@ class CodeGenerator(object):
 
         return result;
 
-    def _create_entry_block_alloca(self, name):
+    def _create_entry_block_alloca(self, name, datatype):
         _builder = ir.IRBuilder()
         _builder.position_at_start(self._builder.function.entry_basic_block)
-        return self._builder.alloca(ir.DoubleType(), size=None, name=name)
+        return self._builder.alloca(datatype, size=None, name=name)

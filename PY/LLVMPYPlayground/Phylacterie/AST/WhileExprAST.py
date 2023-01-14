@@ -33,10 +33,7 @@ class WhileExprAST(ExprAST):
 
         # Compute the end condition
         cond = self.cond_expr.codegen(generator)
-        cmp = generator.getBuilder().fcmp_ordered(
-            '!=', cond, ir.Constant(ir.DoubleType(), 0.0),
-            'loopcond')
-
+        cmp = generator.getBuilder().icmp_unsigned('!=', cond, ir.Constant(ir.IntType(1), 0),'loopcond')
         
         # Create the 'after loop' block and insert it
         after_bb = generator.getBuilder().function.append_basic_block('afterloop')

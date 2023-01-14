@@ -4,15 +4,15 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class VarExprAST(ExprAST):
-    def __init__(self,parent, vars):
+    def __init__(self,parent, var):
         # vars is a sequence of (name, init) pairs
-        self.vars = vars
+        self.var = var
         self.parent = parent
 
     def dump(self, indent=0):
         prefix = ' ' * indent
         s = '{0}{1}\n'.format(prefix, self.__class__.__name__)
-        for name, init in self.vars:
+        for name, init, datatype in [self.var]:
             s += '{0} {1}'.format(prefix, name)
             if init is None:
                 s += '\n'
@@ -24,13 +24,13 @@ class VarExprAST(ExprAST):
         old_bindings = []
         names = []
 
-        for name, init in self.vars:
+        for name, init, datatype in [self.var]:
             # Emit the initializer before adding the variable to scope. This
             # prefents the initializer from referencing the variable itgenerator.
             if init is not None:
                 init_val = init.codegen(generator)
             else:
-                init_val = ir.Constant(ir.DoubleType(), 0.0)
+                init_val = ir.Constant(datatype, 0.0)
 
             old = generator.defineVariable(name,init_val);
             if (not old is None):

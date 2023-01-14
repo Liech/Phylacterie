@@ -26,8 +26,8 @@ class IfExprAST(ExprAST):
 
         # Emit comparison value
         cond_val = self.cond_expr.codegen(generator)
-        cmp = generator.getBuilder().fcmp_ordered(
-            '!=', cond_val, ir.Constant(ir.DoubleType(), 0.0))
+        cmp = generator.getBuilder().icmp_unsigned(
+            '!=', cond_val, ir.Constant(ir.IntType(1), 0))
 
         # Create basic blocks to express the control flow, with a conditional
         # branch to either then_bb or else_bb depending on cmp. else_bb and

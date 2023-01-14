@@ -41,7 +41,7 @@ class BinaryExprAST(ExprAST):
             return generator.getBuilder().fmul(lhs, rhs, 'multmp')
         elif self.op == '<':
             cmp = generator.getBuilder().fcmp_unordered('<', lhs, rhs, 'cmptmp')
-            return generator.getBuilder().uitofp(cmp, ir.DoubleType(), 'booltmp')
+            return generator.getBuilder().uitofp(cmp, ir.IntType(1), 'booltmp')
         else:
             # Note one of predefined operator, so it must be a user-defined one.
             # Emit a call to it.
