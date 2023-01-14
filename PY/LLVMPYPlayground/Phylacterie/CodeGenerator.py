@@ -3,6 +3,7 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 from .AST import *
+from .irType2string import *
 
 class CodeGenerator(object):
     def __init__(self):
@@ -11,6 +12,10 @@ class CodeGenerator(object):
         self._func_symtab = {}
         self._symStack = [];
         self._builderStack = [];
+        self._variableTypes = {}
+
+    def getVariableType(self, name):
+      return self._variableTypes[name];
 
     def setBuilder(self, builder):
       self._builder = builder;
@@ -51,6 +56,7 @@ class CodeGenerator(object):
         saved_block = self._builder.block
         var_addr = self._create_entry_block_alloca(name, value.type)
         self._builder.position_at_end(saved_block)
+        self._variableTypes[name] = irType2string(value.type);
         self._builder.store(value, var_addr)
         
         result = self.getSymtab().get(name);
