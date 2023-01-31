@@ -1,0 +1,107 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>edac7511-dd8e-49bd-9bf5-2f32834db31f</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>main.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>LLVMPYPlayground</Name>
+    <RootNamespace>LLVMPYPlayground</RootNamespace>
+    <InterpreterId>MSBuild|env2|$(MSBuildProjectFullPath)</InterpreterId>
+    <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="main.py" />
+    <Compile Include="Phylacterie\AST\ASTNode.py" />
+    <Compile Include="Phylacterie\AST\BinaryExprAST.py" />
+    <Compile Include="Phylacterie\AST\CallExprAST.py" />
+    <Compile Include="Phylacterie\AST\BoolExprAST.py" />
+    <Compile Include="Phylacterie\AST\ExprAST.py" />
+    <Compile Include="Phylacterie\AST\IntExprAST.py" />
+    <Compile Include="Phylacterie\AST\WhileExprAST.py" />
+    <Compile Include="Phylacterie\AST\FunctionAST.py" />
+    <Compile Include="Phylacterie\AST\IfExprAST.py" />
+    <Compile Include="Phylacterie\AST\DoubleExprAST.py" />
+    <Compile Include="Phylacterie\AST\PrototypeAST.py" />
+    <Compile Include="Phylacterie\AST\ScopeAST.py" />
+    <Compile Include="Phylacterie\AST\UnaryExprAST.py" />
+    <Compile Include="Phylacterie\AST\VarExprAST.py" />
+    <Compile Include="Phylacterie\AST\VariableExprAST.py" />
+    <Compile Include="Phylacterie\AST\__init__.py" />
+    <Compile Include="Phylacterie\BuiltIn\putchard.py" />
+    <Compile Include="Phylacterie\BuiltIn\__init__.py" />
+    <Compile Include="Phylacterie\AST\CodegenError.py" />
+    <Compile Include="Phylacterie\irType2cType.py" />
+    <Compile Include="Phylacterie\irType2string.py" />
+    <Compile Include="Phylacterie\Phylacterie.py" />
+    <Compile Include="Phylacterie\Lexer.py" />
+    <Compile Include="Phylacterie\CodeGenerator.py" />
+    <Compile Include="Phylacterie\ParseError.py" />
+    <Compile Include="Phylacterie\Parser.py" />
+    <Compile Include="Phylacterie\string2irType.py" />
+    <Compile Include="Phylacterie\__init__.py" />
+    <Compile Include="Phylacterie\Test\TestEvaluator.py" />
+    <Compile Include="Phylacterie\Test\TestParser.py" />
+    <Compile Include="Phylacterie\AST\Token.py" />
+    <Compile Include="pykaleidoscope-master\chapter1and2.py" />
+    <Compile Include="pykaleidoscope-master\chapter3and4.py" />
+    <Compile Include="pykaleidoscope-master\chapter5.py" />
+    <Compile Include="pykaleidoscope-master\chapter6.py" />
+    <Compile Include="pykaleidoscope-master\chapter7and8.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Phylacterie\AST\" />
+    <Folder Include="Phylacterie\BuiltIn\" />
+    <Folder Include="Phylacterie\Test\" />
+    <Folder Include="pykaleidoscope-master\" />
+    <Folder Include="Phylacterie\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="pykaleidoscope-master\.gitignore" />
+    <Content Include="pykaleidoscope-master\.vimrc" />
+    <Content Include="pykaleidoscope-master\LICENSE" />
+    <Content Include="main.phy" />
+    <Content Include="pykaleidoscope-master\README.rst" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env1\">
+      <Id>env1</Id>
+      <Version>3.7</Version>
+      <Description>env1 (Python 3.7 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+    <Interpreter Include="env2\">
+      <Id>env2</Id>
+      <Version>3.7</Version>
+      <Description>env2 (Python 3.7 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>

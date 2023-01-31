@@ -98,7 +98,10 @@ class Parser(object):
 
     # numberexpr ::= number
     def _parse_number_expr(self,parent):
-        result = DoubleExprAST(parent, self.cur_tok.value)
+        if('.' in self.cur_tok.value):
+          result = DoubleExprAST(parent, self.cur_tok.value)
+        else:
+          result = IntExprAST(parent, self.cur_tok.value)
         self._get_next_token()  # consume the number
         return result
 

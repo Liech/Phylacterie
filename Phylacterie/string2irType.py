@@ -10,5 +10,7 @@ def string2irType(stringType):
     return ir.DoubleType();
   elif stringType == 'bool':
     return ir.IntType(1);
+  elif stringType == 'int':
+    return ir.IntType(32);
   else:
     raise BaseException("unkown type")

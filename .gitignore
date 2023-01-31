@@ -152,3 +152,4 @@ cython_debug/
 .vs
 env1
 env
+env2

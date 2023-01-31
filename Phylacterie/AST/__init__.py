@@ -12,6 +12,7 @@ from .VarExprAST import VarExprAST
 from .VariableExprAST import VariableExprAST
 from .ScopeAST import ScopeAST
 from .BoolExprAST import BoolExprAST
+from .IntExprAST import IntExprAST
 
 from .Token import TokenKind
 from .Token import Token
