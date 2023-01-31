@@ -14,10 +14,10 @@ class FunctionAST(ASTNode):
     _anonymous_function_counter = 0
 
     @classmethod
-    def create_anonymous(klass,parent, expr):
+    def create_anonymous(klass,parent, expr, returnType):
         """Create an anonymous function to hold an expression."""
         klass._anonymous_function_counter += 1
-        return klass(parent,PrototypeAST(parent, '_anon{0}'.format(klass._anonymous_function_counter),[]),expr)
+        return klass(parent,PrototypeAST(parent, '_anon{0}'.format(klass._anonymous_function_counter),[], False,0,returnType),expr)
 
     def is_anonymous(self):
         return self.proto.name.startswith('_anon')

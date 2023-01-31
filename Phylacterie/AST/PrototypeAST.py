@@ -5,7 +5,7 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class PrototypeAST(ASTNode):
-    def __init__(self, parent, name, arguments, isoperator=False, prec=0, returnType = ir.DoubleType()):
+    def __init__(self, parent, name, arguments, isoperator, prec, returnType):
         self.name = name
         self.argnames = [i['name'] for i in arguments]
         self.isoperator = isoperator

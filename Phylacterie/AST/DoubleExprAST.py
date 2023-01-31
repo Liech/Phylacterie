@@ -15,3 +15,6 @@ class DoubleExprAST(ExprAST):
 
     def codegen(self, generator):
         return ir.Constant(ir.DoubleType(), float(self.val))
+      
+    def getReturnType(self):
+      return ir.DoubleType();

@@ -44,5 +44,5 @@ class WhileExprAST(ExprAST):
         # New code will be inserted into after_bb
         generator.getBuilder().position_at_start(after_bb)
 
-        # The 'for' expression always returns 0
+        # The 'while' expression always returns 0
         return ir.Constant(ir.DoubleType(), 0.0)

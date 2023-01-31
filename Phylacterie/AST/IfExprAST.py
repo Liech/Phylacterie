@@ -60,7 +60,9 @@ class IfExprAST(ExprAST):
         # Emit the merge ('ifcnt') block
         generator.getBuilder().function.basic_blocks.append(merge_bb)
         generator.getBuilder().position_at_start(merge_bb)
-        phi = generator.getBuilder().phi(ir.DoubleType(), 'iftmp')
+
+        assert(self.then_expr.getReturnType() == self.else_expr.getReturnType());
+        phi = generator.getBuilder().phi(self.then_expr.getReturnType(), 'iftmp')
         phi.add_incoming(then_val, then_bb)
         phi.add_incoming(else_val, else_bb)
         return phi

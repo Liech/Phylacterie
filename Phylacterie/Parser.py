@@ -24,6 +24,12 @@ class Parser(object):
         self.token_generator = Lexer(buf).tokens()
         self.cur_tok = None
         self._get_next_token()
+        
+        if not self.cur_tok.kind == TokenKind.IDENTIFIER:
+          raise ParseError('Expected datatype identifier')
+        dataType = self.cur_tok.value
+        self._get_next_token()
+
         result = [];
         while self.cur_tok.kind != TokenKind.EOF:
             if self.cur_tok.kind == TokenKind.EXTERN:
@@ -32,12 +38,12 @@ class Parser(object):
                 result.append(self._parse_definition(root))
             elif self.cur_tok.kind == TokenKind.SCOPESTART:
                 result.append(self._parse_scope(root))
-            elif self.cur_tok.kind == TokenKind.FALSE or self.cur_tok.kind== TokenKind.TRUE:
+            elif self.cur_tok.kind == TokenKind.FALSE or self.cur_tok.kind == TokenKind.TRUE:
                 result.append(self._parse_boolean(root))
             else:
                 result.append(self._parse_expression(root))                
         root.setBody(result);
-        return FunctionAST.create_anonymous(None, root)
+        return FunctionAST.create_anonymous(None, root, string2irType(dataType))
 
     def _get_next_token(self):
         self.cur_tok = next(self.token_generator)

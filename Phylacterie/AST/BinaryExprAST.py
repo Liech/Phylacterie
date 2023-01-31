@@ -47,3 +47,4 @@ class BinaryExprAST(ExprAST):
             # Emit a call to it.
             func = generator.getModule().get_global('binary{0}'.format(self.op))
             return generator.getBuilder().call(func, [lhs, rhs], 'binop')
+

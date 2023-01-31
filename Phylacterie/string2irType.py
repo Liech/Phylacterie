@@ -11,4 +11,4 @@ def string2irType(stringType):
   elif stringType == 'bool':
     return ir.IntType(1);
   else:
-    raise ""
+    raise BaseException("unkown type")

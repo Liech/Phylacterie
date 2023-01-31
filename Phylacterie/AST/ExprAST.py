@@ -1,4 +1,5 @@
 from .ASTNode import ASTNode
 
 class ExprAST(ASTNode):
-    pass
+    def getReturnType(self):
+      raise BaseException("Not implemented!");

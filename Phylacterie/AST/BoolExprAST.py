@@ -17,3 +17,6 @@ class BoolExprAST(ExprAST):
 
     def codegen(self, generator):
         return ir.Constant(ir.IntType(1), int(self.val))
+      
+    def getReturnType(self):
+      return ir.IntType(1);
