@@ -1,5 +1,0 @@
-def foo(x y z)
-    var s1 = x + y, s2 = z + y in
-        s1 * s2
-
-print(foo(1, 2, 3))
