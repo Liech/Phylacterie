@@ -25,18 +25,49 @@ def variable(phyl):
   assert(result == True)
 
 def loop(phyl):  
-  result = phyl.evaluate('double var double x = 0.0 while(x < 5.0) {x=x+1.0} x')
+  result = phyl.evaluate('''double
+  var double x = 0.0
+  while(x < 5.0) {
+    x=x+1.0
+  }
+  x
+  ''')
   assert(result == 5)
 
 def func(phyl):
   #result = phyl.evaluate('double def double wub() { 123.0 } wub()')
   #assert(result == 123.0)
-  result = phyl.evaluate('double def double wub(double x) { x } wub(123.0)')
+  result = phyl.evaluate('''double 
+  def double wub(double x) { 
+    x
+  } 
+  wub(123.0)
+  ''')
   assert(result == 123.0)
-  result = phyl.evaluate('double def double wub2(double x, double y) { x*y*y } wub2(123.0,5.0)')
+  result = phyl.evaluate('''double
+  def double wub2(double x, double y) {
+    x*y*y 
+  }
+  wub2(123.0,5.0)
+  ''');
   assert(result == 123.0*5*5)
-  result = phyl.evaluate('double def double binary @ (double x, double y){x*y*y} 2.0@2.0')
+  result = phyl.evaluate('''double
+  def double binary @ (double x, double y){x*y*y}
+  2.0@2.0
+  ''')
   assert(result == 8.0);
+
+def overload(phyl):
+  result = phyl.evaluate('''double
+  def double binary @ (double x, double y){
+    x*y*y
+  } 
+  def double binary @ (int x, int y){
+    x
+  }
+  2.0@2.0
+  ''');
+  assert(result == 2*2*2)
 
 def test():
   phyl = Phylacterie()
@@ -45,3 +76,4 @@ def test():
   variable(phyl);
   loop(phyl);
   func(phyl);
+  #overload(phyl);
