@@ -1,5 +1,7 @@
 from .ExprAST import ExprAST
 from .CodegenError import CodegenError
+from .Token import *
+from .VariableExprAST import VariableExprAST
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -16,6 +18,25 @@ class CallExprAST(ExprAST):
         for arg in self.args:
             s += arg.dump(indent + 2) + '\n'
         return s[:-1]  # snip out trailing '\n'
+
+    def parse(parser, parent):
+        id_name = parser.cur_tok.value
+        parser._get_next_token()
+        # If followed by a '(' it's a call; otherwise, a simple variable ref.
+        if not parser._cur_tok_is_operator('('):
+            return VariableExprAST(parent, id_name)
+
+        parser._get_next_token()
+        args = []
+        if not parser._cur_tok_is_operator(')'):
+            while True:
+                args.append(parser._parse_expression(parent))
+                if parser._cur_tok_is_operator(')'):
+                    break
+                parser._match(TokenKind.OPERATOR, ',')
+
+        parser._get_next_token()  # consume the ')'
+        return CallExprAST(parent, id_name, args)
 
     def codegen(self, generator):
         callee_func = generator.getModule().get_global(self.callee)

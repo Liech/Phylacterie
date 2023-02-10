@@ -1,5 +1,7 @@
 from .ASTNode import ASTNode
 from .CodegenError import CodegenError
+from .Token import *
+from string2irType import string2irType
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -31,6 +33,61 @@ class PrototypeAST(ASTNode):
         if self.isoperator:
             s += '[operator with prec={0}]'.format(self.prec)
         return s
+
+    def parse(parser, parent):
+        if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
+          raise ParseError('Expected datatype identifier')
+        datatype = string2irType(parser.cur_tok.value)
+        parser._get_next_token()
+
+        prec = 30
+        if parser.cur_tok.kind == TokenKind.IDENTIFIER:
+            name = parser.cur_tok.value
+            parser._get_next_token()
+        elif parser.cur_tok.kind == TokenKind.UNARY:
+            parser._get_next_token()
+            if parser.cur_tok.kind != TokenKind.OPERATOR:
+                raise ParseError('Expected operator after "unary"')
+            name = 'unary{0}'.format(parser.cur_tok.value)
+            parser._get_next_token()
+        elif parser.cur_tok.kind == TokenKind.BINARY:
+            parser._get_next_token()
+            if parser.cur_tok.kind != TokenKind.OPERATOR:
+                raise ParseError('Expected operator after "binary"')
+            name = 'binary{0}'.format(parser.cur_tok.value)
+            parser._get_next_token()
+
+            # Try to parse precedence
+            if parser.cur_tok.kind == TokenKind.NUMBER:
+                prec = int(parser.cur_tok.value)
+                if not (0 < prec < 101):
+                    raise ParseError('Invalid precedence', prec)
+                parser._get_next_token()
+
+            # Add the new operator to our precedence table so we can properly
+            # parse it.
+            parser._precedence_map[name[-1]] = prec
+
+        parser._match(TokenKind.OPERATOR, '(')
+        argnames = []
+        while parser.cur_tok.kind == TokenKind.IDENTIFIER:
+            if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
+              raise ParseError('Expected datatype identifier')
+            dataType = parser.cur_tok.value
+            parser._get_next_token()
+            if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
+              raise ParseError('Expected variablename identifier')
+            argName = parser.cur_tok.value
+            parser._get_next_token()
+            argnames.append({'name':argName, 'type':string2irType(dataType)})
+        parser._match(TokenKind.OPERATOR, ')')
+
+        if name.startswith('binary') and len(argnames) != 2:
+            raise ParseError('Expected binary operator to have 2 operands')
+        elif name.startswith('unary') and len(argnames) != 1:
+            raise ParseError('Expected unary operator to have one operand')
+
+        return PrototypeAST(parent, name, argnames, name.startswith(('unary', 'binary')), prec, datatype)
 
     def codegen(self,generator):
         funcname = self.name

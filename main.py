@@ -1,15 +1,27 @@
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), 'Phylacterie'))
+
+
 from Phylacterie import Phylacterie
+from test import test
 
 # Evaluate some code.
 
 allInput = "";
 saveInput = False;
 
+test();
+
 while True:
   print('>>');
   inp = input();
   phyl = Phylacterie()
 
+  if (inp == 'tst'):
+    test();
+    continue;
   if (inp == 'cls'):
     allInput = "";
     continue;

@@ -1,4 +1,5 @@
 from .ExprAST import ExprAST
+from .Token import *
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -19,6 +20,19 @@ class WhileExprAST(ExprAST):
         s += '{0} Body:\n{1}\n'.format(
             prefix, self.body.dump(indent + 2))
         return s
+
+    def parse(parser, parent):
+        parser._get_next_token()  # consume the 'for'
+
+        parser._match(TokenKind.OPERATOR, '(')
+
+        cond_expr = parser._parse_expression(parent)
+
+        parser._match(TokenKind.OPERATOR, ')')
+
+        body = parser._parse_expression(parent)
+        
+        return WhileExprAST(parent, cond_expr, body)
 
     def codegen(self, generator):
         loop_bb = generator.getBuilder().function.append_basic_block('loop')

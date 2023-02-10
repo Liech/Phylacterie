@@ -1,5 +1,6 @@
 from .ExprAST import ExprAST
 from .DoubleExprAST import DoubleExprAST
+from .Token import *
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -19,6 +20,19 @@ class IfExprAST(ExprAST):
         s += '{0} Then:\n{1}\n'.format(
             prefix, self.then_expr.dump(indent + 2))
         return s
+
+    def parse(parser, parent):
+        parser._get_next_token()  # consume the 'if'        
+        parser._match(TokenKind.OPERATOR, '(')
+        cond_expr = parser._parse_expression(parent)
+        parser._match(TokenKind.OPERATOR, ')')
+        then_expr = parser._parse_expression(parent)
+        if parser.cur_tok.kind == TokenKind.ELSE:
+          parser._match(TokenKind.ELSE)
+          else_expr = parser._parse_expression(parent)
+          return IfExprAST(parent, cond_expr, then_expr, else_expr)
+        else:
+          return IfExprAST(parent, cond_expr, then_expr, None)
 
     def codegen(self, generator):
         if (self.else_expr is None):

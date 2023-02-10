@@ -1,4 +1,7 @@
 from .ExprAST import ExprAST
+from .Token import *
+from string2irType import string2irType
+from ParseError import ParseError
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -19,6 +22,30 @@ class VarExprAST(ExprAST):
             else:
                 s += '=\n' + init.dump(indent+2) + '\n'
         return s
+
+    def parse(parser, parent):
+        parser._get_next_token()  # consume the 'var'
+        vars = []
+
+        # At least one variable name is required
+        if parser.cur_tok.kind != TokenKind.IDENTIFIER:
+            raise ParseError('expected datatype identifier after "var"')         
+        datatype = parser.cur_tok.value
+        parser._get_next_token()  # consume the identifier
+        if parser.cur_tok.kind != TokenKind.IDENTIFIER:
+          raise ParseError('expected name identifier after "var"')         
+
+        name = parser.cur_tok.value
+        parser._get_next_token()  # consume the identifier
+
+        # Parse the optional initializer
+        if parser._cur_tok_is_operator('='):
+            parser._get_next_token()  # consume the '='
+            init = parser._parse_expression(parent)
+        else:
+            init = None
+
+        return VarExprAST(parent, (name, init, string2irType(datatype)))
 
     def codegen(self, generator):
         old_bindings = []

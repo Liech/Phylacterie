@@ -1,6 +1,8 @@
 from .ASTNode import ASTNode
 from .PrototypeAST import PrototypeAST
+from .ScopeAST import ScopeAST
 from ..string2irType import string2irType
+from .Token import *
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -27,6 +29,12 @@ class FunctionAST(ASTNode):
             ' ' * indent, self.__class__.__name__, self.proto.dump())
         s += self.body.dump(indent + 2) + '\n'
         return s
+
+    def parse(parser, parent):
+        parser._get_next_token()  # consume 'def'
+        proto = PrototypeAST.parse(parser,parent);
+        expr = ScopeAST.parse(parser,parent);
+        return FunctionAST(parent, proto, expr)
 
     def codegen(self, generator):
         # Reset the symbol table. Prototype generation will pre-populate it with

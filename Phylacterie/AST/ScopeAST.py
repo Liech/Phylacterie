@@ -1,4 +1,5 @@
 from .ExprAST import ExprAST
+from .Token import *
 
 from .Token import TokenKind
 
@@ -34,6 +35,18 @@ class ScopeAST(ExprAST):
         s += '{0} Body:\n'.format(prefix)
         s += self.body.dump(indent + 2)
         return s
+      
+    def parse(parser, parent):
+        result = ScopeAST(parent,None);
+        parser._match(TokenKind.SCOPESTART);
+        
+        body = []
+        while parser.cur_tok.kind != TokenKind.SCOPEEND:
+          body.append(parser._parse_expression(result));
+
+        parser._match(TokenKind.SCOPEEND);
+        result.setBody(body);
+        return result;
 
     def codegen(self, generator):      
         result = None;        
