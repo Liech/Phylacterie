@@ -70,7 +70,9 @@ class PrototypeAST(ASTNode):
 
         parser._match(TokenKind.OPERATOR, '(')
         argnames = []
-        while parser.cur_tok.kind == TokenKind.IDENTIFIER:
+        while (parser.cur_tok.kind == TokenKind.IDENTIFIER and len(argnames) == 0) or (len(argnames) > 0 and parser._cur_tok_is_operator(',')):
+            if(len(argnames)> 0):
+              parser._match(TokenKind.OPERATOR, ',')
             if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
               raise ParseError('Expected datatype identifier')
             dataType = parser.cur_tok.value

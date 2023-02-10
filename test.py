@@ -33,6 +33,10 @@ def func(phyl):
   #assert(result == 123.0)
   result = phyl.evaluate('double def double wub(double x) { x } wub(123.0)')
   assert(result == 123.0)
+  result = phyl.evaluate('double def double wub2(double x, double y) { x*y*y } wub2(123.0,5.0)')
+  assert(result == 123.0*5*5)
+  result = phyl.evaluate('double def double binary @ (double x, double y){x*y*y} 2.0@2.0')
+  assert(result == 8.0);
 
 def test():
   phyl = Phylacterie()
