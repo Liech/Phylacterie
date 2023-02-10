@@ -2,6 +2,7 @@ from .ASTNode import ASTNode
 from .CodegenError import CodegenError
 from .Token import *
 from string2irType import string2irType
+from ParseError import ParseError
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
