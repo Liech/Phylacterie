@@ -65,7 +65,7 @@ class Phylacterie(object):
 
                 
             cType = irType2cType(ast.proto.returnType)
-            fptr = CFUNCTYPE(cType)(ee.get_function_address(ast.proto.name))
+            fptr = CFUNCTYPE(cType)(ee.get_function_address(ast.proto.getID()))
             result = fptr()
             return result
 

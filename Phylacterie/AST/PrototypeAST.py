@@ -2,6 +2,7 @@ from .ASTNode import ASTNode
 from .CodegenError import CodegenError
 from .Token import *
 from string2irType import string2irType
+from irType2string import irType2string
 from ParseError import ParseError
 
 import llvmlite.ir as ir
@@ -15,7 +16,7 @@ class PrototypeAST(ASTNode):
         self.prec = prec
         self.parent = parent
         self.returnType = returnType
-        self.parameterTypes =  [i['type'] for i in arguments]
+        self.parameterTypes =  [i['type'] for i in arguments]        
 
     def is_unary_op(self):
         return self.isoperator and len(self.argnames) == 1
@@ -92,25 +93,30 @@ class PrototypeAST(ASTNode):
 
         return PrototypeAST(parent, name, argnames, name.startswith(('unary', 'binary')), prec, datatype)
 
+    def getID(self):
+      args = ''.join([irType2string(t) + '_' for t in self.parameterTypes])
+      return self.name + '_' + args;
+
     def codegen(self,generator):
         funcname = self.name
+        funcID = self.getID();
         # Create a function type
         func_ty = ir.FunctionType(self.returnType,  self.parameterTypes)
 
         # If a function with this name already exists in the module...
-        if funcname in generator.getModule().globals:
+        if funcID in generator.getModule().globals:
             # We only allow the case in which a declaration exists and now the
             # function is defined (or redeclared) with the same number of args.
-            existing_func = generator.getModule().globals[funcname]
+            existing_func = generator.getModule().globals[funcID]
             if not isinstance(existing_func, ir.Function):
-                raise CodegenError('Function/Global name collision', funcname)
+                raise CodegenError('Function/Global name collision', funcID)
             if not existing_func.is_declaration:
-                raise CodegenError('Redifinition of {0}'.format(funcname))
+                raise CodegenError('Redifinition of {0}'.format(funcID))
             if len(existing_func.function_type.args) != len(func_ty.args):
                 raise CodegenError(
                     'Redifinition with different number of arguments')
-            func = generator.getModule().globals[funcname]
+            func = generator.getModule().globals[funcID]
         else:
             # Otherwise create a new function
-            func = ir.Function(generator.getModule(), func_ty, funcname)
+            func = ir.Function(generator.getModule(), func_ty, funcID)
         return func

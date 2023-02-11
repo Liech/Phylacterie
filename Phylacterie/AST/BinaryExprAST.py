@@ -3,6 +3,7 @@ from .VariableExprAST import VariableExprAST
 from .UnaryExprAST import UnaryExprAST
 from .CodegenError import CodegenError
 from .Token import *
+from irType2string import irType2string
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -13,6 +14,7 @@ class BinaryExprAST(ExprAST):
         self.lhs = lhs
         self.rhs = rhs
         self.parent = parent
+        self.returnType = None
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(
@@ -20,6 +22,9 @@ class BinaryExprAST(ExprAST):
         s += self.lhs.dump(indent + 2) + '\n'
         s += self.rhs.dump(indent + 2)
         return s
+            
+    def getReturnType(self):
+      return self.returnType
 
     def parse(parser, expr_prec, lhs, parent):
         """Parse the right-hand-side of a binary expression.
@@ -55,6 +60,9 @@ class BinaryExprAST(ExprAST):
             # Merge lhs/rhs
             lhs = BinaryExprAST(parent, op, lhs, rhs)
 
+    def getID(self):
+      return 'binary' + self.op + '_' + irType2string(self.lhs.getReturnType()) + '_' + irType2string(self.rhs.getReturnType()) + '_';
+
     def codegen(self, generator):
         # Assignment is handled specially because it doesn't follow the general
         # recipe of binary ops.
@@ -69,6 +77,7 @@ class BinaryExprAST(ExprAST):
         lhs = self.lhs.codegen(generator)
         rhs = self.rhs.codegen(generator)
 
+        self.returnType = ir.DoubleType()
         if self.op == '+':
             return generator.getBuilder().fadd(lhs, rhs, 'addtmp')
         elif self.op == '-':
@@ -81,6 +90,8 @@ class BinaryExprAST(ExprAST):
         else:
             # Note one of predefined operator, so it must be a user-defined one.
             # Emit a call to it.
-            func = generator.getModule().get_global('binary{0}'.format(self.op))
+            opID = self.getID();
+            func = generator.getModule().get_global(opID)
+            self.returnType = func.return_value.type
             return generator.getBuilder().call(func, [lhs, rhs], 'binop')
 

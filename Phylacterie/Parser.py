@@ -74,12 +74,6 @@ class Parser(object):
         return (self.cur_tok.kind == TokenKind.OPERATOR and
                 self.cur_tok.value == op)
 
-    # identifierexpr
-    #   ::= identifier
-    #   ::= identifier '(' expression* ')'
-    def _parse_identifier_expr(self,parent):
-      return CallExprAST.parse(self, parent);
-
     # numberexpr ::= number
     def _parse_number_expr(self,parent):
         if('.' in self.cur_tok.value):
@@ -104,7 +98,7 @@ class Parser(object):
     #   ::= forexpr
     def _parse_primary(self,parent):
         if self.cur_tok.kind == TokenKind.IDENTIFIER:
-            return self._parse_identifier_expr(parent)
+            return CallExprAST.parse(self, parent);
         elif self.cur_tok.kind == TokenKind.NUMBER:
             return self._parse_number_expr(parent)
         elif self._cur_tok_is_operator('('):

@@ -21,6 +21,10 @@ class IfExprAST(ExprAST):
             prefix, self.then_expr.dump(indent + 2))
         return s
 
+          
+    def getReturnType(self):
+      return self.then_expr.getReturnType();
+
     def parse(parser, parent):
         parser._get_next_token()  # consume the 'if'        
         parser._match(TokenKind.OPERATOR, '(')

@@ -2,30 +2,30 @@
 from Phylacterie import Phylacterie
 
 
-def baseDataTypes(phyl):  
-  result = phyl.evaluate('int 1')
+def baseDataTypes():  
+  result = Phylacterie().evaluate('int 1')
   assert(result == 1)
   
-  result = phyl.evaluate('bool true')
+  result = Phylacterie().evaluate('bool true')
   assert(result == True)
-  result = phyl.evaluate('bool false')
+  result = Phylacterie().evaluate('bool false')
   assert(result == False)
   
-  result = phyl.evaluate('double 1.0')
+  result = Phylacterie().evaluate('double 1.0')
   assert(result == 1.0)
-  result = phyl.evaluate('double 1.0+1.0')
+  result = Phylacterie().evaluate('double 1.0+1.0')
   assert(result == 2.0)
 
-def variable(phyl):  
-  result = phyl.evaluate('int var int x = 123 x')
+def variable():  
+  result = Phylacterie().evaluate('int var int x = 123 x')
   assert(result == 123)
-  result = phyl.evaluate('double var double x = 123.0 x')
+  result = Phylacterie().evaluate('double var double x = 123.0 x')
   assert(result == 123.0)
-  result = phyl.evaluate('bool var bool x = true x')
+  result = Phylacterie().evaluate('bool var bool x = true x')
   assert(result == True)
 
-def loop(phyl):  
-  result = phyl.evaluate('''double
+def loop():  
+  result = Phylacterie().evaluate('''double
   var double x = 0.0
   while(x < 5.0) {
     x=x+1.0
@@ -34,46 +34,49 @@ def loop(phyl):
   ''')
   assert(result == 5)
 
-def func(phyl):
-  #result = phyl.evaluate('double def double wub() { 123.0 } wub()')
-  #assert(result == 123.0)
-  result = phyl.evaluate('''double 
+def func():
+  result = Phylacterie().evaluate('''double 
   def double wub(double x) { 
     x
   } 
   wub(123.0)
   ''')
   assert(result == 123.0)
-  result = phyl.evaluate('''double
+  result = Phylacterie().evaluate('''double
   def double wub2(double x, double y) {
     x*y*y 
   }
   wub2(123.0,5.0)
   ''');
   assert(result == 123.0*5*5)
-  result = phyl.evaluate('''double
+  result = Phylacterie().evaluate('''double
   def double binary @ (double x, double y){x*y*y}
   2.0@2.0
   ''')
   assert(result == 8.0);
 
-def overload(phyl):
-  result = phyl.evaluate('''double
-  def double binary @ (double x, double y){
+def overload():
+  result = Phylacterie().evaluate('''double
+  def double binary $ (double x, double y){
     x*y*y
   } 
-  def double binary @ (int x, int y){
+  def int binary $ (int x, int y){
     x
   }
-  2.0@2.0
+  def bool binary $ (bool x, bool y){
+    if(x) {if(y) true else false} else {false}
+  }
+  if(true$true){
+    2.0$2.0
+  }
+  else 
+    0.0
   ''');
   assert(result == 2*2*2)
 
 def test():
-  phyl = Phylacterie()
-
-  baseDataTypes(phyl);
-  variable(phyl);
-  loop(phyl);
-  func(phyl);
-  #overload(phyl);
+  baseDataTypes();
+  variable();
+  loop();
+  func();
+  overload();

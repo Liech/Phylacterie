@@ -36,6 +36,12 @@ class ScopeAST(ExprAST):
         s += self.body.dump(indent + 2)
         return s
       
+    def getReturnType(self):
+      if (len(self.body) == 0):
+        return self.body.getReturnType();
+      else:
+        return self.body[-1].getReturnType();
+
     def parse(parser, parent):
         result = ScopeAST(parent,None);
         parser._match(TokenKind.SCOPESTART);
