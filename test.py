@@ -55,7 +55,14 @@ def func():
   ''')
   assert(result == 8.0);
 
-def overload():
+def overload():  
+  result = Phylacterie().evaluate('''double
+     def double wub(double x) { x }
+     def double wub(double x, double y){ x*y }
+     wub(wub(1.0),2.0)
+  ''')
+  assert(result == 2)
+
   result = Phylacterie().evaluate('''double
   def double binary $ (double x, double y){
     x*y*y
@@ -73,6 +80,8 @@ def overload():
     0.0
   ''');
   assert(result == 2*2*2)
+
+
 
 def test():
   baseDataTypes();
