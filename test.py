@@ -84,8 +84,8 @@ def overload():
 
 
 def test():
-  #baseDataTypes();
-  #variable();
-  #loop();
-  #func();
+  baseDataTypes();
+  variable();
+  loop();
+  func();
   overload();
