@@ -1,4 +1,4 @@
-from .AST import TokenKind
+﻿from .AST import TokenKind
 from .AST import Token
 
 class Lexer(object):
@@ -65,8 +65,15 @@ class Lexer(object):
                     self._advance()
             elif self.lastchar:
                 # Some other char
-                yield Token(kind=TokenKind.OPERATOR, value=self.lastchar)
-                self._advance()
+                result = ''
+                operatorList = "+*~#\'-_.:,;!+?=$§²³`´%&/^°|<>"
+                while self.lastchar and self.lastchar in operatorList:
+                    result = result + self.lastchar
+                    self._advance()
+                if (len(result) == 0):
+                  result = self.lastchar;
+                  self._advance()
+                yield Token(kind=TokenKind.OPERATOR, value=result)
         yield Token(kind=TokenKind.EOF, value='')
 
     def _advance(self):
