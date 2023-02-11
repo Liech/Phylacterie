@@ -9,14 +9,17 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class PrototypeAST(ASTNode):
-    def __init__(self, parent, name, arguments, isoperator, prec, returnType):
-        self.name = name
-        self.argnames = [i['name'] for i in arguments]
-        self.isoperator = isoperator
-        self.prec = prec
-        self.parent = parent
-        self.returnType = returnType
-        self.parameterTypes =  [i['type'] for i in arguments]        
+    def __init__(self, parent, name, arguments, isoperator, prec, returnType, typeVault):
+      assert(returnType)  
+      self.name = name
+      self.argnames = [i['name'] for i in arguments]
+      self.isoperator = isoperator
+      self.prec = prec
+      self.parent = parent
+      self.returnType = returnType
+      self.parameterTypes =  [i['type'] for i in arguments]        
+      self.typeVault = typeVault
+      self.typeVault.registerType(self.getID(),returnType);
 
     def is_unary_op(self):
         return self.isoperator and len(self.argnames) == 1
@@ -36,7 +39,7 @@ class PrototypeAST(ASTNode):
             s += '[operator with prec={0}]'.format(self.prec)
         return s
 
-    def parse(parser, parent):
+    def parse(parser, parent,typeVault):
         if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
           raise ParseError('Expected datatype identifier')
         datatype = string2irType(parser.cur_tok.value)
@@ -91,7 +94,11 @@ class PrototypeAST(ASTNode):
         elif name.startswith('unary') and len(argnames) != 1:
             raise ParseError('Expected unary operator to have one operand')
 
-        return PrototypeAST(parent, name, argnames, name.startswith(('unary', 'binary')), prec, datatype)
+        typeVault.registerType(name, datatype)
+        for i in range(0,len(argnames)):
+          typeVault.registerType(argnames[i]['name'],argnames[i]['type'])
+
+        return PrototypeAST(parent, name, argnames, name.startswith(('unary', 'binary')), prec, datatype,typeVault)
 
     def getID(self):
       args = ''.join([irType2string(t) + '_' for t in self.parameterTypes])
@@ -99,7 +106,6 @@ class PrototypeAST(ASTNode):
 
     def codegen(self,generator):
         funcname = self.name
-        generator.registerVariableType(self.name,self.returnType);
         funcID = self.getID();
         # Create a function type
         func_ty = ir.FunctionType(self.returnType,  self.parameterTypes)

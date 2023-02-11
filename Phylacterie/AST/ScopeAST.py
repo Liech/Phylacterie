@@ -7,12 +7,14 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class ScopeAST(ExprAST):
-    def __init__(self, parent, body):
+    def __init__(self, parent, body, typeVault):
         self.body = body
         self.parent = parent
         self.varNames = []
         self.oldBindings = []
         self.isGlobalScope = False;
+        self.typeVault = typeVault
+        self.types = {}
 
     def isScope(self):
       return True;
@@ -42,19 +44,21 @@ class ScopeAST(ExprAST):
       else:
         return self.body[-1].getReturnType();
 
-    def parse(parser, parent):
-        result = ScopeAST(parent,None);
+    def parse(parser, parent,typeVault):
+        result = ScopeAST(parent,None,typeVault);
         parser._match(TokenKind.SCOPESTART);
         
         body = []
         while parser.cur_tok.kind != TokenKind.SCOPEEND:
-          body.append(parser._parse_expression(result));
+          body.append(parser._parse_expression(result,typeVault));
 
         parser._match(TokenKind.SCOPEEND);
         result.setBody(body);
+        result.types = typeVault.getTypes()
         return result;
 
     def codegen(self, generator):      
+        self.typeVault.setTypes(self.types)
         result = None;        
         # root scope may have multiple expressions (Hacky thing that should be replaced)
         if type(self.body) == list:
@@ -70,4 +74,5 @@ class ScopeAST(ExprAST):
             else:
                 del generator.getSymtab()[name]
                 
+        self.typeVault.pop();
         return result

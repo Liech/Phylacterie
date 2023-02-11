@@ -9,12 +9,12 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class BinaryExprAST(ExprAST):
-    def __init__(self, parent, op, lhs, rhs):
+    def __init__(self, parent, op, lhs, rhs, typeVault):
         self.op = op
         self.lhs = lhs
         self.rhs = rhs
         self.parent = parent
-        self.returnType = None
+        self.typeVault = typeVault
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(
@@ -23,10 +23,11 @@ class BinaryExprAST(ExprAST):
         s += self.rhs.dump(indent + 2)
         return s
             
-    def getReturnType(self):
-      return self.returnType
+    def getReturnType(self):      
+      opID = self.getID();
+      return self.typeVault.getType(opID);
 
-    def parse(parser, expr_prec, lhs, parent):
+    def parse(parser, expr_prec, lhs, parent,typeVault):
         """Parse the right-hand-side of a binary expression.
 
         expr_prec: minimal precedence to keep going (precedence climbing).
@@ -45,7 +46,7 @@ class BinaryExprAST(ExprAST):
             parser._get_next_token()  # consume the operator
             if (op == ';' and parser.cur_tok.kind == TokenKind.EOF):
               return lhs;
-            rhs = UnaryExprAST.parse(parser, parent);
+            rhs = UnaryExprAST.parse(parser, parent, typeVault);
 
             next_prec = parser._cur_tok_precedence()
             # There are three options:
@@ -55,10 +56,10 @@ class BinaryExprAST(ExprAST):
             # 3. next_prec < cur_prec: no need for a recursive call, combine
             #    lhs and the next iteration will immediately bail out.
             if cur_prec < next_prec:
-                rhs = BinaryExprAST.parse(parser,  cur_prec + 1, rhs, parent)
+                rhs = BinaryExprAST.parse(parser,  cur_prec + 1, rhs, parent, typeVault)
 
             # Merge lhs/rhs
-            lhs = BinaryExprAST(parent, op, lhs, rhs)
+            lhs = BinaryExprAST(parent, op, lhs, rhs, typeVault)
 
     def getID(self):
       return 'binary' + self.op + '_' + irType2string(self.lhs.getReturnType()) + '_' + irType2string(self.rhs.getReturnType()) + '_';
@@ -78,20 +79,27 @@ class BinaryExprAST(ExprAST):
         rhs = self.rhs.codegen(generator)
         opID = self.getID();
 
-        self.returnType = ir.DoubleType()
         if opID == 'binary+_double_double_':
             return generator.getBuilder().fadd(lhs, rhs, 'addtmp')
         elif opID == 'binary-_double_double_':
             return generator.getBuilder().fsub(lhs, rhs, 'subtmp')
         elif opID == 'binary*_double_double_':
             return generator.getBuilder().fmul(lhs, rhs, 'multmp')
+        elif opID == 'binary-_int_int_':
+            return generator.getBuilder().sub(lhs, rhs, 'subtmp')
+        elif opID == 'binary+_int_int_':
+            return generator.getBuilder().add(lhs, rhs, 'subtmp')
+        elif opID == 'binary*_int_int_':
+            return generator.getBuilder().mul(lhs, rhs, 'subtmp')
         elif opID == 'binary<_double_double_':
             cmp = generator.getBuilder().fcmp_unordered('<', lhs, rhs, 'cmptmp')
+            return generator.getBuilder().uitofp(cmp, ir.IntType(1), 'booltmp')
+        elif opID == 'binary<_int_int_':
+            cmp = generator.getBuilder().cmp_unordered('<', lhs, rhs, 'cmptmp')
             return generator.getBuilder().uitofp(cmp, ir.IntType(1), 'booltmp')
         else:
             # Note one of predefined operator, so it must be a user-defined one.
             # Emit a call to it.
             func = generator.getModule().get_global(opID)
-            self.returnType = func.return_value.type
             return generator.getBuilder().call(func, [lhs, rhs], 'binop')
 

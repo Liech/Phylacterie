@@ -5,10 +5,11 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class UnaryExprAST(ExprAST):
-    def __init__(self, parent, op, operand):
+    def __init__(self, parent, op, operand, typeVault):
         self.op = op
         self.operand = operand
         self.parent = parent
+        self.typeVault = typeVault
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(
@@ -16,16 +17,16 @@ class UnaryExprAST(ExprAST):
         s += self.operand.dump(indent + 2)
         return s
 
-    def parse(parser, parent):
+    def parse(parser, parent, typeVault):
         # no unary operator before a primary
         if (not parser.cur_tok.kind == TokenKind.OPERATOR or
             parser.cur_tok.value in ('(', ',')):
-            return parser._parse_primary(parent)
+            return parser._parse_primary(parent,typeVault)
 
         # unary operator
         op = parser.cur_tok.value
         parser._get_next_token()
-        return UnaryExprAST(parent, op, UnaryExprAST.parse(parser, parent))
+        return UnaryExprAST(parent, op, UnaryExprAST.parse(parser, parent,typeVault),typeVault)
 
     def codegen(self, generator):
         operand = self.operand.codegen(generator)

@@ -30,6 +30,7 @@
     <Compile Include="Phylacterie\AST\CallExprAST.py" />
     <Compile Include="Phylacterie\AST\BoolExprAST.py" />
     <Compile Include="Phylacterie\AST\ExprAST.py" />
+    <Compile Include="Phylacterie\AST\IntExprAST.py" />
     <Compile Include="Phylacterie\AST\WhileExprAST.py" />
     <Compile Include="Phylacterie\AST\FunctionAST.py" />
     <Compile Include="Phylacterie\AST\IfExprAST.py" />
@@ -51,6 +52,7 @@
     <Compile Include="Phylacterie\ParseError.py" />
     <Compile Include="Phylacterie\Parser.py" />
     <Compile Include="Phylacterie\string2irType.py" />
+    <Compile Include="Phylacterie\TypeContainer.py" />
     <Compile Include="Phylacterie\__init__.py" />
     <Compile Include="Phylacterie\AST\Token.py" />
   </ItemGroup>

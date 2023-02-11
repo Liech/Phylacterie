@@ -8,11 +8,11 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class CallExprAST(ExprAST):
-    def __init__(self, parent, callee, args):
+    def __init__(self, parent, callee, args, typeVault):
         self.callee = callee
         self.args = args
         self.parent = parent
-        self.returnType = None
+        self.typeVault = typeVault
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(
@@ -22,26 +22,26 @@ class CallExprAST(ExprAST):
         return s[:-1]  # snip out trailing '\n'
       
     def getReturnType(self):
-      return self.returnType
+      return self.typeVault.getType(self.getID());
 
-    def parse(parser, parent):
+    def parse(parser, parent,typeVault):
         id_name = parser.cur_tok.value
         parser._get_next_token()
         # If followed by a '(' it's a call; otherwise, a simple variable ref.
         if not parser._cur_tok_is_operator('('):
-            return VariableExprAST(parent, id_name)
+            return VariableExprAST(parent, id_name,typeVault)
 
         parser._get_next_token()
         args = []
         if not parser._cur_tok_is_operator(')'):
             while True:
-                args.append(parser._parse_expression(parent))
+                args.append(parser._parse_expression(parent,typeVault))
                 if parser._cur_tok_is_operator(')'):
                     break
                 parser._match(TokenKind.OPERATOR, ',')
 
         parser._get_next_token()  # consume the ')'
-        return CallExprAST(parent, id_name, args)
+        return CallExprAST(parent, id_name, args,typeVault)
 
 
     def getID(self):
@@ -49,7 +49,6 @@ class CallExprAST(ExprAST):
       return self.callee + '_' + args;
 
     def codegen(self, generator):
-        self.returnType = generator.getVariableType(self.callee);
         call_args = [arg.codegen(generator) for arg in self.args]
         callee_func = generator.getModule().get_global(self.getID())
         if callee_func is None or not isinstance(callee_func, ir.Function):

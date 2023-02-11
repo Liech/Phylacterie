@@ -6,11 +6,12 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class IfExprAST(ExprAST):
-    def __init__(self, parent, cond_expr, then_expr, else_expr):
+    def __init__(self, parent, cond_expr, then_expr, else_expr, typeVault):
         self.cond_expr = cond_expr
         self.then_expr = then_expr
         self.else_expr = else_expr
         self.parent = parent
+        self.typeVault = typeVault
 
     def dump(self, indent=0):
         prefix = ' ' * indent
@@ -25,18 +26,18 @@ class IfExprAST(ExprAST):
     def getReturnType(self):
       return self.then_expr.getReturnType();
 
-    def parse(parser, parent):
+    def parse(parser, parent, typeVault):
         parser._get_next_token()  # consume the 'if'        
         parser._match(TokenKind.OPERATOR, '(')
-        cond_expr = parser._parse_expression(parent)
+        cond_expr = parser._parse_expression(parent, typeVault)
         parser._match(TokenKind.OPERATOR, ')')
-        then_expr = parser._parse_expression(parent)
+        then_expr = parser._parse_expression(parent, typeVault)
         if parser.cur_tok.kind == TokenKind.ELSE:
           parser._match(TokenKind.ELSE)
-          else_expr = parser._parse_expression(parent)
-          return IfExprAST(parent, cond_expr, then_expr, else_expr)
+          else_expr = parser._parse_expression(parent, typeVault)
+          return IfExprAST(parent, cond_expr, then_expr, else_expr, typeVault)
         else:
-          return IfExprAST(parent, cond_expr, then_expr, None)
+          return IfExprAST(parent, cond_expr, then_expr, None, typeVault)
 
     def codegen(self, generator):
         if (self.else_expr is None):

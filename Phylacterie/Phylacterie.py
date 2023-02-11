@@ -8,6 +8,7 @@ from .Parser import Parser
 from .AST import *
 from .BuiltIn import BuiltIn
 from .irType2cType import irType2cType
+from TypeContainer import TypeContainer
 
 class Phylacterie(object):
     def __init__(self):
@@ -30,9 +31,10 @@ class Phylacterie(object):
 
 
     def evaluate(self, codestr, optimize=True, llvmdump=False):
-        self.root = ScopeAST(None,None);
+        typeVault = TypeContainer();
+        self.root = ScopeAST(None,None, typeVault);
         self.root.isGlobalScope = True;
-        ast = self.parser.parse_toplevel(self.root,codestr)
+        ast = self.parser.parse_toplevel(self.root,codestr,typeVault)
         self.codegen.generate_code(ast)
         
         if llvmdump:

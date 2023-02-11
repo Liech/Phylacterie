@@ -7,10 +7,11 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class VarExprAST(ExprAST):
-    def __init__(self,parent, var):
+    def __init__(self,parent, var, typeVault):
         # vars is a sequence of (name, init) pairs
         self.var = var
         self.parent = parent
+        self.typeVault = typeVault
 
     def dump(self, indent=0):
         prefix = ' ' * indent
@@ -23,7 +24,7 @@ class VarExprAST(ExprAST):
                 s += '=\n' + init.dump(indent+2) + '\n'
         return s
 
-    def parse(parser, parent):
+    def parse(parser, parent, typeVault):
         parser._get_next_token()  # consume the 'var'
         vars = []
 
@@ -41,11 +42,12 @@ class VarExprAST(ExprAST):
         # Parse the optional initializer
         if parser._cur_tok_is_operator('='):
             parser._get_next_token()  # consume the '='
-            init = parser._parse_expression(parent)
+            init = parser._parse_expression(parent, typeVault)
         else:
             init = None
 
-        return VarExprAST(parent, (name, init, string2irType(datatype)))
+        typeVault.registerType(name,string2irType(datatype))
+        return VarExprAST(parent, (name, init, string2irType(datatype)), typeVault)
 
     def codegen(self, generator):
         old_bindings = []
