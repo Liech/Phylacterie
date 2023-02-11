@@ -17,6 +17,9 @@ class CodeGenerator(object):
     def getVariableType(self, name):
       return self._variableTypes[name];
 
+    def registerVariableType(self, name, type):      
+        self._variableTypes[name] = type;
+
     def setBuilder(self, builder):
       self._builder = builder;
 

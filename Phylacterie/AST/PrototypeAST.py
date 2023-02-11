@@ -99,6 +99,7 @@ class PrototypeAST(ASTNode):
 
     def codegen(self,generator):
         funcname = self.name
+        generator.registerVariableType(self.name,self.returnType);
         funcID = self.getID();
         # Create a function type
         func_ty = ir.FunctionType(self.returnType,  self.parameterTypes)

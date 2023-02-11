@@ -2,6 +2,7 @@ from .ASTNode import ASTNode
 from .PrototypeAST import PrototypeAST
 from .ScopeAST import ScopeAST
 from ..string2irType import string2irType
+from irType2string import irType2string
 from .Token import *
 
 import llvmlite.ir as ir
@@ -54,6 +55,7 @@ class FunctionAST(ASTNode):
             alloca = generator.getBuilder().alloca(self.proto.parameterTypes[i], name=arg.name)
             generator.getBuilder().store(arg, alloca)
             generator.getSymtab()[arg.name] = alloca
+            generator.registerVariableType(arg.name, irType2string(self.proto.returnType))
 
         retval = self.body.codegen(generator)
         generator.getBuilder().ret(retval)

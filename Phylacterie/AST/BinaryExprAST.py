@@ -76,21 +76,21 @@ class BinaryExprAST(ExprAST):
 
         lhs = self.lhs.codegen(generator)
         rhs = self.rhs.codegen(generator)
+        opID = self.getID();
 
         self.returnType = ir.DoubleType()
-        if self.op == '+':
+        if opID == 'binary+_double_double_':
             return generator.getBuilder().fadd(lhs, rhs, 'addtmp')
-        elif self.op == '-':
+        elif opID == 'binary-_double_double_':
             return generator.getBuilder().fsub(lhs, rhs, 'subtmp')
-        elif self.op == '*':
+        elif opID == 'binary*_double_double_':
             return generator.getBuilder().fmul(lhs, rhs, 'multmp')
-        elif self.op == '<':
+        elif opID == 'binary<_double_double_':
             cmp = generator.getBuilder().fcmp_unordered('<', lhs, rhs, 'cmptmp')
             return generator.getBuilder().uitofp(cmp, ir.IntType(1), 'booltmp')
         else:
             # Note one of predefined operator, so it must be a user-defined one.
             # Emit a call to it.
-            opID = self.getID();
             func = generator.getModule().get_global(opID)
             self.returnType = func.return_value.type
             return generator.getBuilder().call(func, [lhs, rhs], 'binop')

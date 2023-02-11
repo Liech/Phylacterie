@@ -12,6 +12,7 @@ class CallExprAST(ExprAST):
         self.callee = callee
         self.args = args
         self.parent = parent
+        self.returnType = None
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(
@@ -21,7 +22,7 @@ class CallExprAST(ExprAST):
         return s[:-1]  # snip out trailing '\n'
       
     def getReturnType(self):
-      return ir.DoubleType();
+      return self.returnType
 
     def parse(parser, parent):
         id_name = parser.cur_tok.value
@@ -48,10 +49,11 @@ class CallExprAST(ExprAST):
       return self.callee + '_' + args;
 
     def codegen(self, generator):
+        self.returnType = generator.getVariableType(self.callee);
+        call_args = [arg.codegen(generator) for arg in self.args]
         callee_func = generator.getModule().get_global(self.getID())
         if callee_func is None or not isinstance(callee_func, ir.Function):
             raise CodegenError('Call to unknown function', self.getID())
         if len(callee_func.args) != len(self.args):
             raise CodegenError('Call argument length mismatch', self.getID())
-        call_args = [arg.codegen(generator) for arg in self.args]
         return generator.getBuilder().call(callee_func, call_args, 'calltmp')
