@@ -15,7 +15,6 @@ class TypeContainer(object):
     self._globalTypes['binary<_double_double_'] = ir.IntType(1);
     self._globalTypes['binary<_int_int_'] = ir.IntType(1);
 
-
   def getType(self, name):
     if (name in self._globalTypes):
       return self._globalTypes[name];

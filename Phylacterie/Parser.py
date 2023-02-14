@@ -30,12 +30,6 @@ class Parser(object):
         while self.cur_tok.kind != TokenKind.EOF:
             if self.cur_tok.kind == TokenKind.EXTERN:
                 result.append(self._parse_external(root, core))
-            elif self.cur_tok.kind == TokenKind.DEF:
-                result.append(FunctionAST.parse(self, root, core))
-            elif self.cur_tok.kind == TokenKind.SCOPESTART:
-                result.append(ScopeAST.parse(self,root, core))
-            elif self.cur_tok.kind == TokenKind.FALSE or self.cur_tok.kind == TokenKind.TRUE:
-                result.append(BoolExprAST.parse(self,root))
             else:
                 result.append(self._parse_expression(root, core))                
         root.setBody(result);
@@ -94,26 +88,26 @@ class Parser(object):
     #   ::= ifexpr
     #   ::= forexpr
     def _parse_primary(self,parent, core):
-        if self.cur_tok.kind == TokenKind.IDENTIFIER:
-            return CallExprAST.parse(self, parent, core);
-        elif self.cur_tok.kind == TokenKind.NUMBER:
+        if self.cur_tok.kind == TokenKind.NUMBER:
             return self._parse_number_expr(parent, core)
+        elif self.cur_tok.kind == TokenKind.TRUE:
+            return BoolExprAST.parse(self,parent);
+        elif self.cur_tok.kind == TokenKind.FALSE:
+            return BoolExprAST.parse(self,parent);
+
         elif self._cur_tok_is_operator('('):
             return self._parse_paren_expr(parent, core)
         elif self.cur_tok.kind == TokenKind.IF:
             return IfExprAST.parse(self,parent, core);
         elif self.cur_tok.kind == TokenKind.WHILE:
             return WhileExprAST.parse(self,parent, core);
-        elif self.cur_tok.kind == TokenKind.VAR:
-            return VarExprAST.parse(self, parent, core);
         elif self.cur_tok.kind == TokenKind.SCOPESTART:
             return ScopeAST.parse(self,parent, core);
+
+        elif self.cur_tok.kind == TokenKind.IDENTIFIER:
+            return CallExprAST.parse(self, parent, core);
         elif self.cur_tok.kind == TokenKind.DEF:
             return FunctionAST.parse(self, parent, core);
-        elif self.cur_tok.kind == TokenKind.TRUE:
-            return BoolExprAST.parse(self,parent);
-        elif self.cur_tok.kind == TokenKind.FALSE:
-            return BoolExprAST.parse(self,parent);
         else:
             raise ParseError('Unknown token when expecting an expression')
 

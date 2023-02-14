@@ -24,15 +24,9 @@ class VarExprAST(ExprAST):
                 s += '=\n' + init.dump(indent+2) + '\n'
         return s
 
-    def parse(parser, parent, core):
-        parser._get_next_token()  # consume the 'var'
+    def parse(parser, parent, datatype, core):
         vars = []
 
-        # At least one variable name is required
-        if parser.cur_tok.kind != TokenKind.IDENTIFIER:
-            raise ParseError('expected datatype identifier after "var"')         
-        datatype = parser.cur_tok.value
-        parser._get_next_token()  # consume the identifier
         if parser.cur_tok.kind != TokenKind.IDENTIFIER:
           raise ParseError('expected name identifier after "var"')         
 

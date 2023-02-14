@@ -17,16 +17,16 @@ def baseDataTypes():
   assert(result == 2.0)
 
 def variable():  
-  result = Phylacterie().evaluate('var int x = 123 x')
+  result = Phylacterie().evaluate('int x = 123 x')
   assert(result == 123)
-  result = Phylacterie().evaluate('var double x = 123.0 x')
+  result = Phylacterie().evaluate('double x = 123.0 x')
   assert(result == 123.0)
-  result = Phylacterie().evaluate('var bool x = true x')
+  result = Phylacterie().evaluate('bool x = true x')
   assert(result == True)
 
 def loop():  
   result = Phylacterie().evaluate('''
-  var double x = 0.0
+  double x = 0.0
   while(x < 5.0) {
     x=x+1.0
   }

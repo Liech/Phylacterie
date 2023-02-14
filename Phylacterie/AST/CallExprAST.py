@@ -2,6 +2,7 @@ from .ExprAST import ExprAST
 from .CodegenError import CodegenError
 from .Token import *
 from .VariableExprAST import VariableExprAST
+from .VarExprAST import VarExprAST
 from irType2string import irType2string
 
 import llvmlite.ir as ir
@@ -28,6 +29,9 @@ class CallExprAST(ExprAST):
         id_name = parser.cur_tok.value
         parser._get_next_token()
         # If followed by a '(' it's a call; otherwise, a simple variable ref.
+        
+        if (parser.cur_tok.kind == TokenKind.IDENTIFIER):
+            return VarExprAST.parse(parser,parent, id_name, core);
         if not parser._cur_tok_is_operator('('):
             return VariableExprAST(parent, id_name,core)
 
