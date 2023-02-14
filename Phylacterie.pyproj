@@ -47,6 +47,7 @@
     <Compile Include="Phylacterie\Core\Core.py" />
     <Compile Include="Phylacterie\Core\Types.py" />
     <Compile Include="Phylacterie\Core\__init__.py" />
+    <Compile Include="Phylacterie\GenericParser.py" />
     <Compile Include="Phylacterie\irType2cType.py" />
     <Compile Include="Phylacterie\irType2string.py" />
     <Compile Include="Phylacterie\Phylacterie.py" />

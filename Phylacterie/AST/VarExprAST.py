@@ -13,6 +13,9 @@ class VarExprAST(ExprAST):
         self.parent = parent
         self.core = core
 
+    def getSyntax(self):
+      return ['Type', 'identifier', '=', 'Expression'];
+
     def dump(self, indent=0):
         prefix = ' ' * indent
         s = '{0}{1}\n'.format(prefix, self.__class__.__name__)

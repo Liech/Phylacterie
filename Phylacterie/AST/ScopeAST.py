@@ -16,6 +16,9 @@ class ScopeAST(ExprAST):
         self.core = core
         self.types = {}
 
+    def getSyntax(self):
+      return ['{', 'Expression', '}'];
+
     def isScope(self):
       return True;
 

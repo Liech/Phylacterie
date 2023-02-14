@@ -9,6 +9,9 @@ class VariableExprAST(ExprAST):
         self.name = name
         self.parent = parent
         self.core = core
+        
+    def getSyntax(self):
+      return ['identifier'];
 
     def dump(self, indent=0):
         return '{0}{1}[{2}]'.format(

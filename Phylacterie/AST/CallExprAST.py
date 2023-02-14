@@ -14,6 +14,9 @@ class CallExprAST(ExprAST):
         self.args = args
         self.parent = parent
         self.core = core
+        
+    def getSyntax(self):
+      return ['identifier','(',['Expression',[',']],')']
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(

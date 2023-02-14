@@ -21,6 +21,12 @@ class PrototypeAST(ASTNode):
       self.core = core
       self.core.typeContainer.registerType(self.getID(),returnType);
 
+    def getSyntax(self):
+      #return ['Type', 'unary', 'operator','(',['Type','identifier',[',']],')'];
+      #return ['Type', 'binary', 'operator','(',['Type','identifier',[',']],')'];
+      return  ['Type', 'identifier','(',['Type','identifier',[',']],')'];
+
+
     def is_unary_op(self):
         return self.isoperator and len(self.argnames) == 1
 

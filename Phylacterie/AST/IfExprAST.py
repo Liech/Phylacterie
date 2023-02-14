@@ -12,6 +12,9 @@ class IfExprAST(ExprAST):
         self.else_expr = else_expr
         self.parent = parent
         self.core = core
+        
+    def getSyntax(self):
+      return ['if','(','Expression',')', 'Expression', ['else', 'Expression']]
 
     def dump(self, indent=0):
         prefix = ' ' * indent

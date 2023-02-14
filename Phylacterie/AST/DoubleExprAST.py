@@ -8,6 +8,9 @@ class DoubleExprAST(ExprAST):
     def __init__(self, parent, val):
         self.val = val
         self.parent = parent
+        
+    def getSyntax(self):
+      return ['Number','.','Number']
 
     def dump(self, indent=0):
         return '{0}{1}[{2}]'.format(

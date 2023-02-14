@@ -15,6 +15,9 @@ class BinaryExprAST(ExprAST):
         self.rhs = rhs
         self.parent = parent
         self.core = core
+        
+    def getSyntax(self):
+      return ['Expression','operator','Expression']
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(

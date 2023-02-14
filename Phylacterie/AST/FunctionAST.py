@@ -18,6 +18,9 @@ class FunctionAST(ASTNode):
         self.types = {}
 
     _anonymous_function_counter = 0
+    
+    def getSyntax(self):
+      return ['def','Prototype','Scope']
 
     @classmethod
     def create_anonymous(klass,parent, expr, core):

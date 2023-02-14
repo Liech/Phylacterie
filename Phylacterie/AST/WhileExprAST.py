@@ -10,6 +10,9 @@ class WhileExprAST(ExprAST):
         self.body = body
         self.parent = parent
         self.core = core
+        
+    def getSyntax(self):
+      return ['while','(','Expression',')', 'Scope'];
 
     def dump(self, indent=0):
         prefix = ' ' * indent
