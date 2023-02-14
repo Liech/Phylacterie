@@ -5,11 +5,11 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class WhileExprAST(ExprAST):
-    def __init__(self,parent, cond_expr, body, typeVault):
+    def __init__(self,parent, cond_expr, body, core):
         self.cond_expr = cond_expr
         self.body = body
         self.parent = parent
-        self.typeVault = typeVault
+        self.core = core
 
     def dump(self, indent=0):
         prefix = ' ' * indent
@@ -22,18 +22,18 @@ class WhileExprAST(ExprAST):
             prefix, self.body.dump(indent + 2))
         return s
 
-    def parse(parser, parent, typeVault):
+    def parse(parser, parent, core):
         parser._get_next_token()  # consume the 'for'
 
         parser._match(TokenKind.OPERATOR, '(')
 
-        cond_expr = parser._parse_expression(parent,typeVault)
+        cond_expr = parser._parse_expression(parent,core)
 
         parser._match(TokenKind.OPERATOR, ')')
 
-        body = parser._parse_expression(parent,typeVault)
+        body = parser._parse_expression(parent,core)
         
-        return WhileExprAST(parent, cond_expr, body,typeVault)
+        return WhileExprAST(parent, cond_expr, body,core)
 
     def codegen(self, generator):
         loop_bb = generator.getBuilder().function.append_basic_block('loop')

@@ -8,11 +8,11 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class CallExprAST(ExprAST):
-    def __init__(self, parent, callee, args, typeVault):
+    def __init__(self, parent, callee, args, core):
         self.callee = callee
         self.args = args
         self.parent = parent
-        self.typeVault = typeVault
+        self.core = core
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(
@@ -22,26 +22,26 @@ class CallExprAST(ExprAST):
         return s[:-1]  # snip out trailing '\n'
       
     def getReturnType(self):
-      return self.typeVault.getType(self.getID());
+      return self.core.typeContainer.getType(self.getID());
 
-    def parse(parser, parent,typeVault):
+    def parse(parser, parent,core):
         id_name = parser.cur_tok.value
         parser._get_next_token()
         # If followed by a '(' it's a call; otherwise, a simple variable ref.
         if not parser._cur_tok_is_operator('('):
-            return VariableExprAST(parent, id_name,typeVault)
+            return VariableExprAST(parent, id_name,core)
 
         parser._get_next_token()
         args = []
         if not parser._cur_tok_is_operator(')'):
             while True:
-                args.append(parser._parse_expression(parent,typeVault))
+                args.append(parser._parse_expression(parent,core))
                 if parser._cur_tok_is_operator(')'):
                     break
                 parser._match(TokenKind.OPERATOR, ',')
 
         parser._get_next_token()  # consume the ')'
-        return CallExprAST(parent, id_name, args,typeVault)
+        return CallExprAST(parent, id_name, args,core)
 
 
     def getID(self):

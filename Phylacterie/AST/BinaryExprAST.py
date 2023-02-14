@@ -9,12 +9,12 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class BinaryExprAST(ExprAST):
-    def __init__(self, parent, op, lhs, rhs, typeVault):
+    def __init__(self, parent, op, lhs, rhs, core):
         self.op = op
         self.lhs = lhs
         self.rhs = rhs
         self.parent = parent
-        self.typeVault = typeVault
+        self.core = core
 
     def dump(self, indent=0):
         s = '{0}{1}[{2}]\n'.format(
@@ -25,9 +25,9 @@ class BinaryExprAST(ExprAST):
             
     def getReturnType(self):      
       opID = self.getID();
-      return self.typeVault.getType(opID);
+      return self.core.typeContainer.getType(opID);
 
-    def parse(parser, expr_prec, lhs, parent,typeVault):
+    def parse(parser, expr_prec, lhs, parent,core):
         """Parse the right-hand-side of a binary expression.
 
         expr_prec: minimal precedence to keep going (precedence climbing).
@@ -46,7 +46,7 @@ class BinaryExprAST(ExprAST):
             parser._get_next_token()  # consume the operator
             if (op == ';' and parser.cur_tok.kind == TokenKind.EOF):
               return lhs;
-            rhs = UnaryExprAST.parse(parser, parent, typeVault);
+            rhs = UnaryExprAST.parse(parser, parent, core);
 
             next_prec = parser._cur_tok_precedence()
             # There are three options:
@@ -56,10 +56,10 @@ class BinaryExprAST(ExprAST):
             # 3. next_prec < cur_prec: no need for a recursive call, combine
             #    lhs and the next iteration will immediately bail out.
             if cur_prec < next_prec:
-                rhs = BinaryExprAST.parse(parser,  cur_prec + 1, rhs, parent, typeVault)
+                rhs = BinaryExprAST.parse(parser,  cur_prec + 1, rhs, parent, core)
 
             # Merge lhs/rhs
-            lhs = BinaryExprAST(parent, op, lhs, rhs, typeVault)
+            lhs = BinaryExprAST(parent, op, lhs, rhs, core)
 
     def getID(self):
       return 'binary' + self.op + '_' + irType2string(self.lhs.getReturnType()) + '_' + irType2string(self.rhs.getReturnType()) + '_';

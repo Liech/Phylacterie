@@ -9,7 +9,7 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class PrototypeAST(ASTNode):
-    def __init__(self, parent, name, arguments, isoperator, prec, returnType, typeVault):
+    def __init__(self, parent, name, arguments, isoperator, prec, returnType, core):
       assert(returnType)  
       self.name = name
       self.argnames = [i['name'] for i in arguments]
@@ -18,8 +18,8 @@ class PrototypeAST(ASTNode):
       self.parent = parent
       self.returnType = returnType
       self.parameterTypes =  [i['type'] for i in arguments]        
-      self.typeVault = typeVault
-      self.typeVault.registerType(self.getID(),returnType);
+      self.core = core
+      self.core.typeContainer.registerType(self.getID(),returnType);
 
     def is_unary_op(self):
         return self.isoperator and len(self.argnames) == 1
@@ -39,7 +39,7 @@ class PrototypeAST(ASTNode):
             s += '[operator with prec={0}]'.format(self.prec)
         return s
 
-    def parse(parser, parent,typeVault):
+    def parse(parser, parent,core):
         if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
           raise ParseError('Expected datatype identifier')
         datatype = string2irType(parser.cur_tok.value)
@@ -94,11 +94,11 @@ class PrototypeAST(ASTNode):
         elif name.startswith('unary') and len(argnames) != 1:
             raise ParseError('Expected unary operator to have one operand')
 
-        typeVault.registerType(name, datatype)
+        core.typeContainer.registerType(name, datatype)
         for i in range(0,len(argnames)):
-          typeVault.registerType(argnames[i]['name'],argnames[i]['type'])
+          core.typeContainer.registerType(argnames[i]['name'],argnames[i]['type'])
 
-        return PrototypeAST(parent, name, argnames, name.startswith(('unary', 'binary')), prec, datatype,typeVault)
+        return PrototypeAST(parent, name, argnames, name.startswith(('unary', 'binary')), prec, datatype,core)
 
     def getID(self):
       args = ''.join([irType2string(t) + '_' for t in self.parameterTypes])

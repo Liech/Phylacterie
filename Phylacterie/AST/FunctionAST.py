@@ -4,25 +4,26 @@ from .ScopeAST import ScopeAST
 from ..string2irType import string2irType
 from irType2string import irType2string
 from .Token import *
+import Core
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 class FunctionAST(ASTNode):
-    def __init__(self, parent, proto, body, typeVault):
+    def __init__(self, parent, proto, body, core):
         self.proto = proto
         self.body = body
         self.parent = parent
-        self.typeVault = typeVault
+        self.core = core
         self.types = {}
 
     _anonymous_function_counter = 0
 
     @classmethod
-    def create_anonymous(klass,parent, expr, typeVault):
+    def create_anonymous(klass,parent, expr, core):
         """Create an anonymous function to hold an expression."""
         klass._anonymous_function_counter += 1
-        return klass(parent,PrototypeAST(parent, '_anon{0}'.format(klass._anonymous_function_counter),[], False,0,expr.getReturnType(),typeVault),expr,typeVault)
+        return klass(parent,PrototypeAST(parent, '_anon{0}'.format(klass._anonymous_function_counter),[], False,0,expr.getReturnType(),core),expr,core)
 
     def is_anonymous(self):
         return self.proto.name.startswith('_anon')
@@ -33,22 +34,22 @@ class FunctionAST(ASTNode):
         s += self.body.dump(indent + 2) + '\n'
         return s
 
-    def parse(parser, parent,typeVault):
+    def parse(parser, parent,core):
         parser._get_next_token()  # consume 'def'
-        typeVault.stack();
-        proto = PrototypeAST.parse(parser,parent,typeVault);
-        expr = ScopeAST.parse(parser,parent,typeVault);
-        result = FunctionAST(parent, proto, expr,typeVault)
-        result.types = typeVault.getTypes()
-        typ = typeVault.getType(proto.getID())
-        typeVault.pop()
-        typeVault.registerType(proto.getID(),typ)
+        core.typeContainer.stack();
+        proto = PrototypeAST.parse(parser,parent,core);
+        expr = ScopeAST.parse(parser,parent,core);
+        result = FunctionAST(parent, proto, expr,core)
+        result.types = core.typeContainer.getTypes()
+        typ = core.typeContainer.getType(proto.getID())
+        core.typeContainer.pop()
+        core.typeContainer.registerType(proto.getID(),typ)
         return result
 
     def codegen(self, generator):
         # Reset the symbol table. Prototype generation will pre-populate it with
         # function arguments.
-        self.typeVault.setTypes(self.types);
+        self.core.typeContainer.setTypes(self.types);
         generator.storeSymtab();
         generator.storeBuilder();
         
@@ -69,5 +70,5 @@ class FunctionAST(ASTNode):
         generator.getBuilder().ret(retval)
         generator.popSymtab();
         generator.popBuilder();
-        self.typeVault.pop();
+        self.core.typeContainer.pop();
         return func

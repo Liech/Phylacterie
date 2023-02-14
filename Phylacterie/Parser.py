@@ -7,7 +7,7 @@ from .Lexer import Lexer
 from .AST import *
 from .ParseError import ParseError
 from .string2irType import string2irType
-from TypeContainer import TypeContainer
+import Core
 
 class Parser(object):
     """Parser for the Kaleidoscope language.
@@ -20,7 +20,7 @@ class Parser(object):
         self.cur_tok = None
 
     # toplevel ::= definition | external | expression | ';'
-    def parse_toplevel(self, root, buf, typeVault):
+    def parse_toplevel(self, root, buf, core):
         """Given a string, returns an AST node representing it."""
         self.token_generator = Lexer(buf).tokens()
         self.cur_tok = None
@@ -29,18 +29,18 @@ class Parser(object):
         result = [];
         while self.cur_tok.kind != TokenKind.EOF:
             if self.cur_tok.kind == TokenKind.EXTERN:
-                result.append(self._parse_external(root, typeVault))
+                result.append(self._parse_external(root, core))
             elif self.cur_tok.kind == TokenKind.DEF:
-                result.append(FunctionAST.parse(self, root, typeVault))
+                result.append(FunctionAST.parse(self, root, core))
             elif self.cur_tok.kind == TokenKind.SCOPESTART:
-                result.append(ScopeAST.parse(self,root, typeVault))
+                result.append(ScopeAST.parse(self,root, core))
             elif self.cur_tok.kind == TokenKind.FALSE or self.cur_tok.kind == TokenKind.TRUE:
                 result.append(BoolExprAST.parse(self,root))
             else:
-                result.append(self._parse_expression(root, typeVault))                
+                result.append(self._parse_expression(root, core))                
         root.setBody(result);
-        root.types = typeVault.getTypes()
-        return FunctionAST.create_anonymous(None, root, typeVault)
+        root.types = core.typeContainer.getTypes()
+        return FunctionAST.create_anonymous(None, root, core)
 
     def _get_next_token(self):
         self.cur_tok = next(self.token_generator)
@@ -72,18 +72,18 @@ class Parser(object):
                 self.cur_tok.value == op)
 
     # numberexpr ::= number
-    def _parse_number_expr(self,parent, typeVault):
+    def _parse_number_expr(self,parent, core):
         if('.' in self.cur_tok.value):
-          result = DoubleExprAST(parent, self.cur_tok.value, typeVault)
+          result = DoubleExprAST(parent, self.cur_tok.value)
         else:
           result = IntExprAST(parent, self.cur_tok.value)
         self._get_next_token()  # consume the number
         return result
 
     # parenexpr ::= '(' expression ')'
-    def _parse_paren_expr(self, parent, typeVault):
+    def _parse_paren_expr(self, parent, core):
         self._get_next_token()  # consume the '('
-        expr = self._parse_expression(parent, typeVault)
+        expr = self._parse_expression(parent, core)
         self._match(TokenKind.OPERATOR, ')')
         return expr
 
@@ -93,23 +93,23 @@ class Parser(object):
     #   ::= parenexpr
     #   ::= ifexpr
     #   ::= forexpr
-    def _parse_primary(self,parent, typeVault):
+    def _parse_primary(self,parent, core):
         if self.cur_tok.kind == TokenKind.IDENTIFIER:
-            return CallExprAST.parse(self, parent, typeVault);
+            return CallExprAST.parse(self, parent, core);
         elif self.cur_tok.kind == TokenKind.NUMBER:
-            return self._parse_number_expr(parent, typeVault)
+            return self._parse_number_expr(parent, core)
         elif self._cur_tok_is_operator('('):
-            return self._parse_paren_expr(parent, typeVault)
+            return self._parse_paren_expr(parent, core)
         elif self.cur_tok.kind == TokenKind.IF:
-            return IfExprAST.parse(self,parent, typeVault);
+            return IfExprAST.parse(self,parent, core);
         elif self.cur_tok.kind == TokenKind.WHILE:
-            return WhileExprAST.parse(self,parent, typeVault);
+            return WhileExprAST.parse(self,parent, core);
         elif self.cur_tok.kind == TokenKind.VAR:
-            return VarExprAST.parse(self, parent, typeVault);
+            return VarExprAST.parse(self, parent, core);
         elif self.cur_tok.kind == TokenKind.SCOPESTART:
-            return ScopeAST.parse(self,parent, typeVault);
+            return ScopeAST.parse(self,parent, core);
         elif self.cur_tok.kind == TokenKind.DEF:
-            return FunctionAST.parse(self, parent, typeVault);
+            return FunctionAST.parse(self, parent, core);
         elif self.cur_tok.kind == TokenKind.TRUE:
             return BoolExprAST.parse(self,parent);
         elif self.cur_tok.kind == TokenKind.FALSE:
@@ -118,18 +118,18 @@ class Parser(object):
             raise ParseError('Unknown token when expecting an expression')
 
     # expression ::= primary binoprhs
-    def _parse_expression(self, parent, typeVault):
+    def _parse_expression(self, parent, core):
         if (self.cur_tok.kind == TokenKind.SCOPESTART):
-           return ScopeAST.parse(self,parent, typeVault);
+           return ScopeAST.parse(self,parent, core);
 
-        lhs = UnaryExprAST.parse(self, parent, typeVault);
+        lhs = UnaryExprAST.parse(self, parent, core);
         # Start with precedence 0 because we want to bind any operator to the
         # expression at this point.
-        result = BinaryExprAST.parse(self,  0, lhs, parent, typeVault)
+        result = BinaryExprAST.parse(self,  0, lhs, parent, core)
 
         return result;
 
     # external ::= 'extern' prototype
-    def _parse_external(self,parent, typeVault):
+    def _parse_external(self,parent, core):
         self._get_next_token()  # consume 'extern'
-        return PrototypeAST.parse(self,parent, typeVault);
+        return PrototypeAST.parse(self,parent, core);
