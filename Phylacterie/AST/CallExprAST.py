@@ -28,17 +28,8 @@ class CallExprAST(ExprAST):
     def getReturnType(self):
       return self.core.typeContainer.getType(self.getID());
 
-    def parse(parser, parent,core):
-        id_name = parser.cur_tok.value
-        parser._get_next_token()
-        # If followed by a '(' it's a call; otherwise, a simple variable ref.
-        
-        if (parser.cur_tok.kind == TokenKind.IDENTIFIER):
-            return VarExprAST.parse(parser,parent, id_name, core);
-        if not parser._cur_tok_is_operator('('):
-            return VariableExprAST(parent, id_name,core)
-
-        parser._get_next_token()
+    def parse(parser, parent,id_name, core):
+        parser._get_next_token() # '('
         args = []
         if not parser._cur_tok_is_operator(')'):
             while True:

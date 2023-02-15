@@ -36,7 +36,9 @@ class WhileExprAST(ExprAST):
 
         body = parser._parse_expression(parent,core)
         
-        return WhileExprAST(parent, cond_expr, body,core)
+        result = WhileExprAST(parent, cond_expr, body,core)        
+        parser.nextNeedsNoSemicolon();
+        return result;
 
     def codegen(self, generator):
         loop_bb = generator.getBuilder().function.append_basic_block('loop')

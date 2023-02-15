@@ -37,16 +37,17 @@ class FunctionAST(ASTNode):
         s += self.body.dump(indent + 2) + '\n'
         return s
 
-    def parse(parser, parent,core):
-        parser._get_next_token()  # consume 'def'
+    def parse(parser, parent,data,name, core):
         core.typeContainer.stack();
-        proto = PrototypeAST.parse(parser,parent,core);
+        proto = PrototypeAST.parse(parser,parent,data,name,core);
         expr = ScopeAST.parse(parser,parent,core);
         result = FunctionAST(parent, proto, expr,core)
         result.types = core.typeContainer.getTypes()
         typ = core.typeContainer.getType(proto.getID())
         core.typeContainer.pop()
         core.typeContainer.registerType(proto.getID(),typ)
+        
+        parser.nextNeedsNoSemicolon();
         return result
 
     def codegen(self, generator):

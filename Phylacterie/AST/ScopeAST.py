@@ -1,3 +1,4 @@
+from parser import ParserError
 from .ExprAST import ExprAST
 from .Token import *
 
@@ -17,7 +18,7 @@ class ScopeAST(ExprAST):
         self.types = {}
 
     def getSyntax(self):
-      return ['{', 'Expression', '}'];
+      return ['{', ['Expression',';'], '}'];
 
     def isScope(self):
       return True;
@@ -50,14 +51,15 @@ class ScopeAST(ExprAST):
     def parse(parser, parent,core):
         result = ScopeAST(parent,None,core);
         parser._match(TokenKind.SCOPESTART);
-        
         body = []
         while parser.cur_tok.kind != TokenKind.SCOPEEND:
           body.append(parser._parse_expression(result,core));
+          parser.semicolon();
 
         parser._match(TokenKind.SCOPEEND);
         result.setBody(body);
-        result.types = core.typeContainer.getTypes()
+        result.types = core.typeContainer.getTypes()        
+        parser.nextNeedsNoSemicolon();
         return result;
 
     def codegen(self, generator):      

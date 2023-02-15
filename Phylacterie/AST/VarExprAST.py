@@ -27,14 +27,8 @@ class VarExprAST(ExprAST):
                 s += '=\n' + init.dump(indent+2) + '\n'
         return s
 
-    def parse(parser, parent, datatype, core):
+    def parse(parser, parent, datatype,varName, core):
         vars = []
-
-        if parser.cur_tok.kind != TokenKind.IDENTIFIER:
-          raise ParseError('expected name identifier after "var"')         
-
-        name = parser.cur_tok.value
-        parser._get_next_token()  # consume the identifier
 
         # Parse the optional initializer
         if parser._cur_tok_is_operator('='):
@@ -43,8 +37,8 @@ class VarExprAST(ExprAST):
         else:
             init = None
 
-        core.typeContainer.registerType(name,string2irType(datatype))
-        return VarExprAST(parent, (name, init, string2irType(datatype)), core)
+        core.typeContainer.registerType(varName,string2irType(datatype))
+        return VarExprAST(parent, (varName, init, string2irType(datatype)), core)
 
     def codegen(self, generator):
         old_bindings = []

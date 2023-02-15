@@ -25,13 +25,15 @@ class Parser(object):
         self.token_generator = Lexer(buf).tokens()
         self.cur_tok = None
         self._get_next_token()
+        self.noSemicolon = False
 
         result = [];
         while self.cur_tok.kind != TokenKind.EOF:
             if self.cur_tok.kind == TokenKind.EXTERN:
                 result.append(self._parse_external(root, core))
             else:
-                result.append(self._parse_expression(root, core))                
+                result.append(self._parse_expression(root, core))       
+            self.semicolon();
         root.setBody(result);
         root.types = core.typeContainer.getTypes()
         return FunctionAST.create_anonymous(None, root, core)
@@ -105,7 +107,7 @@ class Parser(object):
             return ScopeAST.parse(self,parent, core);
 
         elif self.cur_tok.kind == TokenKind.IDENTIFIER:
-            return CallExprAST.parse(self, parent, core);
+            return IdentifierPreAST.parse(self, parent, core);
         elif self.cur_tok.kind == TokenKind.DEF:
             return FunctionAST.parse(self, parent, core);
         else:
@@ -126,4 +128,20 @@ class Parser(object):
     # external ::= 'extern' prototype
     def _parse_external(self,parent, core):
         self._get_next_token()  # consume 'extern'
-        return PrototypeAST.parse(self,parent, core);
+        datatype = self.cur_tok
+        self._get_next_token()
+        varName = self.cur_tok
+        self._get_next_token()
+        return PrototypeAST.parse(self,parent,datatype,varName, core);
+
+    def nextNeedsNoSemicolon(self):
+      self.noSemicolon = True
+
+    def semicolon(self):
+      if (self.noSemicolon):
+        self.noSemicolon = False
+        return
+      if(not self._cur_tok_is_operator(';')):
+        raise ParseError();
+      else:
+        self._get_next_token()

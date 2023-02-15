@@ -45,24 +45,18 @@ class PrototypeAST(ASTNode):
             s += '[operator with prec={0}]'.format(self.prec)
         return s
 
-    def parse(parser, parent,core):
-        if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
-          raise ParseError('Expected datatype identifier')
-        datatype = string2irType(parser.cur_tok.value)
-        parser._get_next_token()
+    def parse(parser, parent,datatype,varName,core):
+        datatype = string2irType(datatype.value)
 
         prec = 30
-        if parser.cur_tok.kind == TokenKind.IDENTIFIER:
-            name = parser.cur_tok.value
-            parser._get_next_token()
-        elif parser.cur_tok.kind == TokenKind.UNARY:
-            parser._get_next_token()
+        if varName.kind == TokenKind.IDENTIFIER:
+            name = varName.value
+        elif varName.kind == TokenKind.UNARY:
             if parser.cur_tok.kind != TokenKind.OPERATOR:
                 raise ParseError('Expected operator after "unary"')
             name = 'unary{0}'.format(parser.cur_tok.value)
             parser._get_next_token()
-        elif parser.cur_tok.kind == TokenKind.BINARY:
-            parser._get_next_token()
+        elif varName.kind == TokenKind.BINARY:
             if parser.cur_tok.kind != TokenKind.OPERATOR:
                 raise ParseError('Expected operator after "binary"')
             name = 'binary{0}'.format(parser.cur_tok.value)

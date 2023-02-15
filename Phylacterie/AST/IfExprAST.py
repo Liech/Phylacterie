@@ -35,12 +35,16 @@ class IfExprAST(ExprAST):
         cond_expr = parser._parse_expression(parent, core)
         parser._match(TokenKind.OPERATOR, ')')
         then_expr = parser._parse_expression(parent, core)
+        parser.semicolon();
         if parser.cur_tok.kind == TokenKind.ELSE:
           parser._match(TokenKind.ELSE)
           else_expr = parser._parse_expression(parent, core)
-          return IfExprAST(parent, cond_expr, then_expr, else_expr, core)
+          parser.semicolon();
+          result = IfExprAST(parent, cond_expr, then_expr, else_expr, core)
         else:
-          return IfExprAST(parent, cond_expr, then_expr, None, core)
+          result = IfExprAST(parent, cond_expr, then_expr, None, core)
+        parser.nextNeedsNoSemicolon();
+        return result;
 
     def codegen(self, generator):
         if (self.else_expr is None):

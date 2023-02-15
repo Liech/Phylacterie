@@ -14,6 +14,8 @@ from .ScopeAST import ScopeAST
 from .BoolExprAST import BoolExprAST
 from .IntExprAST import IntExprAST
 
+from .IdentifierPreAST import IdentifierPreAST
+
 from .Token import TokenKind
 from .Token import Token
 
