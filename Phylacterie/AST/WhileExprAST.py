@@ -14,17 +14,6 @@ class WhileExprAST(ExprAST):
     def getSyntax(self):
       return ['while','(','Expression',')', 'Scope'];
 
-    def dump(self, indent=0):
-        prefix = ' ' * indent
-        s = '{0}{1}\n'.format(prefix, self.__class__.__name__)
-        #s += '{0} Start [{1}]:\n{2}\n'.format(
-        #    prefix, self.id_name, self.start_expr.dump(indent + 2))
-        s += '{0} End:\n{1}\n'.format(
-            prefix, self.cond_expr.dump(indent + 2))
-        s += '{0} Body:\n{1}\n'.format(
-            prefix, self.body.dump(indent + 2))
-        return s
-
     def parse(parser, parent, core):
         parser._get_next_token()  # consume the 'for'
 

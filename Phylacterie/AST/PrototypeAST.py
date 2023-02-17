@@ -38,14 +38,6 @@ class PrototypeAST(ASTNode):
         assert self.isoperator
         return self.name[-1]
 
-    def dump(self, indent=0):
-        s = '{0}{1} {2}({3})'.format(
-            ' ' * indent, self.__class__.__name__, self.name,
-            ', '.join(self.argnames))
-        if self.isoperator:
-            s += '[operator with prec={0}]'.format(self.prec)
-        return s
-
     def parse(parser, parent,datatype,varName,core):
         prec = 30
         if varName.kind == TokenKind.IDENTIFIER:

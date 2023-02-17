@@ -18,13 +18,6 @@ class BinaryExprAST(ExprAST):
         
     def getSyntax(self):
       return ['Expression','operator','Expression']
-
-    def dump(self, indent=0):
-        s = '{0}{1}[{2}]\n'.format(
-            ' ' * indent, self.__class__.__name__, self.op)
-        s += self.lhs.dump(indent + 2) + '\n'
-        s += self.rhs.dump(indent + 2)
-        return s
             
     def getReturnType(self):      
       opID = self.getID();

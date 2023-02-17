@@ -16,17 +16,6 @@ class VarExprAST(ExprAST):
     def getSyntax(self):
       return ['Type', 'identifier', '=', 'Expression'];
 
-    def dump(self, indent=0):
-        prefix = ' ' * indent
-        s = '{0}{1}\n'.format(prefix, self.__class__.__name__)
-        for name, init, datatype in [self.var]:
-            s += '{0} {1}'.format(prefix, name)
-            if init is None:
-                s += '\n'
-            else:
-                s += '=\n' + init.dump(indent+2) + '\n'
-        return s
-
     def parse(parser, parent, datatype,varName, core):
         vars = []
 

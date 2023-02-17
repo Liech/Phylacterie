@@ -17,13 +17,6 @@ class CallExprAST(ExprAST):
         
     def getSyntax(self):
       return ['identifier','(',['Expression',[',']],')']
-
-    def dump(self, indent=0):
-        s = '{0}{1}[{2}]\n'.format(
-            ' ' * indent, self.__class__.__name__, self.callee)
-        for arg in self.args:
-            s += arg.dump(indent + 2) + '\n'
-        return s[:-1]  # snip out trailing '\n'
       
     def getReturnType(self):
       return self.core.typeContainer.getType(self.getID());

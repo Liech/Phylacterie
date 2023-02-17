@@ -14,10 +14,6 @@ class DatatypeAST(ExprAST):
     def getSyntax(self):
       return ['Datatype']
 
-    def dump(self, indent=0):
-        return '{0}{1}[{2}]'.format(
-            ' ' * indent, self.__class__.__name__, self.val)
-
     def parse(parser,parent,identifier, core):
       templateTypes = []
       if(parser._cur_tok_is_operator('<')):

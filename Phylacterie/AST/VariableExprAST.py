@@ -13,10 +13,6 @@ class VariableExprAST(ExprAST):
     def getSyntax(self):
       return ['identifier'];
 
-    def dump(self, indent=0):
-        return '{0}{1}[{2}]'.format(
-            ' ' * indent, self.__class__.__name__, self.name)
-
     def getReturnType(self):
       return self.core.typeContainer.getType(self.name);
 

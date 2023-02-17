@@ -14,13 +14,6 @@ class UnaryExprAST(ExprAST):
     def getSyntax(self):
       return ['Operator', 'Expression'];
 
-
-    def dump(self, indent=0):
-        s = '{0}{1}[{2}]\n'.format(
-            ' ' * indent, self.__class__.__name__, self.op)
-        s += self.operand.dump(indent + 2)
-        return s
-
     def parse(parser, parent, core):
         # no unary operator before a primary
         if (not parser.cur_tok.kind == TokenKind.OPERATOR or

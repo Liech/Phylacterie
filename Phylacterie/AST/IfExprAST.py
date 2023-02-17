@@ -15,16 +15,6 @@ class IfExprAST(ExprAST):
         
     def getSyntax(self):
       return ['if','(','Expression',')', 'Expression', ['else', 'Expression']]
-
-    def dump(self, indent=0):
-        prefix = ' ' * indent
-        s = '{0}{1}\n'.format(prefix, self.__class__.__name__)
-        s += '{0} Condition:\n{1}\n'.format(
-            prefix, self.cond_expr.dump(indent + 2))
-        s += '{0} Then:\n{1}\n'.format(
-            prefix, self.then_expr.dump(indent + 2))
-        return s
-
           
     def getReturnType(self):
       return self.then_expr.getReturnType();

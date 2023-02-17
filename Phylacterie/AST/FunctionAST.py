@@ -30,12 +30,6 @@ class FunctionAST(ASTNode):
     def is_anonymous(self):
         return self.proto.name.startswith('_anon')
 
-    def dump(self, indent=0):
-        s = '{0}{1}[{2}]\n'.format(
-            ' ' * indent, self.__class__.__name__, self.proto.dump())
-        s += self.body.dump(indent + 2) + '\n'
-        return s
-
     def parse(parser, parent,datatype,name, core):
         core.stack();
         proto = PrototypeAST.parse(parser,parent,datatype,name,core);

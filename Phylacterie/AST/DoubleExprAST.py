@@ -13,10 +13,6 @@ class DoubleExprAST(ExprAST):
     def getSyntax(self):
       return ['Number','.','Number']
 
-    def dump(self, indent=0):
-        return '{0}{1}[{2}]'.format(
-            ' ' * indent, self.__class__.__name__, self.val)
-
     def codegen(self, generator):
         return ir.Constant(ir.DoubleType(), float(self.val))
       

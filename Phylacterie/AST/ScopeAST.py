@@ -34,13 +34,6 @@ class ScopeAST(ExprAST):
 
     def addOldBindings(self, oldBindings):
       self.oldBindings = oldBindings;
-
-    def dump(self, indent=0):
-        prefix = ' ' * indent
-        s = '{0}{1}\n'.format(prefix, self.__class__.__name__)
-        s += '{0} Body:\n'.format(prefix)
-        s += self.body.dump(indent + 2)
-        return s
       
     def getReturnType(self):
       if (len(self.body) == 0):

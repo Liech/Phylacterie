@@ -17,10 +17,6 @@ class BoolExprAST(ExprAST):
       #return ['true']
       return ['false']
 
-    def dump(self, indent=0):
-        return '{0}{1}[{2}]'.format(
-            ' ' * indent, self.__class__.__name__, self.val)
-
     def parse(parser, parent):
       if (parser.cur_tok.kind == TokenKind.FALSE):
         parser._get_next_token()
