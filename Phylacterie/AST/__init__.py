@@ -14,6 +14,7 @@ from .ScopeAST import ScopeAST
 from .BoolExprAST import BoolExprAST
 from .IntExprAST import IntExprAST
 from .DatatypeAST import DatatypeAST
+from .ClassExprAST import ClassExprAST
 
 from .IdentifierPreAST import IdentifierPreAST
 

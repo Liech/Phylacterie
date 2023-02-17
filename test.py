@@ -104,6 +104,16 @@ def ifs():
   ''')
   assert(result == True)
 
+def classtest():
+  result = Phylacterie().evaluate('''
+  class myFirstClass{
+    double varname1;
+    int varname2;
+  }
+  1;
+  ''')
+  assert(result == 1)
+
 def test():
   func();
   baseDataTypes();
@@ -111,3 +121,4 @@ def test():
   loop();
   overload();
   ifs();
+  classtest();

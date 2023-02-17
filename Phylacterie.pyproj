@@ -29,6 +29,7 @@
     <Compile Include="Phylacterie\AST\BinaryExprAST.py" />
     <Compile Include="Phylacterie\AST\CallExprAST.py" />
     <Compile Include="Phylacterie\AST\BoolExprAST.py" />
+    <Compile Include="Phylacterie\AST\ClassExprAST.py" />
     <Compile Include="Phylacterie\AST\DatatypeAST.py" />
     <Compile Include="Phylacterie\AST\ExprAST.py" />
     <Compile Include="Phylacterie\AST\IdentifierPreAST.py" />

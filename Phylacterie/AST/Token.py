@@ -20,4 +20,5 @@ class TokenKind(Enum):
     INCLUDE = -16
     TRUE = -17
     FALSE = -18
+    CLASS = -19
 Token = namedtuple('Token', 'kind value')

@@ -91,25 +91,27 @@ class Parser(object):
     #   ::= forexpr
     def _parse_primary(self,parent, core):
         if self.cur_tok.kind == TokenKind.NUMBER:
-            return self._parse_number_expr(parent, core)
+          return self._parse_number_expr(parent, core)
         elif self.cur_tok.kind == TokenKind.TRUE:
-            return BoolExprAST.parse(self,parent);
+          return BoolExprAST.parse(self,parent);
         elif self.cur_tok.kind == TokenKind.FALSE:
-            return BoolExprAST.parse(self,parent);
+          return BoolExprAST.parse(self,parent);
 
         elif self._cur_tok_is_operator('('):
-            return self._parse_paren_expr(parent, core)
+          return self._parse_paren_expr(parent, core)
         elif self.cur_tok.kind == TokenKind.IF:
-            return IfExprAST.parse(self,parent, core);
+          return IfExprAST.parse(self,parent, core);
         elif self.cur_tok.kind == TokenKind.WHILE:
-            return WhileExprAST.parse(self,parent, core);
+          return WhileExprAST.parse(self,parent, core);
         elif self.cur_tok.kind == TokenKind.SCOPESTART:
-            return ScopeAST.parse(self,parent, core);
+          return ScopeAST.parse(self,parent, core);
 
         elif self.cur_tok.kind == TokenKind.IDENTIFIER:
-            return IdentifierPreAST.parse(self, parent, core);
+          return IdentifierPreAST.parse(self, parent, core);
         elif self.cur_tok.kind == TokenKind.DEF:
-            return FunctionAST.parse(self, parent, core);
+          return FunctionAST.parse(self, parent, core);#
+        elif self.cur_tok.kind == TokenKind.CLASS:
+          return ClassExprAST.parse(self,parent,core);
         else:
             raise ParseError('Unknown token when expecting an expression')
 
