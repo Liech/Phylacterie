@@ -79,8 +79,9 @@ class PrototypeAST(ASTNode):
               parser._match(TokenKind.OPERATOR, ',')
             if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
               raise ParseError('Expected datatype identifier')
-            dataType = DatatypeAST.parse(parent, parser.cur_tok.value, core);
+            typeid = parser.cur_tok.value
             parser._get_next_token()
+            dataType = DatatypeAST.parse(parser,parent,typeid, core);
             if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
               raise ParseError('Expected variablename identifier')
             argName = parser.cur_tok.value

@@ -16,8 +16,9 @@ class DatatypeAST(ExprAST):
         return '{0}{1}[{2}]'.format(
             ' ' * indent, self.__class__.__name__, self.val)
 
-    def parse(parent, identifier, core):
-      return DatatypeAST(identifier);
+    def parse(parser,parent,identifier, core):
+      result = DatatypeAST(identifier);      
+      return result;
 
     def codegen(self, generator):
         return None
