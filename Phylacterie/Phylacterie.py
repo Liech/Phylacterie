@@ -7,7 +7,6 @@ from .CodeGenerator import CodeGenerator
 from .Parser import Parser
 from .AST import *
 from .BuiltIn import BuiltIn
-from .irType2cType import irType2cType
 from Core import Core
 
 class Phylacterie(object):

@@ -1,6 +1,5 @@
 from .ExprAST import ExprAST
 from .Token import *
-from string2irType import string2irType
 from ParseError import ParseError
 
 import llvmlite.ir as ir

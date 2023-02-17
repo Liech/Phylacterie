@@ -6,7 +6,6 @@ from ast import parse
 from .Lexer import Lexer
 from .AST import *
 from .ParseError import ParseError
-from .string2irType import string2irType
 import Core
 
 class Parser(object):

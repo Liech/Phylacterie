@@ -14,7 +14,7 @@ class ClassExprAST(ExprAST):
         self.parent = parent
         self.core   = core
         self.classname = classname;
-        self.members = []
+        self.members = members
         
     def getSyntax(self):
       return ['class']
@@ -50,6 +50,8 @@ class ClassExprAST(ExprAST):
     def getID(self):
       return 'class';
 
-    def codegen(self, generator):
-        return None
+    def codegen(self, generator):        
+      membertypes = [x['type'].getIRType() for x in self.members]
+      datatype = ir.LiteralStructType(membertypes);
+      return None
 

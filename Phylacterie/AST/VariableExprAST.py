@@ -1,5 +1,4 @@
 from .ExprAST import ExprAST
-from string2irType import string2irType
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
