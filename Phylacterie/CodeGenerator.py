@@ -3,7 +3,6 @@ import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
 from .AST import *
-from .irType2string import *
 
 class CodeGenerator(object):
     def __init__(self):

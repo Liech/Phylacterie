@@ -3,8 +3,7 @@ from .ExprAST import ExprAST
 from .Token import *
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
-from string2irType import string2irType
-from irType2cType import irType2cType
+from ctypes import CFUNCTYPE, c_bool, c_double, c_int
 
 class DatatypeAST(ExprAST):
     def __init__(self, identifier, templateTypes = []):
@@ -36,13 +35,27 @@ class DatatypeAST(ExprAST):
       return self.identifier;
 
     def getIRType(self):
-      return string2irType(self.identifier);
+      if self.identifier == 'double':
+        return ir.DoubleType();
+      elif self.identifier == 'bool':
+        return ir.IntType(1);
+      elif self.identifier == 'int':
+        return ir.IntType(32);
+      else:
+        raise BaseException("unkown type")
 
     def getDefault(self):
       return ir.Constant(self.identifier, 0.0)
 
     def getCType(self):
-      return irType2cType(self.getIRType());
+      if self.getIRType() == ir.DoubleType():
+        return c_double;
+      if self.getIRType() == ir.IntType(32):
+        return c_int;
+      elif self.getIRType() == ir.IntType(1):
+        return c_bool;
+      else:
+        raise ""
 
     def toString(self):
       return self.identifier

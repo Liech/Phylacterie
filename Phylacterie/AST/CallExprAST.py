@@ -3,7 +3,6 @@ from .CodegenError import CodegenError
 from .Token import *
 from .VariableExprAST import VariableExprAST
 from .VarExprAST import VarExprAST
-from irType2string import irType2string
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm

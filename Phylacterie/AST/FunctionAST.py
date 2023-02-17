@@ -1,7 +1,6 @@
 from .ASTNode import ASTNode
 from .PrototypeAST import PrototypeAST
 from .ScopeAST import ScopeAST
-from irType2string import irType2string
 from .Token import *
 import Core
 

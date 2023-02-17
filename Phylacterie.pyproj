@@ -50,14 +50,11 @@
     <Compile Include="Phylacterie\Core\Core.py" />
     <Compile Include="Phylacterie\Core\VariableContainer.py" />
     <Compile Include="Phylacterie\Core\__init__.py" />
-    <Compile Include="Phylacterie\irType2cType.py" />
-    <Compile Include="Phylacterie\irType2string.py" />
     <Compile Include="Phylacterie\Phylacterie.py" />
     <Compile Include="Phylacterie\Lexer.py" />
     <Compile Include="Phylacterie\CodeGenerator.py" />
     <Compile Include="Phylacterie\ParseError.py" />
     <Compile Include="Phylacterie\Parser.py" />
-    <Compile Include="Phylacterie\string2irType.py" />
     <Compile Include="Phylacterie\Core\TypeContainer.py" />
     <Compile Include="Phylacterie\__init__.py" />
     <Compile Include="Phylacterie\AST\Token.py" />
