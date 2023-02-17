@@ -1,4 +1,5 @@
 from .ExprAST import ExprAST
+from .DatatypeAST import DatatypeAST
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -20,4 +21,4 @@ class DoubleExprAST(ExprAST):
         return ir.Constant(ir.DoubleType(), float(self.val))
       
     def getReturnType(self):
-      return ir.DoubleType();
+      return DatatypeAST('double')

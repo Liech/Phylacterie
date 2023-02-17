@@ -1,5 +1,6 @@
 from .ExprAST import ExprAST
 
+from .DatatypeAST import DatatypeAST
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
 
@@ -20,4 +21,4 @@ class IntExprAST(ExprAST):
         return ir.Constant(ir.IntType(32), int(self.val))
       
     def getReturnType(self):
-      return ir.IntType(32);
+      return DatatypeAST('int')

@@ -66,7 +66,7 @@ class Phylacterie(object):
                 print(target_machine.emit_assembly(llvmmod))
 
                 
-            cType = irType2cType(ast.proto.returnType)
+            cType = ast.proto.returnType.getCType()
             fptr = CFUNCTYPE(cType)(ee.get_function_address(ast.proto.getID()))
             result = fptr()
             return result

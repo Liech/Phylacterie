@@ -13,6 +13,7 @@ from .VariableExprAST import VariableExprAST
 from .ScopeAST import ScopeAST
 from .BoolExprAST import BoolExprAST
 from .IntExprAST import IntExprAST
+from .DatatypeAST import DatatypeAST
 
 from .IdentifierPreAST import IdentifierPreAST
 

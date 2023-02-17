@@ -37,8 +37,9 @@ class VarExprAST(ExprAST):
         else:
             init = None
 
-        core.typeContainer.registerType(varName,string2irType(datatype))
-        return VarExprAST(parent, (varName, init, string2irType(datatype)), core)
+        core.typeContainer.registerType(varName,datatype)
+        core.variables.registerVar(varName, {})
+        return VarExprAST(parent, (varName, init, datatype), core)
 
     def codegen(self, generator):
         old_bindings = []
@@ -50,7 +51,7 @@ class VarExprAST(ExprAST):
             if init is not None:
                 init_val = init.codegen(generator)
             else:
-                init_val = ir.Constant(datatype, 0.0)
+                init_val = datatype.getDefault(); 
 
             old = generator.defineVariable(name,init_val);
             if (not old is None):

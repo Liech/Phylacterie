@@ -1,7 +1,15 @@
 from .TypeContainer import TypeContainer
-from .Types import Types
+from .VariableContainer import VariableContainer
 
 class Core(object):    
     def __init__(self):
       self.typeContainer = TypeContainer();
-      self.Types         = Types();
+      self.variables     = VariableContainer();
+
+    def stack(self):
+      self.typeContainer.stack();
+      self.variables.stack();
+
+    def pop(self):
+      self.typeContainer.pop();
+      self.variables.pop();

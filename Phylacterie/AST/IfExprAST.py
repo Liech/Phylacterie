@@ -87,8 +87,8 @@ class IfExprAST(ExprAST):
         generator.getBuilder().function.basic_blocks.append(merge_bb)
         generator.getBuilder().position_at_start(merge_bb)
 
-        assert(self.then_expr.getReturnType() == self.else_expr.getReturnType());
-        phi = generator.getBuilder().phi(self.then_expr.getReturnType(), 'iftmp')
+        assert(self.then_expr.getReturnType().toString() == self.else_expr.getReturnType().toString());
+        phi = generator.getBuilder().phi(self.then_expr.getReturnType().getIRType(), 'iftmp')
         phi.add_incoming(then_val, then_bb)
         phi.add_incoming(else_val, else_bb)
         return phi

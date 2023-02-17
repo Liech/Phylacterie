@@ -2,6 +2,7 @@ from ctypes.wintypes import BOOL
 from xmlrpc.client import boolean
 from .ExprAST import ExprAST
 from .Token import *
+from .DatatypeAST import DatatypeAST
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -34,4 +35,4 @@ class BoolExprAST(ExprAST):
         return ir.Constant(ir.IntType(1), int(self.val))
       
     def getReturnType(self):
-      return ir.IntType(1);
+      return DatatypeAST('bool')

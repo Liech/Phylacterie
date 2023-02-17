@@ -1,6 +1,7 @@
 from .ASTNode import ASTNode
 from .CodegenError import CodegenError
 from .Token import *
+from .DatatypeAST import DatatypeAST
 from string2irType import string2irType
 from irType2string import irType2string
 from ParseError import ParseError
@@ -46,8 +47,6 @@ class PrototypeAST(ASTNode):
         return s
 
     def parse(parser, parent,datatype,varName,core):
-        datatype = string2irType(datatype.value)
-
         prec = 30
         if varName.kind == TokenKind.IDENTIFIER:
             name = varName.value
@@ -80,13 +79,13 @@ class PrototypeAST(ASTNode):
               parser._match(TokenKind.OPERATOR, ',')
             if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
               raise ParseError('Expected datatype identifier')
-            dataType = parser.cur_tok.value
+            dataType = DatatypeAST.parse(parent, parser.cur_tok.value, core);
             parser._get_next_token()
             if not parser.cur_tok.kind == TokenKind.IDENTIFIER:
               raise ParseError('Expected variablename identifier')
             argName = parser.cur_tok.value
             parser._get_next_token()
-            argnames.append({'name':argName, 'type':string2irType(dataType)})
+            argnames.append({'name':argName, 'type':dataType})
         parser._match(TokenKind.OPERATOR, ')')
 
         if name.startswith('binary') and len(argnames) != 2:
@@ -97,18 +96,20 @@ class PrototypeAST(ASTNode):
         core.typeContainer.registerType(name, datatype)
         for i in range(0,len(argnames)):
           core.typeContainer.registerType(argnames[i]['name'],argnames[i]['type'])
+          core.variables.registerVar(argnames[i]['name'],{})
 
         return PrototypeAST(parent, name, argnames, name.startswith(('unary', 'binary')), prec, datatype,core)
 
     def getID(self):
-      args = ''.join([irType2string(t) + '_' for t in self.parameterTypes])
+      args = ''.join([t.toString() + '_' for t in self.parameterTypes])
       return self.name + '_' + args;
 
     def codegen(self,generator):
         funcname = self.name
         funcID = self.getID();
         # Create a function type
-        func_ty = ir.FunctionType(self.returnType,  self.parameterTypes)
+        types = [x.getIRType() for x in self.parameterTypes]
+        func_ty = ir.FunctionType(self.returnType.getIRType(),  types)
 
         # If a function with this name already exists in the module...
         if funcID in generator.getModule().globals:

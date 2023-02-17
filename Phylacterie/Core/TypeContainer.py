@@ -1,5 +1,6 @@
 
 import llvmlite.ir as ir
+from AST import DatatypeAST
 
 class TypeContainer(object):
   def __init__(self):
@@ -7,13 +8,13 @@ class TypeContainer(object):
     self._globalTypes = {}
     self._stack = []
     
-    self._globalTypes['binary+_double_double_'] = ir.DoubleType();
-    self._globalTypes['binary*_double_double_'] = ir.DoubleType();
-    self._globalTypes['binary-_double_double_'] = ir.DoubleType();
-    self._globalTypes['binary+_int_int_'] = ir.IntType(32);
-    self._globalTypes['binary*_int_int_'] = ir.IntType(32);
-    self._globalTypes['binary<_double_double_'] = ir.IntType(1);
-    self._globalTypes['binary<_int_int_'] = ir.IntType(1);
+    self._globalTypes['binary+_double_double_'] = DatatypeAST('double')
+    self._globalTypes['binary*_double_double_'] = DatatypeAST('double')
+    self._globalTypes['binary-_double_double_'] = DatatypeAST('double')
+    self._globalTypes['binary+_int_int_'] =  DatatypeAST('int')
+    self._globalTypes['binary*_int_int_'] = DatatypeAST('int')
+    self._globalTypes['binary<_double_double_'] =  DatatypeAST('bool')
+    self._globalTypes['binary<_int_int_'] = DatatypeAST('bool')
 
   def getType(self, name):
     if (name in self._globalTypes):

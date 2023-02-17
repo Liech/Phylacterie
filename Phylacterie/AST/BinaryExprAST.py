@@ -65,7 +65,7 @@ class BinaryExprAST(ExprAST):
             lhs = BinaryExprAST(parent, op, lhs, rhs, core)
 
     def getID(self):
-      return 'binary' + self.op + '_' + irType2string(self.lhs.getReturnType()) + '_' + irType2string(self.rhs.getReturnType()) + '_';
+      return 'binary' + self.op + '_' + self.lhs.getReturnType().toString() + '_' + self.rhs.getReturnType().toString() + '_';
 
     def codegen(self, generator):
         # Assignment is handled specially because it doesn't follow the general

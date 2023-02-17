@@ -43,7 +43,7 @@ class CallExprAST(ExprAST):
 
 
     def getID(self):
-      args = ''.join([irType2string(t.getReturnType()) + '_' for t in self.args])
+      args = ''.join([t.getReturnType().toString() + '_' for t in self.args])
       return self.callee + '_' + args;
 
     def codegen(self, generator):

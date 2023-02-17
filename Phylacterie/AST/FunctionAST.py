@@ -1,7 +1,6 @@
 from .ASTNode import ASTNode
 from .PrototypeAST import PrototypeAST
 from .ScopeAST import ScopeAST
-from ..string2irType import string2irType
 from irType2string import irType2string
 from .Token import *
 import Core
@@ -37,14 +36,14 @@ class FunctionAST(ASTNode):
         s += self.body.dump(indent + 2) + '\n'
         return s
 
-    def parse(parser, parent,data,name, core):
-        core.typeContainer.stack();
-        proto = PrototypeAST.parse(parser,parent,data,name,core);
+    def parse(parser, parent,datatype,name, core):
+        core.stack();
+        proto = PrototypeAST.parse(parser,parent,datatype,name,core);
         expr = ScopeAST.parse(parser,parent,core);
         result = FunctionAST(parent, proto, expr,core)
         result.types = core.typeContainer.getTypes()
         typ = core.typeContainer.getType(proto.getID())
-        core.typeContainer.pop()
+        core.pop()
         core.typeContainer.registerType(proto.getID(),typ)
         
         parser.nextNeedsNoSemicolon();
@@ -66,7 +65,7 @@ class FunctionAST(ASTNode):
         # Add all arguments to the symbol table and create their allocas
         for i, arg in enumerate(func.args):
             arg.name = self.proto.argnames[i]
-            alloca = generator.getBuilder().alloca(self.proto.parameterTypes[i], name=arg.name)
+            alloca = generator.getBuilder().alloca(self.proto.parameterTypes[i].getIRType(), name=arg.name)
             generator.getBuilder().store(arg, alloca)
             generator.getSymtab()[arg.name] = alloca
 
