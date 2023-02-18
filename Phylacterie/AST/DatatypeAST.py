@@ -1,13 +1,13 @@
 from .ExprAST import ExprAST
 
-from .Token import *
+from .Token import TokenKind
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
 from ctypes import CFUNCTYPE, c_bool, c_double, c_int
 
 class DatatypeAST(ExprAST):
     def __init__(self, identifier, templateTypes = []):
-        self.identifier = identifier;
+        self.identifier    = identifier;
         self.templateTypes = templateTypes;
 
     def getSyntax(self):

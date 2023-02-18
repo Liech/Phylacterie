@@ -3,7 +3,7 @@ from .VariableExprAST import VariableExprAST
 from .UnaryExprAST import UnaryExprAST
 from .CodegenError import CodegenError
 from .DatatypeAST import DatatypeAST
-from .Token import *
+from .Token import TokenKind
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -44,6 +44,7 @@ class ClassExprAST(ExprAST):
       parser._match(TokenKind.SCOPEEND)      
       result = ClassExprAST(parent,classname, members, core);
       parser.nextNeedsNoSemicolon();
+      core.classes.registerClass(classname, result);
       return result;
 
     def getID(self):

@@ -47,6 +47,7 @@
     <Compile Include="Phylacterie\BuiltIn\putchard.py" />
     <Compile Include="Phylacterie\BuiltIn\__init__.py" />
     <Compile Include="Phylacterie\AST\CodegenError.py" />
+    <Compile Include="Phylacterie\Core\ClassContainer.py" />
     <Compile Include="Phylacterie\Core\Core.py" />
     <Compile Include="Phylacterie\Core\VariableContainer.py" />
     <Compile Include="Phylacterie\Core\__init__.py" />
