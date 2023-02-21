@@ -106,9 +106,9 @@ def ifs():
 
 def classtest():
   result = Phylacterie().evaluate('''
-  class myFirstClass{
+  class myFirstClass {
     double varname1;
-    int varname2;
+    int    varname2;
   }
   1;
   ''')

@@ -3,18 +3,18 @@ import llvmlite.ir as ir
 from AST import DatatypeAST
 
 class TypeContainer(object):
-  def __init__(self):
+  def __init__(self, core):
     self._types = {}
     self._globalTypes = {}
     self._stack = []
     
-    self._globalTypes['binary+_double_double_'] = DatatypeAST('double')
-    self._globalTypes['binary*_double_double_'] = DatatypeAST('double')
-    self._globalTypes['binary-_double_double_'] = DatatypeAST('double')
-    self._globalTypes['binary+_int_int_'] =  DatatypeAST('int')
-    self._globalTypes['binary*_int_int_'] = DatatypeAST('int')
-    self._globalTypes['binary<_double_double_'] =  DatatypeAST('bool')
-    self._globalTypes['binary<_int_int_'] = DatatypeAST('bool')
+    self._globalTypes['binary+_double_double_'] = DatatypeAST (core, 'double')
+    self._globalTypes['binary*_double_double_'] = DatatypeAST (core, 'double')
+    self._globalTypes['binary-_double_double_'] = DatatypeAST (core, 'double')
+    self._globalTypes['binary+_int_int_']       = DatatypeAST (core, 'int')
+    self._globalTypes['binary*_int_int_']       = DatatypeAST (core, 'int')
+    self._globalTypes['binary<_double_double_'] = DatatypeAST (core, 'bool')
+    self._globalTypes['binary<_int_int_']       = DatatypeAST (core, 'bool')
 
   def getType(self, name):
     if (name in self._globalTypes):

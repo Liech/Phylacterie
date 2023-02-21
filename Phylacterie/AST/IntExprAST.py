@@ -6,9 +6,10 @@ import llvmlite.binding as llvm
 
 
 class IntExprAST(ExprAST):
-    def __init__(self, parent, val):
+    def __init__(self, core, parent, val):
         self.val = val
         self.parent = parent
+        self.core = core;
     
     def getSyntax(self):
       return ['Number']
@@ -17,4 +18,4 @@ class IntExprAST(ExprAST):
         return ir.Constant(ir.IntType(32), int(self.val))
       
     def getReturnType(self):
-      return DatatypeAST('int')
+      return DatatypeAST(self.core,'int')

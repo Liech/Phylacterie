@@ -4,7 +4,7 @@ from .ClassContainer import ClassContainer
 
 class Core(object):    
     def __init__(self):
-      self.typeContainer = TypeContainer();
+      self.typeContainer = TypeContainer(self);
       self.variables     = VariableContainer();
       self.classes       = ClassContainer();
 

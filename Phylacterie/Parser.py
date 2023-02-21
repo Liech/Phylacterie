@@ -69,9 +69,9 @@ class Parser(object):
     # numberexpr ::= number
     def _parse_number_expr(self,parent, core):
         if('.' in self.cur_tok.value):
-          result = DoubleExprAST(parent, self.cur_tok.value)
+          result = DoubleExprAST(core, parent, self.cur_tok.value)
         else:
-          result = IntExprAST(parent, self.cur_tok.value)
+          result = IntExprAST(core, parent, self.cur_tok.value)
         self._get_next_token()  # consume the number
         return result
 
@@ -92,9 +92,9 @@ class Parser(object):
         if self.cur_tok.kind == TokenKind.NUMBER:
           return self._parse_number_expr(parent, core)
         elif self.cur_tok.kind == TokenKind.TRUE:
-          return BoolExprAST.parse(self,parent);
+          return BoolExprAST.parse(self,parent, core);
         elif self.cur_tok.kind == TokenKind.FALSE:
-          return BoolExprAST.parse(self,parent);
+          return BoolExprAST.parse(self,parent, core);
 
         elif self._cur_tok_is_operator('('):
           return self._parse_paren_expr(parent, core)

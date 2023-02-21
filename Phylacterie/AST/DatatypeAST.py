@@ -6,7 +6,7 @@ import llvmlite.binding as llvm
 from ctypes import CFUNCTYPE, c_bool, c_double, c_int
 
 class DatatypeAST(ExprAST):
-    def __init__(self, identifier, templateTypes = []):
+    def __init__(self, core, identifier, templateTypes = []):
         self.identifier    = identifier;
         self.templateTypes = templateTypes;
 
@@ -22,10 +22,10 @@ class DatatypeAST(ExprAST):
             parser._match(TokenKind.OPERATOR, ',')
           subID = parser.cur_tok.value
           parser._get_next_token()
-          templateTypes.append(DatatypeAST.parse(parser,parent,subID,core));              
+          templateTypes.append(DatatypeAST.parse(core,parser,parent,subID,core));              
         parser._match(TokenKind.OPERATOR, '>')
 
-      result = DatatypeAST(identifier, templateTypes);      
+      result = DatatypeAST(core, identifier, templateTypes);      
       return result;
 
     def codegen(self, generator):
