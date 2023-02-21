@@ -110,6 +110,7 @@ def classtest():
     double varname1;
     int    varname2;
   }
+  myFirstClass classInstance;
   1;
   ''')
   assert(result == 1)

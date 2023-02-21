@@ -8,7 +8,11 @@ from ctypes import CFUNCTYPE, c_bool, c_double, c_int
 class DatatypeAST(ExprAST):
     def __init__(self, core, identifier, templateTypes = []):
         self.identifier    = identifier;
-        self.templateTypes = templateTypes;
+        self.templateTypes = templateTypes;        
+        if (core.classes.hasClass(identifier)):
+          self.classObject = core.classes.getClass(identifier);
+        else:
+          self.classObject = None
 
     def getSyntax(self):
       return ['Datatype']
@@ -41,11 +45,16 @@ class DatatypeAST(ExprAST):
         return ir.IntType(1);
       elif self.identifier == 'int':
         return ir.IntType(32);
+      elif self.classObject != None:
+        self.classObject.getIRType();
       else:
         raise BaseException("unkown type")
 
     def getDefault(self):
-      return ir.Constant(self.identifier, 0.0)
+      if self.classObject != None:
+        return self.classObject.getDefault();
+      else:
+        return ir.Constant(self.identifier, 0.0)
 
     def getCType(self):
       if self.getIRType() == ir.DoubleType():
@@ -55,7 +64,7 @@ class DatatypeAST(ExprAST):
       elif self.getIRType() == ir.IntType(1):
         return c_bool;
       else:
-        raise ""
+        raise "return type not convertible to c type"
 
     def toString(self):
       return self.identifier

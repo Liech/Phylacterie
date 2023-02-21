@@ -51,7 +51,16 @@ class ClassExprAST(ExprAST):
       return 'class';
 
     def codegen(self, generator):        
-      membertypes = [x['type'].getIRType() for x in self.members]
-      datatype = ir.LiteralStructType(membertypes);
       return None
 
+    def getIRType(self):
+      membertypes = [x['type'].getIRType() for x in self.members]
+      datatype = ir.LiteralStructType(membertypes);
+      return datatype;
+
+    def getDefault(self):
+      struct_type = self.getIRType();
+      struct_val = struct_type(ir.Undefined)
+      #for i, v in enumerate(self.members):
+      #  struct_val = builder.insert_value(struct_val, v, i)
+      return struct_val
