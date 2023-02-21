@@ -111,6 +111,7 @@ def classtest():
     int    varname2;
   }
   myFirstClass classInstance;
+  #classInstance.varname1;
   1;
   ''')
   assert(result == 1)

@@ -61,6 +61,8 @@ class ClassExprAST(ExprAST):
     def getDefault(self):
       struct_type = self.getIRType();
       struct_val = struct_type(ir.Undefined)
-      #for i, v in enumerate(self.members):
-      #  struct_val = builder.insert_value(struct_val, v, i)
       return struct_val
+
+    def codegenSetMemberValue(self, builder, structVal, memberNumber, memberValue):
+      newStruct = builder.insert_value(structVal, memberValue, memberNumber)
+      return newStruct

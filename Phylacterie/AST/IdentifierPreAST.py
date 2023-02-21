@@ -18,7 +18,7 @@ class IdentifierPreAST(ExprAST):
     id_name = parser.cur_tok.value
     parser._get_next_token()
     if (core.variables.hasVar(id_name)):
-      return VariableExprAST(parent, id_name,core)
+      return VariableExprAST.parse(parser,parent,id_name, core);
     elif parser._cur_tok_is_operator('('):   
       return CallExprAST.parse(parser,parent, id_name, core);
     else:

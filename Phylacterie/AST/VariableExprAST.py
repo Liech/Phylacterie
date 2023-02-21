@@ -15,6 +15,9 @@ class VariableExprAST(ExprAST):
     def getReturnType(self):
       return self.core.typeContainer.getType(self.name);
 
+    def parse(self, parent, id_name,core):
+      return VariableExprAST(parent,id_name, core);
+
     def codegen(self,generator):
         var_addr = generator.getSymtab()[self.name]
         self.returnType = self.core.typeContainer.getType(self.name);
