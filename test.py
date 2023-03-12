@@ -104,6 +104,19 @@ def ifs():
   ''')
   assert(result == True)
 
+def unary():
+  #  bool unary !(bool a) { if(a) false; else true; } !true;
+  result = Phylacterie().evaluate('''
+  bool unary !(bool a) {
+    if(a) 
+      false;
+    else
+      true;
+  }
+  !true;
+  ''')
+  assert(result == False)
+
 def classtest():
   result = Phylacterie().evaluate('''
   class myFirstClass {
@@ -117,6 +130,7 @@ def classtest():
   assert(result == 1)
 
 def test():
+  unary();
   func();
   baseDataTypes();
   variable();

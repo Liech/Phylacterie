@@ -14,6 +14,10 @@ class UnaryExprAST(ExprAST):
     def getSyntax(self):
       return ['Operator', 'Expression'];
 
+    def getReturnType(self):      
+      opID = self.getID();
+      return self.core.typeContainer.getType(opID);
+
     def parse(parser, parent, core):
         # no unary operator before a primary
         if (not parser.cur_tok.kind == TokenKind.OPERATOR or
@@ -25,7 +29,10 @@ class UnaryExprAST(ExprAST):
         parser._get_next_token()
         return UnaryExprAST(parent, op, UnaryExprAST.parse(parser, parent,core),core)
 
+    def getID(self):
+      return 'unary' + self.op + '_' + self.operand.getReturnType().toString() + '_';
+
     def codegen(self, generator):
         operand = self.operand.codegen(generator)
-        func = generator.getModule().get_global('unary{0}'.format(self.op))
+        func = generator.getModule().get_global(self.getID())
         return generator.getBuilder().call(func, [operand], 'unop')
