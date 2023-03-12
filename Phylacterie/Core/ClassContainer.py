@@ -1,4 +1,4 @@
-
+ 
 class ClassContainer(object):
   def __init__(self):
     self._classes = {}

@@ -3,6 +3,7 @@ from .CodegenError import CodegenError
 from .Token import *
 from .DatatypeAST import DatatypeAST
 from ParseError import ParseError
+from .OperatorType import OperatorType
 
 import llvmlite.ir as ir
 import llvmlite.binding as llvm
@@ -44,11 +45,13 @@ class PrototypeAST(ASTNode):
             if parser.cur_tok.kind != TokenKind.OPERATOR:
                 raise ParseError('Expected operator after "unary"')
             name = 'unary{0}'.format(parser.cur_tok.value)
+            core.operators.setOperatorType(parser.cur_tok.value,OperatorType.UNARY);
             parser._get_next_token()
         elif varName.kind == TokenKind.BINARY:
             if parser.cur_tok.kind != TokenKind.OPERATOR:
                 raise ParseError('Expected operator after "binary"')
             name = 'binary{0}'.format(parser.cur_tok.value)
+            core.operators.setOperatorType(parser.cur_tok.value,OperatorType.BINARY);
             parser._get_next_token()
 
             # Try to parse precedence

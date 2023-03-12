@@ -18,7 +18,7 @@ from .ClassExprAST import ClassExprAST
 
 from .IdentifierPreAST import IdentifierPreAST
 
-from .Token import TokenKind
-from .Token import Token
+from .Token import *
+from .OperatorType import *
 
 from .CodegenError import CodegenError
