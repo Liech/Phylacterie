@@ -52,15 +52,6 @@ class Parser(object):
             raise ParseError('Expected "{0}"'.format(expected_kind))
         self._get_next_token()
 
-    _precedence_map = {'=': 2, '<': 10, '+': 20, '-': 20, '*': 40, '.' : 50}
-
-    def _cur_tok_precedence(self):
-        """Get the operator precedence of the current token."""
-        try:
-            return self._precedence_map[self.cur_tok.value]
-        except KeyError:
-            return -1
-
     def _cur_tok_is_operator(self, op):
         """Query whether the current token is the operator op"""
         return (self.cur_tok.kind == TokenKind.OPERATOR and

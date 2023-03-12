@@ -29,7 +29,7 @@ class BinaryExprAST(ExprAST):
         lhs: AST of the left-hand-side.
         """
         while True:
-            cur_prec = parser._cur_tok_precedence()
+            cur_prec = core.operators.getPrecedence(parser.cur_tok.value);
             # If this is a binary operator with precedence lower than the
             # currently parsed sub-expression, bail out. If it binds at least
             # as tightly, keep going.
@@ -43,7 +43,7 @@ class BinaryExprAST(ExprAST):
               return lhs;
             rhs = UnaryExprAST.parse(parser, parent, core);
 
-            next_prec = parser._cur_tok_precedence()
+            next_prec = core.operators.getPrecedence(parser.cur_tok.value);
             # There are three options:
             # 1. next_prec > cur_prec: we need to make a recursive call
             # 2. next_prec == cur_prec: no need for a recursive call, the next

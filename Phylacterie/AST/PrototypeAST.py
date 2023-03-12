@@ -60,7 +60,7 @@ class PrototypeAST(ASTNode):
 
             # Add the new operator to our precedence table so we can properly
             # parse it.
-            parser._precedence_map[name[-1]] = prec
+            core.operators.setPrecedence(name[-1], prec);
 
         parser._match(TokenKind.OPERATOR, '(')
         argnames = []
