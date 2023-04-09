@@ -8,3 +8,4 @@ The llvmlite Kaleidoscope example is used as base.
 
 The current state can be observed best by looking at [test.py](https://github.com/Liech/Phylacterie/blob/main/test.py)
 
+While it may not serve as useable language in its current state it is a somehow clean and understandable starting point for your own languages.
